@@ -2,8 +2,8 @@
 #define GREEDY_H
 #include "zfun.h"
 
-int max_marginal_gain_element(int N, int K, set<int> &S);
+int max_marginal_gain_element(bitset<N> &S, double l, double B);
 
-pair<set<int>, int> greedy(int N, int K);
+pair<bitset<N>, double> greedy(double l, double B);
 
 #endif

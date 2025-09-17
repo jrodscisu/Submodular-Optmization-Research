@@ -5,20 +5,16 @@ using namespace std;
 
 int main() {
 
-    int N, K;
+    double l, B;
 
-    cin >> N >> K;
+    scanf("%lf %lf", &l, &B);
 
-    pair<set<int>, double> answer = greedy(N, K);
+    pair<bitset<N>, double> answer = greedy(l, B);
 
 
     cout << "The returned value is " << answer.second << endl;
 
-    cout << "These are the elements: " << endl;
 
-    for(auto x : answer.first) {
-        // cout << x << " ";
-    }
     cout << endl;
     return 0;
 }
