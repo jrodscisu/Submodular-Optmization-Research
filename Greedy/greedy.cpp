@@ -31,16 +31,16 @@ pair<bitset<N>, double> greedy(bitset<N> &S, double l, double B, int which){
 
         S[greedy_choice] = 1;
         
-        printf("The value at iteration %d : %.6lf\n" , (int)S.count() , fun(S, l, B, which));
-        cout << "These are the elements: " << endl;
+        // printf("The value at iteration %d : %.6lf\n" , (int)S.count() , fun(S, l, B, which));
+        // cout << "These are the elements: " << endl;
 
-        for(int i = 0; i < N; i++) {
-            if(S[i] == 1){
-                cout << i << " ";
-            }
-        }
+        // for(int i = 0; i < N; i++) {
+        //     if(S[i] == 1){
+        //         cout << i << " ";
+        //     }
+        // }
 
-        cout << endl << endl;
+        // cout << endl << endl;
     }
 
 

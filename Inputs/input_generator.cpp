@@ -5,7 +5,7 @@ using namespace std;
 int main(int argc, char * argv[]){
 
     for(int i = 0; i <= 10; i++){
-        cout << 10 << ' ' << i << ' ' << string(argv[1]) << endl;
+        printf("10 %d %s %s %s\n", i, argv[1], argv[2], argv[3]);
     }
 
     return 0;

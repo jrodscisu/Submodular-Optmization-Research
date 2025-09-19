@@ -6,39 +6,35 @@ using namespace std;
 
 int main(int argc, char * argv[]) {
 
-    double l, B;
-    int choice;
-    scanf("%lf %lf %d", &l, &B, &choice);
+    double l = stod(argv[1]), B = stod(argv[2]);
+    int choice = stod(argv[3]);
 
     bitset<N> S;
 
     S.reset();
-    if (argc > 1){
-        for(int i = 1; i < argc; i++){
-            S[stoi(string(argv[i]))] = 1; 
+    if (stoi(argv[5]) > 0){
+        int x = stoi(argv[5]); 
+
+        if(string(argv[4]) == string("0")){
+            while(x--){
+                S[x] = 1;
+            }
+        }else{
+            while(x--){
+                S[x * K] = 1;
+            }
         }
     }
 
     pair<bitset<N>, double> answer = greedy(S, l, B, choice);
 
-    double approximation = answer.second / (K * l);
+    double approximation = answer.second / (B * (R - 1) + (K * l));
 
-    printf("%.9f\n", approximation);
+    // printf("K=%d, R=%d, Randoms=%d, l=%.6lf, B=%.6f, Disjoint=%s, Approximation=%.9f\n",
+    //        K, R, RANDOMS, l, B, ((choice) ? "False" : "True"), approximation);
 
-    // cout << "The returned value is " << answer.second << endl;
+    printf("%d %d %d %.6lf %.6f %d %s %s %.9f\n", 
+        K, R, RANDOMS, l, B, ((choice) ? 0 : 1), argv[4], argv[5] , approximation);
 
-
-    // cout << "These are the elements: " << endl;
-
-    // for(int i = 0; i < N; i++) {
-    //     if(answer.first[i] == 1){
-    //         cout << i << " ";
-    //     }
-    // }
-
-
-
-    // cout << endl << endl;
-    // cout << endl;
     return 0;
 }

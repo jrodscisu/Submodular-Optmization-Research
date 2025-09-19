@@ -15,7 +15,7 @@
 #define R K / 4
 #endif
 
-#ifndef RANDOOMS
+#ifndef RANDOMS
 #define RANDOMS 0
 #endif
 
