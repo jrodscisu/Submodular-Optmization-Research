@@ -1,7 +1,12 @@
 #include "zfun.h"
 
-double dummy_zfun( bitset<N> &S){
-    return  S.count();
+bitset<N> mask;
+
+void generator(){
+    mask.reset();
+    for(int i = R * K; i < N - RANDOMS; i++){
+        mask[i] = 1;
+    }
 }
 
 double zfun(bitset<N> &S, double l, double B){
@@ -9,10 +14,14 @@ double zfun(bitset<N> &S, double l, double B){
     int start_GreedyBreakers = R * K;
     double value = 0.0;
 
+    bitset<N> Rs = S & mask;
+
+    int n_Rs = Rs.count();    
+
     for(int i = 0; i < start_GreedyBreakers; i++){
         if(S[i] == 1){
-            if(S[(i/K) + start_GreedyBreakers] == 1){
-                value += (l - ((double)R * (l + B)/K));      
+            if(n_Rs > 0){
+                value += (l - ((n_Rs) * (l + B)/K));      
             }else{
                 value += l;
             }
@@ -75,6 +84,7 @@ double fun(bitset<N> &S, double l, double B, int which){
 }
 
 double marginal_gain(bitset<N> S, int g, double l, double B, int which){
+    generator();
     double zfunUe = fun(S, l, B, which);
     
     S[g] = 1;

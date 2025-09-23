@@ -28,10 +28,11 @@ int main(int argc, char * argv[]) {
 
     pair<bitset<N>, double> answer = greedy(S, l, B, choice);
 
-    double approximation = answer.second / (B * (R - 1) + (K * l));
+    double approximation = answer.second / (K * l);
 
     // printf("K=%d, R=%d, Randoms=%d, l=%.6lf, B=%.6f, Disjoint=%s, Approximation=%.9f\n",
     //        K, R, RANDOMS, l, B, ((choice) ? "False" : "True"), approximation);
+
 
     printf("%d %d %d %.6lf %.6f %d %s %s %.9f\n", 
         K, R, RANDOMS, l, B, ((choice) ? 0 : 1), argv[4], argv[5] , approximation);
