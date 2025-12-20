@@ -76,11 +76,11 @@ double zfun_Non_Disjoint(bitset<N> &S, double l, double B){
 }
 
 double fun(bitset<N> &S, double l, double B, int which){
-    if(which == 0){
+    // if(which == 0){
         return zfun(S, l, B);
-    }else{
-        return zfun_Non_Disjoint(S, l, B);
-    }
+    // }else{
+        // return zfun_Non_Disjoint(S, l, B);
+    // }
 }
 
 double marginal_gain(bitset<N> S, int g, double l, double B, int which){
