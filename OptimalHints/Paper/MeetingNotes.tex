@@ -1,0 +1,253 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{color}
+\usepackage{amsmath,amsthm,amssymb,multirow,paralist}
+\usepackage{hyperref}
+\usepackage[margin=1in]{geometry}
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{assumption}{Assumption}
+\newtheorem{remark}{Remark}
+
+\title{Research meeting notes}
+
+\begin{document}
+
+\maketitle
+
+\section{Monotone Submodular Maximization}
+
+The Monotone Submodular Maximization problem is described as: 
+\vspace{0.05in}
+
+\indent \emph{Given a monotone submodular function $f$ and an integer $k$, find $S = argmax_{A: |A| \leq k}\; f(A)$} \\
+
+\noindent \textbf{Lemma 1.} Given the set $S_i$ the set of the elements chosen the last $i$ iterations of the greedy algorithm. Then, $f(S_i) \geq (1-e^{-i/k})f(OPT)$ \\
+
+\noindent \textbf{Theorem 1.} For any instance of the Monotone Submodular Maximization problem (a Monotone Submodular function $f$ and an integer $k$). 
+
+Given a prediction set $S_l$ where $|S_l| = l \leq k$ and $f(S_l) \geq (1 - (1 - \frac{1}{k})^l + \alpha) f(OPT)$. Then the greedy solution $T_i = S_l \cup \{g_1, g_2, ..., g_i\}$ is a $(1 - \frac{1}{e} + (1 - \frac{1}{k})^{k-l}\alpha)-$approximation. \\
+
+\textbf{Proof:}
+
+$$\begin{aligned}
+    f(OPT)  &\leq f(OPT \cup T_i)\ && \text{Monotonicity}\\
+            &\leq f(T_i) + f(o_1|T_i) + f(o_2|T_i) + ... + f(o_i|T_i)\\
+            &= f(T_i) + \sum_{j = 1}^{k}f(o_j|T_i) \\
+            &\leq f(T_i) + \sum_{j = 1}^k f(g_{i+1 - l}|T_i) && \text{Submodularity and }  g_{i+1-l} = \text{best for the i+1-th iteration} \\
+            &= f(T_i) + k f(g_{i+1-l} | T_i) \\
+            &= f(T_i) + k [f(T_{i+1})  - f(T_i)]\\
+f(T_{i+1})  &\geq \frac{f(OPT)}{k} + \left(1  - \frac{1}{k}\right) f(T_i) \\
+            &\geq \frac{f(OPT)}{k} + \left(1  - \frac{1}{k}\right)\left[ \frac{f(OPT)}{k} + \left(1 - \frac{1}{k}\right)f(T_{i-1})\right] \\
+            &\geq \frac{f(OPT)}{k} \left [1 + \left(1 - \frac{1}{k}\right) + \left(1 - \frac{1}{k}\right)^2 + \dots + \left(1 - \frac{1}{k}\right)^{k-l-1} \right ] + \left(1 - \frac{1}{k}\right)^{k-l}f(T_{k- (k-l)})\\
+            &\geq \frac{f(OPT)}{k} \left [1 + \left(1 - \frac{1}{k}\right) + \left(1 - \frac{1}{k}\right)^2 + \dots + \left(1 - \frac{1}{k}\right)^{k-l-1} \right ] \\
+            &+ \left(1 - \frac{1}{k}\right)^{k- l}\left[\frac{1}{k}\left\{1 + \left(1 - \frac{1}{k}\right) + \cdots + \left(1-\frac{1}{k}\right)^{l-1}\right\} + \alpha \right]f(OPT)\\
+            &\geq \frac{f(OPT)}{k} \left [1 + \left(1 - \frac{1}{k}\right) + \left(1 - \frac{1}{k}\right)^2 + \dots + \left(1 - \frac{1}{k}\right)^{k-l-1} + \left(1 - \frac{1}{k}\right)^{k-l} + \cdots + \left(1-\frac{1}{k}\right)^{k-1}\right\}\\
+            &+ \left(1 - \frac{1}{k}\right)^{k- l} \alpha f(OPT)\\
+\end{aligned}$$
+$$\begin{aligned}
+           &\geq \left(1 - \frac{1}{e}\right)f(OPT) + \left(1 - \frac{1}{k}\right)^{k-l}\alpha f(OPT) \\
+            &= \left[1 - \frac{1}{e} + \left(1 - \frac{1}{k}\right)^{k-l}\alpha\right]f(OPT)
+\end{aligned}$$
+
+What happens if we get the best $k-2 $ (i.e. $l = k - 2$) elements of an optimal solution? Then we would get:
+
+\[\alpha = \left(1-\frac{1}{k}\right)^{k-2} - \frac{2}{k}\]
+
+
+then, 
+
+$$\begin{aligned}
+    &\left[1 - \frac{1}{e} + \left(1 - \frac{1}{k}\right)^{2}\alpha\right]f(OPT) \\
+    &\left[1 - \frac{1}{e} + \left(1 - \frac{1}{k}\right)^{2}\left[\left(1-\frac{1}{k}\right)^{k-2} - \frac{2}{k}\right]\right]f(OPT) \\
+    &\left[1 - \frac{1}{e} + \left(1 - \frac{1}{k}\right)^{k} -\left(1-\frac{1}{k}\right)^{2} \frac{2}{k}\right]f(OPT) \\
+    &\left[1 - \frac{1}{e} + \frac{1}{e} -\left(1-\frac{2}{k}+\frac{1}{k^2}\right) \frac{2}{k}\right]f(OPT) \\
+    &\left[1 - \frac{2}{k} + \frac{4}{k^2} - \frac{2}{k^3}\right] f(OPT) \\
+\end{aligned}$$
+
+
+\textbf{Corollary 1.} For the general case, consider we are given the best $k-m = l$ elements of an OPT solution, then we can get an approximation ratio of:
+
+$$
+1 - \frac{k-l}{ek}\left(1 - \frac{1}{k}\right)^{-l} f(OPT)
+$$
+
+\noindent\textbf{Theorem 2.} Given a prediction set $S_0 = OPT_{l}$, we can "quantify" the approximation ratio of $S_i = OPT_{l} \cup \{g_1, g_2, ..., g_i\}$, that is, greedily selecting the remaining $k-l$ elements. E.g.\\
+
+Let $S_0 = OPT_{k-2}$
+$$\begin{aligned}
+    f(OPT) \leq \;& f(OPT \cup S_1)\\
+           \leq \;     & f(S_1) + 2f(g_2\;|\;S_1) \\
+           =\;     & f(S_1) + 2[f(S_2) - f(S_1)] \\
+           =\;     & 2f(S_2) - f(S_1) \\
+    f(S_2) \geq\; & \frac{1}{2}\left[ f(OPT) + f(S_1) \right] \\
+           \geq\;     & \frac{1}{2}\left[ f(OPT) + \frac{1}{2} f(OPT) + \frac{1}{2}f(S_0) \right]\\
+    f(S_2) \geq\; & \frac{3}{4}f(OPT) + \frac{1}{4}f(OPT_{k-2})
+\end{aligned}
+$$
+
+and for $S_0 = OPT_{k-3}$
+
+$$\begin{aligned}
+    f(OPT) \leq \;& f(OPT \cup S_0)\\
+            \leq\;& f(S_0) + 3 f(g_3 | S_0) \\
+            =\; & f(S_0) + 3 [f(S_1) -f(S_0)] \\
+            =\; & 3f(S_1) - 2f(S_0)\\
+    f(S_1)  \geq\;& \frac{1}{3} [f(OPT) + 2f(S_0)] \\
+    f(S_3)  \geq\;& \frac{1}{3} [f(OPT) + 2f(S_2)] \\
+            =\;& \frac{1}{3} [f(OPT) + \frac{2}{3} [f(OPT) + 2f(S_1)]] \\
+            =\;& \frac{1}{3} [f(OPT) +\frac{2}{3} f(OPT) + \frac{4}{3}f(S_1)] \\
+            =\;& \frac{1}{3} [f(OPT) +\frac{2}{3} f(OPT) + \frac{4}{9}[f(OPT) + 2f(OPT_{k-3})]] \\
+            =\;& \frac{1}{3} [f(OPT) +\frac{2}{3} f(OPT) + \frac{4}{9}f(OPT) + \frac{8}{9}f(OPT_{k-3})] \\
+            =\;& \frac{1}{3}f(OPT) +\frac{2}{9} f(OPT) + \frac{4}{27}f(OPT) + \frac{8}{27}f(OPT_{k-3}) \\
+    f(S_3) \geq\; & \frac{19}{27} f(OPT) + \frac{8}{27}f(OPT_{k-3})
+\end{aligned}$$
+
+
+For the general case, consider we are given any $l$ elements of an OPT solution, then we can get an approximation ratio of:
+
+$$
+\left[1 - \left(1 - \frac{1}{k-l}\right)^{k-l}\right] f(OPT) + \left(1 - \frac{1}{k-l}\right)^{k-l} f(OPT_{l})
+$$
+
+\textbf{Corollary 2.} Ideally we should get the same results from \emph{Theorem 1} when using the best $l$ and the analysis of Theorem 2. However, we found that when $f(OPT_{l}) = \frac{l}{k}f(OPT)$ we get an approximation ratio of:
+
+$$\left(1 - \frac{k-l}{ek}\right)f(OPT)$$
+
+\section{From Yanhui's work}
+
+From Yanhui's approach we adapt the analysis of using predictions in an online Submodular Maximization Problem to an offline version of the, and we will also try to use this analysis to work with the case of using elements from the optimal to build on a solution with $l$ elements chosen with the greedy strategy.
+
+\subsection{Offline SMP given $l$ elements from an Optimal Solution}
+
+\textbf{Definition 1.} [Predictor-quality-on-correctness]\label{ass:rho}
+For every step $i$ there exists a constant $\rho>0$ such that
+\[
+\mathbb{E}\big[\Delta(p_i\mid S_{i-1}) \mid p_i\in O\big]
+\;\ge\; \rho_i \cdot\frac{\mathrm{OPT}-f(S_{i-1})}{k}.
+\]
+
+\noindent I.e. $\rho$ is the goodness factor of the prediction. We also define the predictor (marginal) membership probability for every $i$
+\[
+\Pr\big[p_i\in O\big] \;\ge\; \alpha_i,
+\]
+for some known $\alpha_i\in[0,1]$ (this was given in the problem statement). \\
+
+Now we would like to compare it for the case where we get $l$ elements from an optimal solution. Hence, we need to come up with a few more assumptions:
+
+
+
+\textbf{Assumption 2.} [Quality-for-optimal-elements] Assuming that the we have the best $l$ elements from an optimal solution, each one will contribute $\frac{OPT}{k}$. Hence, for each $p_i$:
+
+\[
+    \mathbb{E}\big[\Delta(p_i\mid S_{i-1}) \mid p_i\in O\big] = \frac{OPT}{k} = \rho_i\cdot\frac{\mathrm{OPT}-f(S_{i-1})}{k} 
+    \]
+    \[
+    OPT = \rho_i\cdot(\mathrm{OPT}-\frac{(i - 1)OPT}{k}) \]
+    \[
+     1 = \rho_i\cdot\Big(1-\frac{i - 1}{k}\Big) \]
+     \[
+     \rho_i = \frac{k}{k - i + 1}
+\]
+
+\textbf{Corollary 3.} Given the best $l$ elements from an optimal solution, and a greedy solution building on the remaining $k - l$, using Assumption 2, we get that $f(S_k) \geq [1 - \frac{k - l}{ek} (1 - \frac{1}{k})^{-l}]f(OPT)$. Which is same as \\Corollary 1.
+
+\textbf{Proof.}
+
+Most of the proof remains the same from Yanhui's work, but the last step where we replace the $\rho_i, \alpha_i, \beta_i$ in $c_i = (1 - \beta_i) + \beta_i\alpha_i\rho_i$.
+
+\[\begin{aligned}
+    f(OPT) - f(S_k) & \leq \Big[\exp\!\Big(-\sum_{i=1}^k \frac{c_i}{k}\Big)\Big]\cdot\mathrm{OPT}\\
+            & \leq \Big[\exp\!\Big(-\Big[\sum_{i=1}^l \frac{c_i}{k} + \sum_{i=l + 1}^k \frac{c_i}{k} \Big]\Big)\Big]\cdot\mathrm{OPT} \\
+            & \leq \Big[\exp\!\Big(-\Big[\sum_{i=1}^l \frac{k}{(k - i + 1)k} + \sum_{i=l + 1}^k \frac{1}{k} \Big]\Big)\Big]\cdot\mathrm{OPT} \\
+            & \leq \Big[\exp\!\Big(-\Big[\sum_{i=1}^l \frac{1}{(k - i + 1)} + \frac{k - l}{k} \Big]\Big)\Big]\cdot\mathrm{OPT} \\
+            & \approx \Big[\exp\!\Big(-\Big[\log\Big(\frac{k}{k - l}\Big) + \frac{k - l}{k} \Big]\Big)\Big]\cdot\mathrm{OPT} \\
+            &= \Big[\frac{k - l}{k} e ^{-(\frac{k - l}{k})}\Big]\cdot\mathrm{OPT} \\
+            &= \Big[\frac{k - l}{k} e ^{(-1 + \frac{l}{k})}\Big]\cdot\mathrm{OPT} \\
+            &= \Big[\frac{k - l}{ek} e ^{\frac{l}{k}}\Big]\cdot\mathrm{OPT} \\
+            &= \Big[\frac{k - l}{ek} \frac{1}{e} ^{-\frac{l}{k}}\Big]\cdot\mathrm{OPT} \\
+            &= \Big[\frac{k - l}{ek} {\Big(\Big(1 - \frac{1}{k}\Big)^k\Big)}^{-\frac{l}{k}}\Big]\cdot\mathrm{OPT} \\
+    f(S_k) &\geq         \Big[1 - \frac{k - l}{ek} {\Big(1 - \frac{1}{k}\Big) ^ {-l}}\Big]\cdot\mathrm{OPT} \\
+\end{aligned}
+\]
+\begin{flushright}
+    $\square$
+\end{flushright}
+
+\subsection{$\mathrm{OPT}$ of SMP given $S_l$ from the $l$-th greedy step}
+
+\textbf{Definitions}
+\begin{itemize}
+    \item Let $S_l = \{g_1, g_2, ..., g_l\}$ where $g_t$ is the element chosen in the $t$-th step of the greedy strategy.
+    \item Let $O_l = \{o^{'}_{l}, o^{'}_{l + 1}, ..., o^{'}_{k}\}$: the best elements to build on $S_l$
+    \item $\mathrm{OPT}_l = S_{l-1} \cup O_l$: the optimal solution given an initial partial (greedy) solution $S_i$.
+    \item $\Gamma_l = OPT_l - f(S_{l-1})$
+\end{itemize}
+
+\textbf{Definition 2.} (Predictor-quality-on-correctness). For every step $i$ there exists a constant $\rho_i>0$ such that
+
+\[
+\mathbb{E}\big[\Delta(p_i\mid S_{i-1}) \mid p_i\in O_i\big]
+\;\ge\; \rho_i\cdot\frac{\mathrm{OPT_i}-f(S_{i-1})}{k}.
+\] 
+
+\textbf{Theorem 3.} Given an SMP, $S_l$ (as above), a predictor that will give a prediction $p_i$ at step $l < i \leq k$ and $Pr[p_i \in O_i] = 1$, then ...:
+
+
+\textbf{Proof:}
+
+Similar to Yanhui's analysis the proof goes along the same lines on step A through C, changing $OPT$ with $OPT_i$ and $O$ with $O_i$. Moreover we have,
+
+\[
+c_i = (1 - \beta_i) +\beta_i\alpha_i\rho_i \tag{*}
+\]
+
+\[
+\mathbb{E}\big[f(S_i) - f(S_{i-1})\big] \geq \frac{c_i}{k} \Gamma_i \tag{**}
+\]
+
+Then, by definition we have $\Gamma_{i+1} = (\mathrm{OPT}_{i+1} - \mathrm{OPT}_{i}) +  \Gamma_i - (f(S_i) - f(S_{i-1}))$. Using (**) we have: 
+
+\[
+\begin{aligned}
+\mathbb{E}\big[\Gamma_{i+1}\big] &= (\mathrm{OPT}_{i+1} - \mathrm{OPT}_{i}) + \Gamma_i - \mathbb{E}\big[f(S_i) - f(S_{i-1})\big] \\
+    &\leq (\mathrm{OPT}_{i+1} - \mathrm{OPT}_{i}) + \Gamma_i - \frac{c_i}{k}\Gamma_i & (\mathrm{OPT_{i+1} - OPT_i} \leq 0) \\
+    &\leq \Big(1 - \frac{c_i}{k}\Big)\Gamma_i
+\end{aligned}
+\]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{Model ideas}
+
+\begin{enumerate}
+    \item Have an oracle that will tell us the probability $p$ of an element being part of an optimal solution.
+\end{enumerate}
+
+\subsection{Possible questions we have come up with}
+
+\begin{enumerate}
+    \item What if we are giving $OPT_{k-l}$ elements, and we choose the remaining $l$ as $g_1, o_1, g_2, o_2, ...$? Where $g_i$ is a greedy selection and $o_i$ is an element from the optimal solution.
+
+    \item What if we only have to choose the first element, and the remaining $k-1$ elements are guaranteed to be part of a solution.
+
+    \hspace{0.2in} This one we landed on trying to "claim":
+
+    $$
+    f\left(OPT_{k-3} \cup \{g_1, o, g_3\}\right)\geq f(OPT_{k-3} \cup \{g_1, g_2', g_3'\})
+    $$
+\end{enumerate}
+
+
+\end{document}
