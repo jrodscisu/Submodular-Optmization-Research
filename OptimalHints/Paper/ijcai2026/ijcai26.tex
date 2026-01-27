@@ -135,9 +135,13 @@ A function $f: 2^{V} \rightarrow \mathbf{R}$ is submodular if for all $A, B \sub
 \subsection{Background}
 Submodular maximization appears in many areas of computer science, especially combinatorial optimization, max cut, set covering, matroid optimization, sensor placing, and others [references]. A good example is the \emph{max cover under cardinality constraint} problem; where we are asked to choose a collection of sets of size $k$ whose union is maximized. The greedy approach to this problem is well-known to provide a $(1-1/e)$-approximation, and this is optimal under the $P \neq NP$ assumption. In the latter example, and many other settings, the submodular functions of interest are said to be \emph{monotone}, i.e. for any $A\subseteq B \subseteq V, f(A) \leq f(B)$. Interestingly, the \emph{max cover under cardinality constraint} problem can be represented as a maximization of a monotone submodular function under a cardinality constraint; that is, $max_{S \subseteq V} \{f(S) : |S| \leq K\}$. For the cases where this is not trivial, the submodular maximization problem under cardinality constraint is proved to be NP-hard [reference]. 
 
+% TODO: Add some background on combinatorial optimization, it could be that one paper that we have used before
+
 Here we will consider the case where the functions are \emph{monotone}. For this instance, Nemhauser et al. [Reference] proposed a greedy algorithm with a near-optimal approximation factor of $(1 -\frac{1}{e})$; later on [Reference], it was proven that such factor is the best we can do with only a polynomial number of function queries. However, the greedy algorithm does not perform as well under other constraints like the knapsack constraint.
 
-We will also assume to have access to the submodular function by querying an \emph{oracle}. That is, we have access to the value of $f(S)$ for any $S \subseteq V$ through an \emph{oracle}.
+We will also assume to have access to the submodular function by querying an \emph{oracle}. That is, we have access to the value of $f(S)$ for any $S \subseteq V$ through an \emph{oracle}. Besides we will also consider having a predictor that will provide a prediction in each step of the original greedy algorithm.
+
+In section [A] we will go over our contributions, section [B] we will discuss our different type of predictions that we have considered, and section [C] we will present an example of a framework used to compare the performance of the different prediction scenarios. 
 
 \subsection{Preliminaries}
 

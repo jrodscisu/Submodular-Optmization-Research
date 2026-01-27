@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2025.9.11)  14 JAN 2026 23:46
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2025.9.11)  15 JAN 2026 17:09
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -401,22 +401,22 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
 LaTeX Font Info:    Trying to load font information for OT1+phv on input line 121.
  (/usr/share/texlive/texmf-dist/tex/latex/psnfss/ot1phv.fd
 File: ot1phv.fd 2020/03/25 scalable font definitions for OT1/phv.
-)
-Overfull \hbox (13.91685pt too wide) detected at line 163
-[][]
- []
-
-[1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}{/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}
+) [1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}{/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}
 
 
 
 ]
-Overfull \hbox (11.80748pt too wide) detected at line 191
+Overfull \hbox (13.91685pt too wide) detected at line 167
 [][]
  []
 
 
-Overfull \hbox (111.8005pt too wide) detected at line 257
+Overfull \hbox (11.80748pt too wide) detected at line 195
+[][]
+ []
+
+
+Overfull \hbox (111.8005pt too wide) detected at line 261
 [][]
  []
 
@@ -428,7 +428,7 @@ LaTeX Warning: Empty `thebibliography' environment on input line 3.
 pdfTeX warning (ext4): destination with the same identifier (name{subdefinitioninner.1.1}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.775 \end{document}
+l.779 \end{document}
                     ] (./ijcai26.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
@@ -440,13 +440,13 @@ Package rerunfilecheck Info: File `ijcai26.out' has not changed.
 Here is how much of TeX's memory you used:
  11560 strings out of 474222
  183710 string characters out of 5748733
- 1965975 words of memory out of 5000000
+ 1967975 words of memory out of 5000000
  33646 multiletter control sequences out of 15000+600000
  574402 words of font info for 61 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,11n,79p,1171b,509s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,11n,79p,1171b,612s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on ijcai26.pdf (2 pages, 150546 bytes).
+Output written on ijcai26.pdf (2 pages, 151063 bytes).
 PDF statistics:
  117 PDF objects out of 1000 (max. 8388607)
  86 compressed objects within 1 object stream
