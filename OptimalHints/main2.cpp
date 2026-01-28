@@ -7,12 +7,15 @@
 #include <string>
 #include <ctime>
 #include <fstream>
+#include <cmath>
 #include <algorithm>
 
 // #define OPT 1000000.0
 #define RUNS 1
 #define INSTANCES 1
-#define BAD_TAKING 0.35
+#define BAD_TAKING 0.1
+#define e 2.71828
+
 using namespace std;
 
 long double OPT = 1000000.0;
@@ -86,6 +89,11 @@ pair<long double, long double> mod_greedy(bool bad_ps = false) {
     vector<long double> bins (K, OPT/K);
     vector<long double> os, Gs;
     vector<long double> greedy_factors;
+
+    // ((Prediction or not, Beta), (Marginal gain, rho))
+    vector<pair<pair<int, long double>, pair<long double, long double>>> decisions;
+    vector<long double> bad_ps;
+    vector<long double> rhos;
     long double GreedyVal = 0.0;
 
     fin.open("g_marginal_gain.in");
@@ -180,12 +188,12 @@ pair<long double, long double> mod_greedy(bool bad_ps = false) {
 
         int p = K + pcoin(gen);
         int g = arg_max;
-        long double deltaP = bins[p - K];
+        long double deltaP = bins[os[p - K]];
         long double deltaG = max_val;
 
         // Adjust for bad prediction
 
-        if(bad_prediction.first != -1) {
+        if(bad_prediction.first != -2) {
 
             assert(true);
 
@@ -197,7 +205,16 @@ pair<long double, long double> mod_greedy(bool bad_ps = false) {
 
         long double Beta = deltaP / (deltaP + deltaG);
 
+        cout << "Step " << i << ": p  " << p << ", DeltaP = " << deltaP << ", DeltaG = " << deltaG << ", Beta = " << Beta << endl;
         if(coin(gen) < Beta * 100){
+            double marginal_gain = deltaP;
+            double Gammai = OPT - answer;
+
+            decisions.push_back(make_pair(make_pair(1, Beta), make_pair(marginal_gain, Gammai)));
+
+
+            rhos.push_back((((deltaP * K) / Beta) - (1.0 - Beta)) / Beta);
+
             answer += deltaP;
 
             if(p < K) {
@@ -209,7 +226,15 @@ pair<long double, long double> mod_greedy(bool bad_ps = false) {
                 bins[p - K] = deltaP;
             }
 
+
         }else {
+            double marginal_gain = deltaG;
+            double Gammai = OPT - answer;
+
+            decisions.push_back(make_pair(make_pair(0, Beta), make_pair(marginal_gain, Gammai)));
+
+            rhos.push_back(0);
+
             answer += deltaG;
 
             if(arg_max < K) {
@@ -221,7 +246,38 @@ pair<long double, long double> mod_greedy(bool bad_ps = false) {
                 bins[arg_max - K] = 0;
             }
         }
+
     }
+
+    //summation check
+
+    double sum_cis = 0.0;
+
+    for(int i = 0; i < K; i++) {
+        double Beta = decisions[i].first.second;
+        double alpha_i = (decisions[i].first.first == 1) ? 1.0 : 0.0;
+        double Gammai = decisions[i].second.second; 
+        double rho_i = rhos[i];
+        double ci = (1 - Beta) + alpha_i * rho_i * Beta;
+        sum_cis += ci; 
+    }
+
+    double check = (1 - exp(-sum_cis / K));
+
+    assert(answer >= OPT * check - 0.0001);
+
+    cout << "Expected bound: " << OPT * check << " Achieved: " << answer << endl;
+
+    for(int i = 0; i < K; i++) {
+        cout << "Step " << i << ": ";
+        if(decisions[i].first.first == 1) {
+            cout << "Prediction taken. ";
+        }else {
+            cout << "Greedy taken. ";
+        }
+        cout << ", Rho: " << rhos[i] << endl;
+    }
+    cout << endl;
 
     return make_pair(answer, GreedyVal);
 }   
