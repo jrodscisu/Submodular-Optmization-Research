@@ -1,0 +1,5 @@
+1. Compute the rho value of the predictions
+2. Run the algorithm multiple times for each one of the instances. [done]
+3. Compute the media, mean, for different values of K. [done]
+4. Add a restriction to the rho (rho_i <= 1)
+5. Addint a remark paragraph for with the intution of the assumption 2.4
