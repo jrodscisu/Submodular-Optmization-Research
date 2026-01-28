@@ -10,13 +10,13 @@
 #include <algorithm>
 
 // #define OPT 1000000.0
-#define RUNS 100
-#define INSTANCES 100
-
+#define RUNS 1
+#define INSTANCES 1
+#define BAD_TAKING 0.35
 using namespace std;
 
-long double OPT;
-int N, K;
+long double OPT = 1000000.0;
+int K, bad_percentage = 0;
 vector<int> S;
 vector<long double> f, vs, gs;
 int vCount, gCount;
@@ -34,6 +34,7 @@ long double greedy_with_oph() {
     
     long double greedy;
     long double val;
+    long double greedySum = 0.0;
     int greedyGreed;
     while(size_S < K){
         greedy = 0.0;
@@ -46,7 +47,6 @@ long double greedy_with_oph() {
             }
             if(coin(gen) < greedingChance/greedyGreed)
                 break;
-            // greedyGreed <<= 1;
         }
         val = min((long double)OPT/K , greedy);
 
@@ -64,6 +64,7 @@ long double greedy_with_oph() {
 
         assert(greedy <= prevGreedy);
 
+        greedySum += greedy;
         prevGreedy = greedy;
 
         vs.push_back(val);
@@ -73,18 +74,21 @@ long double greedy_with_oph() {
     }
 
 
-    return f[K];
+    return greedySum;
 }
 
-pair<long double, long double> mod_greedy() {
-    ifstream fin;
+pair<long double, long double> mod_greedy(bool bad_ps = false) {
 
+    ifstream fin;
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> coin(1, 100);
     vector<long double> bins (K, OPT/K);
     vector<long double> os, Gs;
     vector<long double> greedy_factors;
     long double GreedyVal = 0.0;
 
-    fin.open("greedy_factors.in");
+    fin.open("g_marginal_gain.in");
 
     for(int i = 0; i < K; i++) {
         double x;
@@ -97,16 +101,14 @@ pair<long double, long double> mod_greedy() {
     fin.close();
 
     long double answer = 0.0;
+    pair<int, long double> bad_prediction;
+    vector<int> posible_bads;
 
     for(int i = 0; i < K; i++) {
 
-        // for(int j = 0; j < K; j++) {
-        //     cout << bins[j] << " ";
-        // }
-        // cout << endl;
-
         os.clear();
         Gs.clear();
+        bad_prediction = make_pair(-2, -1.0);
 
         //Calculate optimals
 
@@ -125,10 +127,38 @@ pair<long double, long double> mod_greedy() {
             }
         }
 
+        //Allow bad prediction on this step 
+
+        if(bad_ps && coin(gen) <= bad_percentage) {
+            int cont = 0 ;
+            bad_prediction = make_pair(-1, -1.0);
+            posible_bads.clear();
+            for(int j = 0; j < K; j++) {
+                if(Gs[j] > 0) {
+                    posible_bads.push_back(j);
+                }
+                cont++;
+            }
+            for(int j = 0; j < os.size(); j++) {
+                posible_bads.push_back(os[j] + K);
+            }
+
+            // Make bad prediction
+
+            std::uniform_int_distribution<> pcoin(0,  (int)posible_bads.size() - 1);
+            
+            bad_prediction.first = posible_bads[pcoin(gen)];
+            if(bad_prediction.first < K) {
+                bad_prediction.second = Gs[bad_prediction.first];
+            }else {
+                bad_prediction.second = bins[bad_prediction.first - K] * BAD_TAKING;
+            }
+        }
+
         // Choose arg_max
 
         int arg_max = -1;
-        long double max_val = -1;
+        long double max_val = -1.0;
 
         for(int j = 0; j < K; j++) {
             if(Gs[j] > max_val) {
@@ -146,26 +176,39 @@ pair<long double, long double> mod_greedy() {
 
         // Get prediction
 
-        std::random_device rd;
-        std::mt19937 gen(rd());
-        std::uniform_int_distribution<> coin(0, (int)os.size() - 1);
-        std::uniform_int_distribution<> pcoin(1, 100);
+        std::uniform_int_distribution<> pcoin(0, (int)os.size() - 1);
 
-        int p = coin(gen);
-        int g = (arg_max >= K) ? arg_max - K : arg_max;
-        long double deltaP = bins[p];
+        int p = K + pcoin(gen);
+        int g = arg_max;
+        long double deltaP = bins[p - K];
         long double deltaG = max_val;
 
-        // cout << "deltaP: " << deltaP << " os.size(): " << os.size() << ", deltaG: " << deltaG << endl;
+        // Adjust for bad prediction
+
+        if(bad_prediction.first != -1) {
+
+            assert(true);
+
+            p = bad_prediction.first;
+            deltaP = bad_prediction.second;
+        }
+
         assert(deltaP + deltaG > 0);
 
         long double Beta = deltaP / (deltaP + deltaG);
 
-        if(pcoin(gen) < Beta * 100){
+        if(coin(gen) < Beta * 100){
             answer += deltaP;
-            bins[p] = 0;
 
-            // cout << "Optimal selected via prediction: " << p << " with deltaP = " << deltaP << endl;
+            if(p < K) {
+                for(int j = 0; j < K; j++) {
+                    bins[j] = max((long double)0, bins[j] - greedy_factors[p]/K);
+                }
+                greedy_factors[p] = 0;
+            }else { 
+                bins[p - K] = deltaP;
+            }
+
         }else {
             answer += deltaG;
 
@@ -174,26 +217,13 @@ pair<long double, long double> mod_greedy() {
                     bins[j] = max((long double)0, bins[j] - greedy_factors[g]/K);
                 }
                 greedy_factors[g] = 0;
-                // cout << "Greedy selected: " << g << " with deltaG = " << deltaG << endl;
             }else {
                 bins[arg_max - K] = 0;
-                // cout << "Optimal selected via Greedy: " << arg_max - K << " with deltaG = " << deltaG << endl;
             }
         }
-
-        // cout << "Current bins: " << endl;
     }
-    // cout << "Current answer2: " << answer/OPT << " * OPT"<< endl;
 
     return make_pair(answer, GreedyVal);
-
-    // for(int j = 0; j < K; j++) {
-    //     cout << bins[j] << " ";
-    // }
-    // cout << endl;
-
-    // cout << "Final answer: " << answer/OPT << " * OPT"<< endl;
-    // cout << "Greedy value: " << GreedyVal/OPT << " * OPT"<< endl;
 }   
 
 void runner(){
@@ -228,14 +258,16 @@ void runner(){
 
         //Generate a new instance
         OPT = optCoin(gen);
-        long double factors = greedy_with_oph();
+        long double greedyValue = greedy_with_oph();
 
-        if (factors < OPT * greedRatio){
+        if (greedyValue < OPT * greedRatio){
             i--;
             continue;
         }
 
-        fout.open("greedy_factors.in");
+        // Output greedy marginal gains to history and file
+
+        fout.open("g_marginal_gain.in");
 
         history << "Instance " << i << ": OPT = " << OPT << "\n";
 
@@ -248,17 +280,23 @@ void runner(){
 
         fout.close();
 
+        // Run modified greedy
+
         vector<long double> runs_results;
         pair<long double, long double> result;
 
         long double avg = 0.0;
 
         for (int j = 0; j < RUNS; j++) {
-            result = mod_greedy();
+            result = mod_greedy((bad_percentage > 0));
 
             avg += result.first;
             runs_results.push_back(result.first);
         }
+
+        //Compute statistics
+
+        sort(runs_results.begin(), runs_results.end());
 
         avg /= (RUNS * OPT);
 
@@ -266,7 +304,7 @@ void runner(){
 
         avgOfMedians +=  runs_results[RUNS / 2]/OPT;
 
-        run_avgs.push_back(make_pair(avg, make_pair(factors/OPT, OPT)));
+        run_avgs.push_back(make_pair(avg, make_pair(greedyValue/OPT, OPT)));
     }
 
     sort(run_avgs.begin(), run_avgs.end());
@@ -284,14 +322,8 @@ void runner(){
 
     avg_improvement /= INSTANCES;
 
-    // history << "Mean Min Improvement: " << mini << " when Greedy Value = " << results_mini.second/OPT << ", and Our result = " << results_mini.first/OPT << endl;
-    // history << "Max Improvement: " << maxi << " when Greedy Value = " << results_maxi.second/OPT << ", and Our result = " << results_maxi.first/OPT << endl;
-    // history << "Avg Improvement: " << avg << endl << endl;
+    // Output results
 
-    // cout << "Min Improvement: " << mini << " when Greedy Value = " << results_mini.second/OPT << ", and Our result = " << results_mini.first/OPT << endl;
-    // cout << "Max Improvement: " << maxi << " when Greedy Value = " << results_maxi.second/OPT << ", and Our result = " << results_maxi.first/OPT << endl;
-    // cout << "Avg Improvement: " << avg << endl;
-    
     history << "Mean of Averages: " << meanOfAvgs << endl;
     history << "Median of Averages: " << medianOfAvgs << endl;
     history << "Average of Medians: " << avgOfMedians / INSTANCES << endl;
@@ -310,10 +342,14 @@ void runner(){
 
 int main(int argc, char * argv[]) {
 
-    if(argc < 1){
+    if(argc < 2){
         exit(-1);
     }else{
         K = atoi(argv[1]);
+
+        if(argc > 2){
+            bad_percentage = atoi(argv[2]);
+        }
     }
 
     runner();
