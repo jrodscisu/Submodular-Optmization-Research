@@ -12,7 +12,7 @@
 
 // #define OPT 1000000.0
 #define RUNS 100
-#define INSTANCES 100
+#define INSTANCES 1
 #define BAD_TAKING 0.01
 #define e 2.71828
 
@@ -40,14 +40,35 @@ long double greedy_with_oph() {
     long double greedySum = 0.0;
     long double bin_size = OPT / K;
     while(size_S < K){
-        greedy = 0.0;
+        // greedy = 0.0;
         greedy = bin_size;
         val = 0.0;
-        while(greedy + (OPT - f[size_S])/K + f[size_S] <= OPT && greedy + (OPT - f[size_S])/K <= prevGreedy){
-            greedy += (OPT - f[size_S])/K;
-            if(coin(gen) >= greedingChance)
+        // while(greedy + (OPT - f[size_S])/K + f[size_S] <= OPT && greedy + (OPT - f[size_S])/K <= prevGreedy){
+        //     greedy += (OPT - f[size_S])/K;
+        //     if(coin(gen) >= greedingChance)
+        //         break;
+        // }
+
+        while(true){
+            if(greedy < (OPT - f[size_S])/K){
+                // cout << "here" << endl;
+                greedy = (OPT - f[size_S])/K;
+                continue;
+            }
+            if(bin_size - greedy/K > greedy){
+                cout << "Wrong solution" << endl;
+                exit(-1);
+            }
+            if(greedy + (greedy - (bin_size - greedy/K))/2 > prevGreedy){
                 break;
+            }
+
+            greedy += (greedy - (bin_size - greedy/K))/2;
+            if(coin(gen) <= 50){
+                break;
+            }
         }
+
         val = min((long double)OPT/K , greedy);
 
         // if(coin(gen)  <= 100 * (val/(val + greedy))){
@@ -63,6 +84,9 @@ long double greedy_with_oph() {
 
         bin_size -= greedy/K;
 
+        if(prevGreedy < greedy){
+            cout << prevGreedy << ' ' << greedy << endl;
+        }
         assert(greedy <= prevGreedy);
 
         greedySum += greedy;
