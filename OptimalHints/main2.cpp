@@ -226,8 +226,8 @@ pair<long double, long double> mod_greedy(bool bad_ps = false) {
         std::uniform_int_distribution<> pcoin2(0, (int)validGs.size() - 1);
 
         int p = pcoin(gen);// [Uncomment for greedy + optimal]
-        // int p = K + pcoin(gen); [Uncomment for optimal]
-        // int p = pcoin2(gen); [Uncomment for greedy]
+        // int p = K + pcoin(gen); //[Uncomment for optimal]
+        // int p = pcoin2(gen); //[Uncomment for greedy]
 
         if(p < K) {
             while(Gs[p] <= 0){
@@ -260,7 +260,7 @@ pair<long double, long double> mod_greedy(bool bad_ps = false) {
         // history_buffer += "\n";
 
         
-        // Beta = 0; [Uncomment for no hints]
+        // Beta = 0; //[Uncomment for no hints]
         if(coin(gen) < Beta * 100){
             double marginal_gain = deltaP;
             double Gammai = OPT - answer;
@@ -364,6 +364,7 @@ void runner(){
 
     ofstream fout;
     ofstream history;
+    ifstream instance_r;
     time_t now = time(0);
     tm* ltm = localtime(&now);
     char buffer[32];
@@ -372,7 +373,8 @@ void runner(){
 
     vector<pair<long double, pair<long double, long double>>> run_avgs;
     
-    history.open("history.out", ios::app);
+    history.open("history_" + to_string(K) + ".out", ios::app);
+    instance_r.open("instances_" + to_string(K) + ".out");
 
     history << "========================\n";
     history << "New Run at " << buffer << "\n";
@@ -380,31 +382,40 @@ void runner(){
 
     for (int i = 0; i < INSTANCES; i++){
         f.clear();
-        gs.clear();
+        gs.resize(K);
         vs.clear();
         S.clear();
         vCount = 0;
         gCount = 0;
 
-        //Generate a new instance
-        OPT = optCoin(gen);
-        long double greedyValue = greedy_with_oph();
+        long double greedyValue = 0.0;
+        //Generate a new instance 
+        // OPT = optCoin(gen);
 
-        if (greedyValue < OPT * greedRatio){
-            i--;
-            continue;
-        }
+        // greedyValue = greedy_with_oph();
+        // if (greedyValue < OPT * greedRatio){
+        //     i--;
+        //     continue;
+        // }
+
+
 
         // Output greedy marginal gains to history and file
 
         fout.open("g_marginal_gain.in");
 
+        instance_r >> OPT;
 
         history << "Instance " << i << ": OPT = " << OPT << "\n";
+        // history << OPT << "\n";
 
         for(int j = 0; j < K; j++) {
+            instance_r >> gs[j];
+
             fout << gs[j] << " ";
             history << gs[j] << " ";
+
+            greedyValue += gs[j];
         }
         fout << endl;
         history << endl;
@@ -459,11 +470,11 @@ void runner(){
 
     // Output results
 
-    history << "Mean of Averages: " << meanOfAvgs << endl;
-    history << "Median of Averages: " << medianOfAvgs << endl;
-    history << "Average of Medians: " << avgOfMedians / INSTANCES << endl;
-    history << "Average Improvement: " << avg_improvement << endl;
-    history << "Averege Greedy Value: " << meanOfAvgs - avg_improvement << endl << endl;
+    // history << "Mean of Averages: " << meanOfAvgs << endl;
+    // history << "Median of Averages: " << medianOfAvgs << endl;
+    // history << "Average of Medians: " << avgOfMedians / INSTANCES << endl;
+    // history << "Average Improvement: " << avg_improvement << endl;
+    // history << "Averege Greedy Value: " << meanOfAvgs - avg_improvement << endl << endl;
 
     cout << "Mean of Averages: " << meanOfAvgs << endl;
     cout << "Median of Averages: " << medianOfAvgs << endl;
