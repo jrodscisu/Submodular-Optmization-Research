@@ -19,7 +19,7 @@ plt.plot(k_values, performance_greedy,
 
 # Plot Line 2 (Method B)
 plt.plot(k_values, performance_mod_greedy, 
-         marker='s', linestyle='--', color='blue', label= 'Greedy with Predictions', linewidth=2)
+         marker='s', linestyle='--', color='blue', label= 'Greedy with Optimal Predictions', linewidth=2)
 
 # 3. Add Labels, Title, and Legend
 plt.xlabel('K', fontsize=12)
@@ -53,12 +53,12 @@ plt.plot(k_values, performance_greedy,
 
 # Plot Line 2 (Method B)
 plt.plot(k_values, performance_mod_greedy, 
-         marker='s', linestyle='--', color='blue', label= 'Greedy with Predictions', linewidth=2)
+         marker='s', linestyle='--', color='blue', label= 'Greedy with Bad Predictions', linewidth=2)
 
 # 3. Add Labels, Title, and Legend
 plt.xlabel('K', fontsize=12)
 plt.ylabel('Approximation ratio', fontsize=12)
-plt.title('Approximation ratiovs. K Parameter', fontsize=14)
+plt.title('Approximation ratio vs. K Parameter', fontsize=14)
 plt.legend()
 plt.grid(True, linestyle=':', alpha=0.6)
 
@@ -80,7 +80,9 @@ per_values = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]  # The X-ax
 performance_greedy = [0.661012, 0.661012,0.661012,0.661012,0.661012,0.661012,0.661012,0.661012,0.661012,0.661012,0.661012]
 
 # The Y-axis values for the second line
-performance_mod_greedy = [0.7211, 0.7149, 0.7084, 0.7008, 0.6947, 0.6871, 0.6808, 0.6733, 0.6662, 0.6591, 0.6521]
+performance_mod_greedy_optANDgreedy = [0.7211, 0.7149, 0.7084, 0.7008, 0.6947, 0.6871, 0.6808, 0.6733, 0.6662, 0.6591, 0.6521]
+
+performance_mod_greedy_optOnly= [0.8008, 0.7832, 0.7669, 0.7522, 0.7372, 0.7214, 0.7070, 0.6929, 0.6786, 0.6650, 0.6518]
 
 # 2. Create the Plot
 plt.figure(figsize=(8, 6))
@@ -90,8 +92,11 @@ plt.plot(per_values, performance_greedy,
          marker='o', linestyle='-', color='red', label='Greedy', linewidth=2)
 
 # Plot Line 2 (Method B)
-plt.plot(per_values, performance_mod_greedy, 
-         marker='s', linestyle='--', color='blue', label= 'Greedy with Predictions', linewidth=2)
+plt.plot(per_values, performance_mod_greedy_optANDgreedy, 
+         marker='s', linestyle='-.', color='blue', label= 'Greedy with all Type of Predictions', linewidth=2)
+
+plt.plot(per_values, performance_mod_greedy_optOnly, 
+         marker='^', linestyle=':', color='green', label= 'Greedy with only Optimal Predictions', linewidth=2)
 
 # 3. Add Labels, Title, and Legend
 plt.xlabel('Pr. of getting a bad prediction', fontsize=12)
@@ -102,6 +107,6 @@ plt.grid(True, linestyle=':', alpha=0.6)
 
 # 4. Save and Show
 plt.tight_layout()
-# plt.ylim(0, 1.0)
+plt.ylim(0, 1.0)
 plt.savefig('mixed_predictions.png', dpi=300)
 plt.show()

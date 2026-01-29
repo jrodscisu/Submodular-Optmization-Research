@@ -219,14 +219,14 @@ pair<long double, long double> mod_greedy(bool bad_ps = false) {
 
         // Get prediction
 
-        std::uniform_int_distribution<> pcoin(0, K + (int)os.size() - 1); //[Uncomment for greedy + optimal]
-        // std::uniform_int_distribution<> pcoin(0, (int)os.size() - 1); // [Uncomment for opt]
+        // std::uniform_int_distribution<> pcoin(0, K + (int)os.size() - 1); //[Uncomment for greedy + optimal]
+        std::uniform_int_distribution<> pcoin(0, (int)os.size() - 1); // [Uncomment for opt]
 
 
         std::uniform_int_distribution<> pcoin2(0, (int)validGs.size() - 1);
 
-        int p = pcoin(gen);// [Uncomment for greedy + optimal]
-        // int p = K + pcoin(gen); //[Uncomment for optimal]
+        // int p = pcoin(gen);// [Uncomment for greedy + optimal]
+        int p = K + pcoin(gen); //[Uncomment for optimal]
         // int p = pcoin2(gen); //[Uncomment for greedy]
 
         if(p < K) {
