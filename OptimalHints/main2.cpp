@@ -12,7 +12,7 @@
 
 // #define OPT 1000000.0
 #define RUNS 100
-#define INSTANCES 1
+#define INSTANCES 100
 #define BAD_TAKING 0.01
 #define e 2.71828
 
@@ -82,12 +82,15 @@ long double greedy_with_oph() {
             gCount++;
         }
 
-        bin_size -= greedy/K;
 
         if(prevGreedy < greedy){
             cout << prevGreedy << ' ' << greedy << endl;
         }
         assert(greedy <= prevGreedy);
+        assert(greedy >= bin_size);
+        assert(greedy >= (OPT - f[size_S])/K);
+
+        bin_size -= greedy/K;
 
         greedySum += greedy;
         prevGreedy = greedy;
@@ -165,30 +168,6 @@ pair<long double, long double> mod_greedy(bool bad_ps = false) {
         //Allow bad prediction on this step 
 
         if(bad_ps && coin(gen) <= bad_percentage) {
-            // int cont = 0 ;
-            // bad_prediction = make_pair(-1, -1.0);
-            // posible_bads.clear();
-            // for(int j = 0; j < K; j++) {
-            //     if(Gs[j] > 0) {
-            //         posible_bads.push_back(j);
-            //     }
-            //     cont++;
-            // }
-            // for(int j = 0; j < os.size(); j++) {
-            //     posible_bads.push_back(os[j] + K);
-            // }
-
-            // // Make bad prediction
-
-            // std::uniform_int_distribution<> pcoin(0,  (int)posible_bads.size() - 1);
-            
-            // bad_prediction.first = posible_bads[pcoin(gen)];
-            // if(bad_prediction.first < K) {
-            //     bad_prediction.second = Gs[bad_prediction.first];
-            // }else {
-            //     bad_prediction.second = bins[bad_prediction.first - K] * BAD_TAKING;
-            // }
-
             posible_bads.clear();
 
             for(int j = 0;j < K; j++){
@@ -209,7 +188,11 @@ pair<long double, long double> mod_greedy(bool bad_ps = false) {
         int arg_max = -1;
         long double max_val = -1.0;
             //From greedy
+        vector<double> validGs;
         for(int j = 0; j < K; j++) {
+            if(Gs[j] > 0){
+                validGs.push_back(j);
+            }
             if(Gs[j] > max_val) {
                 max_val = Gs[j];
                 arg_max = j;
@@ -236,11 +219,24 @@ pair<long double, long double> mod_greedy(bool bad_ps = false) {
 
         // Get prediction
 
-        std::uniform_int_distribution<> pcoin(0, (int)os.size() - 1);
+        std::uniform_int_distribution<> pcoin(0, K + (int)os.size() - 1); //[Uncomment for greedy + optimal]
+        // std::uniform_int_distribution<> pcoin(0, (int)os.size() - 1); // [Uncomment for opt]
 
-        int p = K + pcoin(gen);
+
+        std::uniform_int_distribution<> pcoin2(0, (int)validGs.size() - 1);
+
+        int p = pcoin(gen);// [Uncomment for greedy + optimal]
+        // int p = K + pcoin(gen); [Uncomment for optimal]
+        // int p = pcoin2(gen); [Uncomment for greedy]
+
+        if(p < K) {
+            while(Gs[p] <= 0){
+                p = validGs[pcoin2(gen)];
+            }
+        }
+
         int g = arg_max;
-        long double deltaP = bins[os[p - K]];
+        long double deltaP = (p >= K ) ? bins[os[p - K]] : Gs[p];
         long double deltaG = max_val;
 
         // Adjust for bad prediction
@@ -264,7 +260,7 @@ pair<long double, long double> mod_greedy(bool bad_ps = false) {
         // history_buffer += "\n";
 
         
-
+        // Beta = 0; [Uncomment for no hints]
         if(coin(gen) < Beta * 100){
             double marginal_gain = deltaP;
             double Gammai = OPT - answer;
