@@ -6,7 +6,8 @@ k_values = [20, 30, 40, 50, 60]  # The X-axis (K)
 
 # The Y-axis values for the first line
 performance_greedy = [0.661, 0.6496, 0.6449, 0.6424, 0.6406]
-performance_mod_greedy = [0.800, 0.7929, 0.7921, 0.7903, 0.7888]
+performance_mod_greedy_opt = [0.800, 0.7929, 0.7921, 0.7903, 0.7888]
+performance_mod_greedy_bad = [0.6521, 0.6439, 0.6409, 0.6399, 0.6389]
 
 # The Y-axis values for the second line
 
@@ -15,15 +16,18 @@ plt.figure(figsize=(8, 6))
 
 # Plot Line 1 (Method A)
 plt.plot(k_values, performance_greedy, 
-         marker='o', linestyle='-', color='red', label='Greedy', linewidth=2)
+         marker='o', linestyle='-', color='blue', label='Greedy', linewidth=2)
 
 # Plot Line 2 (Method B)
-plt.plot(k_values, performance_mod_greedy, 
-         marker='s', linestyle='--', color='blue', label= 'Greedy with Optimal Predictions', linewidth=2)
+plt.plot(k_values, performance_mod_greedy_opt, 
+         marker='s', linestyle='--', color='green', label= 'Greedy with Optimal Hints', linewidth=2)
+
+plt.plot(k_values, performance_mod_greedy_bad, 
+         marker='s', linestyle='--', color='red', label= 'Greedy with Bad Hints', linewidth=2)
 
 # 3. Add Labels, Title, and Legend
 plt.xlabel('K', fontsize=12)
-plt.ylabel('Approximation ratio', fontsize=12)
+plt.ylabel('Average Median of Approximation ratio', fontsize=12)
 plt.title('Approximation ratio vs. K Parameter', fontsize=14)
 plt.legend()
 plt.grid(True, linestyle=':', alpha=0.6)
@@ -31,42 +35,42 @@ plt.grid(True, linestyle=':', alpha=0.6)
 # 4. Save and Show
 plt.tight_layout()
 # plt.ylim(0, 1.0)
-plt.savefig('hints_all_optimal.png', dpi=300)
+plt.savefig('ks_app_ratio.png', dpi=300)
 plt.show()
 
 ##################################################################################
 
-k_values = [20, 30, 40, 50, 60]  # The X-axis (K)
+# k_values = [20, 30, 40, 50, 60]  # The X-axis (K)
 
-# The Y-axis values for the first line
-performance_greedy = [0.6610, 0.6496, 0.6449, 0.6424, 0.6406]
+# # The Y-axis values for the first line
+# performance_greedy = [0.6610, 0.6496, 0.6449, 0.6424, 0.6406]
 
-# The Y-axis values for the second line
-performance_mod_greedy = [0.6521, 0.6439, 0.6409, 0.6399, 0.6389]
+# # The Y-axis values for the second line
+# performance_mod_greedy = [0.6521, 0.6439, 0.6409, 0.6399, 0.6389]
 
-# 2. Create the Plot
-plt.figure(figsize=(8, 6))
+# # 2. Create the Plot
+# plt.figure(figsize=(8, 6))
 
-# Plot Line 1 (Method A)
-plt.plot(k_values, performance_greedy, 
-         marker='o', linestyle='-', color='red', label='Greedy', linewidth=2)
+# # Plot Line 1 (Method A)
+# plt.plot(k_values, performance_greedy, 
+#          marker='o', linestyle='-', color='red', label='Greedy', linewidth=2)
 
-# Plot Line 2 (Method B)
-plt.plot(k_values, performance_mod_greedy, 
-         marker='s', linestyle='--', color='blue', label= 'Greedy with Bad Predictions', linewidth=2)
+# # Plot Line 2 (Method B)
+# plt.plot(k_values, performance_mod_greedy, 
+#          marker='s', linestyle='--', color='blue', label= 'Greedy with Bad Predictions', linewidth=2)
 
-# 3. Add Labels, Title, and Legend
-plt.xlabel('K', fontsize=12)
-plt.ylabel('Approximation ratio', fontsize=12)
-plt.title('Approximation ratio vs. K Parameter', fontsize=14)
-plt.legend()
-plt.grid(True, linestyle=':', alpha=0.6)
+# # 3. Add Labels, Title, and Legend
+# plt.xlabel('K', fontsize=12)
+# plt.ylabel('Approximation ratio', fontsize=12)
+# plt.title('Approximation ratio vs. K Parameter', fontsize=14)
+# plt.legend()
+# plt.grid(True, linestyle=':', alpha=0.6)
 
-# 4. Save and Show
-plt.tight_layout()
-# plt.ylim(0, 1.0)
-plt.savefig('100_bad_predictions.png', dpi=300)
-plt.show()
+# # 4. Save and Show
+# plt.tight_layout()
+# # plt.ylim(0, 1.0)
+# plt.savefig('100_bad_predictions.png', dpi=300)
+# plt.show()
 
 
 
@@ -93,20 +97,20 @@ plt.plot(per_values, performance_greedy,
 
 # Plot Line 2 (Method B)
 plt.plot(per_values, performance_mod_greedy_optANDgreedy, 
-         marker='s', linestyle='-.', color='blue', label= 'Greedy with all Type of Predictions', linewidth=2)
+         marker='s', linestyle='-.', color='blue', label= 'Greedy with all Type of Hints', linewidth=2)
 
 plt.plot(per_values, performance_mod_greedy_optOnly, 
-         marker='^', linestyle=':', color='green', label= 'Greedy with only Optimal Predictions', linewidth=2)
+         marker='^', linestyle=':', color='green', label= 'Greedy with Optimal and Bad Hints', linewidth=2)
 
 # 3. Add Labels, Title, and Legend
 plt.xlabel('Pr. of getting a bad prediction', fontsize=12)
-plt.ylabel('Approximation ratio(Accuracy)', fontsize=12)
+plt.ylabel('Average Median of Approximation ratio', fontsize=12)
 plt.title('Approximation ratio vs. Pr. of getting a bad predictions', fontsize=14)
 plt.legend()
 plt.grid(True, linestyle=':', alpha=0.6)
 
 # 4. Save and Show
 plt.tight_layout()
-plt.ylim(0, 1.0)
-plt.savefig('mixed_predictions.png', dpi=300)
+# plt.ylim(0, 1.0)
+plt.savefig('pr_vs_app_ratio.png', dpi=300)
 plt.show()
