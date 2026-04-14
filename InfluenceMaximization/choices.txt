@@ -1,0 +1,51 @@
+Enter prediction: 579
+######For k = 10 Selected: 103 out of p: 579 and g: 103
+Enter prediction: 1286
+######For k = 10 Selected: 1286 out of p: 1286 and g: 105
+Enter prediction: 579
+######For k = 10 Selected: 105 out of p: 579 and g: 105
+Enter prediction: 579
+######For k = 10 Selected: 281 out of p: 579 and g: 281
+Enter prediction: 579
+######For k = 10 Selected: 161 out of p: 579 and g: 161
+Enter prediction: 579
+######For k = 10 Selected: 1271 out of p: 579 and g: 1271
+Enter prediction: 1039
+######For k = 10 Selected: 4035 out of p: 1039 and g: 4035
+Enter prediction: 1039
+######For k = 10 Selected: 1039 out of p: 1039 and g: 290
+Enter prediction: 110
+######For k = 10 Selected: 110 out of p: 110 and g: 290
+Enter prediction: Enter prediction: 579
+######For k = 10 Selected: 103 out of p: 579 and g: 103
+S = {103, 
+Enter prediction: 1286
+######For k = 10 Selected: 297 out of p: 1286 and g: 297
+S = {103, 297, 
+Enter prediction: 1286
+######For k = 10 Selected: 1286 out of p: 1286 and g: 1286
+S = {103, 297, 1286, 
+Enter prediction: 579
+######For k = 10 Selected: 281 out of p: 579 and g: 281
+S = {103, 281, 297, 1286, 
+Enter prediction: 579
+######For k = 10 Selected: 105 out of p: 579 and g: 105
+S = {103, 105, 281, 297, 1286, 
+Enter prediction: 579
+######For k = 10 Selected: 1291 out of p: 579 and g: 1291
+S = {103, 105, 281, 297, 1286, 1291, 
+Enter prediction: 579
+######For k = 10 Selected: 3139 out of p: 579 and g: 3139
+S = {103, 105, 281, 297, 1286, 1291, 3139, 
+Enter prediction: 579
+######For k = 10 Selected: 79 out of p: 579 and g: 79
+S = {79, 103, 105, 281, 297, 1286, 1291, 3139, 
+Enter prediction: 579
+######For k = 10 Selected: 579 out of p: 579 and g: 1274
+S = {79, 103, 105, 281, 297, 579, 1286, 1291, 3139, 
+Enter prediction: 1039
+######For k = 10 Selected: 1039 out of p: 1039 and g: 1274
+S = {79, 103, 105, 281, 297, 579, 1039, 1286, 1291, 3139, 
+79 103 105 281 297 579 1039 1286 1291 3139 
+Result: 34.4737
+Enter prediction: 

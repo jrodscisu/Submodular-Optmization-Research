@@ -10,7 +10,6 @@
 #include <cmath>
 #include <algorithm>
 
-// #define OPT 1000000.0
 #define RUNS 100
 #define INSTANCES 100
 #define BAD_TAKING 0.01
@@ -28,6 +27,7 @@ long double greedRatio = 0.63;
 int greedingChance = 75;
 
 long double greedy_with_oph() {
+    
     int size_S = 0;
     double prevGreedy = OPT;
     std::random_device rd;
@@ -36,22 +36,13 @@ long double greedy_with_oph() {
     f.push_back(0);
     
     long double greedy;
-    long double val;
     long double greedySum = 0.0;
     long double bin_size = OPT / K;
     while(size_S < K){
-        // greedy = 0.0;
         greedy = bin_size;
-        val = 0.0;
-        // while(greedy + (OPT - f[size_S])/K + f[size_S] <= OPT && greedy + (OPT - f[size_S])/K <= prevGreedy){
-        //     greedy += (OPT - f[size_S])/K;
-        //     if(coin(gen) >= greedingChance)
-        //         break;
-        // }
 
         while(true){
             if(greedy < (OPT - f[size_S])/K){
-                // cout << "here" << endl;
                 greedy = (OPT - f[size_S])/K;
                 continue;
             }
@@ -69,23 +60,9 @@ long double greedy_with_oph() {
             }
         }
 
-        val = min((long double)OPT/K , greedy);
+        f.push_back(f[size_S] + greedy);
+        S.push_back(0);
 
-        // if(coin(gen)  <= 100 * (val/(val + greedy))){
-        if(false){
-            f.push_back(f[size_S] + val);
-            S.push_back(1);
-            vCount++;
-        }else{
-            f.push_back(f[size_S] + greedy);
-            S.push_back(0);
-            gCount++;
-        }
-
-
-        if(prevGreedy < greedy){
-            cout << prevGreedy << ' ' << greedy << endl;
-        }
         assert(greedy <= prevGreedy);
         assert(greedy >= bin_size);
         assert(greedy >= (OPT - f[size_S])/K);
@@ -95,12 +72,10 @@ long double greedy_with_oph() {
         greedySum += greedy;
         prevGreedy = greedy;
 
-        vs.push_back(val);
         gs.push_back(greedy);
 
         size_S++;
     }
-
 
     return greedySum;
 }
