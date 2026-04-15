@@ -1,0 +1,40 @@
+[package]
+authors = ["J David Smith <emallson@atlanis.net>"]
+build = "build.rs"
+license = "BSD-3-Clause"
+name = "capngraph"
+version = "0.3.2"
+
+[build-dependencies]
+capnpc = "0.12"
+
+[dependencies]
+capnp = "0.12"
+petgraph = "0.4.1"
+bit-set = { version = "0.4", optional = true }
+colored = { version = "1.4.1", optional = true }
+docopt = { version = "0.6", optional = true }
+rustc-serialize = { version = "0.3", optional = true }
+serde = { version = "0.9.12", optional = true }
+serde_derive = { version = "0.9.12", optional = true }
+serde_json = { version = "0.9.9", optional = true }
+capngraph = { version = "0.3.1", git = "https://github.com/emallson/capngraph.git" }
+
+[features]
+default = []
+bins = ["bit-set", "colored", "docopt", "rustc-serialize", "serde", "serde_derive", "serde_json"]
+
+[[bin]]
+name = "convert"
+path = "src/bin/convert.rs"
+required-features = ["bins"]
+
+[[bin]]
+name = "deconvert"
+path = "src/bin/deconvert.rs"
+required-features = ["bins"]
+
+[[bin]]
+name = "describe-graph"
+path = "src/bin/describe-graph.rs"
+required-features = ["bins"]

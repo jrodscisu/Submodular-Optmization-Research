@@ -5,11 +5,17 @@ using namespace std;
 map<set<int>, double> memory_map; 
 
 template <typename T>
+struct Edge{
+    T target;
+    double pr;
+};
+
+template <typename T>
 class Graph{
     public:
 
     int size;
-    vector<vector<T>> adjList;
+    vector<vector<Edge<T>>> adjList;
     vector<int> d, t;
     vector<double> dd;
 
@@ -18,30 +24,26 @@ class Graph{
         d.assign(n, 0);
         t.resize(n);
         dd.resize(n);
-        adjList.assign(n, vector<T> ());
+        adjList.assign(n, vector<Edge<T>> ());
 
     }
 
-    void addEdge(T u, T v){
+    void addEdge(T u, T v, double pr){
 
-        adjList[u].push_back(v);
-        adjList[v].push_back(u);
+        adjList[u].push_back({v, pr});
+        // adjList[v].push_back({u, pr});
     
-        d[u]++;
         d[v]++;
+        // d[u]++;
     }
 };
 
-struct Edge{
-    int target;
-    double probability;
-};
 
 class IMM{
 private:
 
     int num_nodes;
-    vector<vector<Edge>> reverse_graph;
+    vector<vector<Edge<int>>> reverse_graph;
     vector<vector<int>> RR_sets;
     vector<vector<int>> node_to_rr_forMG;
     vector<int> degrees_forMG;
@@ -81,13 +83,13 @@ public:
             int u = q.front();
             q.pop();
 
-            for(const Edge & edge: reverse_graph[u]){
+            for(const Edge<int> & edge: reverse_graph[u]){
                 int v = edge.target;
 
                 //Modified to acknowledge node removal
 
                 if(!visited[v]) {
-                    if(dist(rng) <= edge.probability) {
+                    if(dist(rng) <= edge.pr) {
                         visited[v] = true;
                         q.push(v);
                         rr_set.push_back(v);
@@ -97,7 +99,6 @@ public:
         }
 
         return rr_set;
-
     }
 
     vector<int> node_selection(const vector<vector<int> > & rr_sets, int k){
@@ -309,7 +310,7 @@ public:
 
 
 
-set<int> degreeDiscountIC(Graph<int> & G, int k, int p){
+vector<int> degreeDiscountIC(Graph<int> & G, int k, int p){
     set<int> S;
     priority_queue<pair<double, int> > VmS;
 
@@ -332,7 +333,7 @@ set<int> degreeDiscountIC(Graph<int> & G, int k, int p){
 
         S.insert(u);
 
-        for(auto v : G.adjList[u]){
+        for(auto [v, pr] : G.adjList[u]){
             G.t[v]++;
             G.dd[v] = (double)G.d[v] - 2.0 * G.t[v] - (double)(G.d[v] - G.t[v]) * G.t[v] * ((double)p/100);
 
@@ -340,10 +341,12 @@ set<int> degreeDiscountIC(Graph<int> & G, int k, int p){
         }
     }
 
-    return S;
+    vector<int> Sv(S.begin(), S.end());
+
+    return Sv;
 }
 
-int IC(const Graph<int> & G, const vector<int> & S, double p){
+int IC(const Graph<int> & G, const vector<int> & S){
 
     thread_local std::random_device rd;  
     thread_local std::mt19937 gen(rd()); 
@@ -364,11 +367,11 @@ int IC(const Graph<int> & G, const vector<int> & S, double p){
         ans++;
         int u = active.front(); active.pop();
 
-        for(auto v: G.adjList[u]){
+        for(auto [v, pr]: G.adjList[u]){
             if(influenced[v])
                 continue;
 
-            if(coin(gen) <= p){
+            if(coin(gen) <= pr){
                 influenced[v] = 1;
                 active.push(v);
             }
@@ -378,47 +381,12 @@ int IC(const Graph<int> & G, const vector<int> & S, double p){
     return ans;
 }
 
-int IC(const Graph<int> & G, const set<int> & S, int p){
-
-    thread_local std::random_device rd;  
-    thread_local std::mt19937 gen(rd()); 
-    thread_local std::uniform_int_distribution coin(1, 100); 
-
-    vector<uint8_t> influenced(G.size, 0);
-
-    queue<int> active;
-
-    for(auto x: S){
-        influenced[x] = 1;
-        active.push(x);
-    }
-
-    int ans = 0;
-
-    while(!active.empty()){
-        ans++;
-        int u = active.front(); active.pop();
-
-        for(auto v: G.adjList[u]){
-            if(influenced[v])
-                continue;
-
-            if(coin(gen) <= p){
-                influenced[v] = 1;
-                active.push(v);
-            }
-        }
-    }
-
-    return ans;
-}
-
-double monte_carlo_IC(vector<int> & seeds, Graph<int> &G, double p, int reps){
+double monte_carlo_IC(vector<int> & seeds, Graph<int> &G, int reps){
     double sum = 0.0;
 
     #pragma omp parallel for reduction(+:sum)
     for(int i = 0; i < reps; i++){
-        sum += IC(G, seeds, p);
+        sum += IC(G, seeds);
     }
 
     return sum / reps;
@@ -429,6 +397,7 @@ Graph<int> readGraph(string filename){
     file.open(filename);
 
     int n, m;
+    double p;
 
     file >> n >> m;
 
@@ -439,7 +408,7 @@ Graph<int> readGraph(string filename){
     int u, v;
 
     for(int i = 0; i < m; i++){
-        file >> u >> v;
+        file >> u >> v >> p;
 
         if(compress.find(u) == compress.end()){
             compress.insert({u, compress.size()});
@@ -449,69 +418,16 @@ Graph<int> readGraph(string filename){
             compress.insert({v, compress.size()});
         }
 
-        G.addEdge(compress[u], compress[v]); 
+        // G.addEdge(compress[u], compress[v], p); 
+
+        // Zero-idx solution
+
+        G.addEdge(u, v, p); 
     }
 
     file.close();
 
     return G;
-}
-
-set<int> OptimalHints_fakeGreedy(Graph<int> & G, int k, set<int> OPT){
-
-
-    std::random_device rd;  
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution coin(0, 100);
-
-    set<int>::iterator it;
-
-    set<int> S;
-    priority_queue<pair<double, int> > VmS;
-
-    for(int i = 0; i < G.size; i++){
-
-        G.dd[i] = G.d[i];
-        VmS.push({G.dd[i], i});
-    }
-
-    for(int i = 0; i < k; i++){
-
-        std::uniform_int_distribution<> index(0, OPT.size() - 1);
-
-        auto [val, g] = VmS.top(); VmS.pop();
-
-        while(S.find(g) != S.end() || G.dd[g] != val){
-            val = VmS.top().first; 
-            g = VmS.top().second;
-            VmS.pop();
-        }
-
-        int o = g;
-
-        while(!OPT.empty() && o == g){
-            it = OPT.begin();
-            int r_steps = index(gen);
-
-            while(r_steps--)
-                it++;
-            
-            if(OPT.size() == 1)
-                break;
-            
-            o = *it;
-        }
-        int v = (coin(gen) * (G.dd[o] + G.dd[g]) < 100 * (G.dd[o])) ? o : g;
-
-        S.insert(v);
-
-        for(auto u : G.adjList[v]){
-            G.dd[u]--;
-            VmS.push({G.dd[u], u});
-        }
-    }
-
-    return S;
 }
 
 pair<set<int> , double> OptimalHints_OPT_k(Graph<int> & G, int k, double pr, int MC_reps, IMM & im){
@@ -562,7 +478,7 @@ pair<set<int> , double> OptimalHints_OPT_k(Graph<int> & G, int k, double pr, int
         S_prime.push_back(p);
         set<int> temp(S_prime.begin(), S_prime.end());
         if(memory_map.find(temp) == memory_map.end()) {
-            mp = monte_carlo_IC(S_prime, G, pr, MC_reps);
+            mp = monte_carlo_IC(S_prime, G, MC_reps);
             memory_map.insert({temp, mp});
         }else {
             mp = memory_map[temp];
@@ -573,7 +489,7 @@ pair<set<int> , double> OptimalHints_OPT_k(Graph<int> & G, int k, double pr, int
             S_prime.push_back(g);
             set<int> temp2(S_prime.begin(), S_prime.end());
             if(memory_map.find(temp2) == memory_map.end()) {
-                mg = monte_carlo_IC(S_prime, G, pr, MC_reps);
+                mg = monte_carlo_IC(S_prime, G, MC_reps);
                 memory_map.insert({temp2, mg});
             }else{
                 mg = memory_map[temp2];
@@ -608,7 +524,7 @@ pair<set<int> , double> OptimalHints_OPT_k(Graph<int> & G, int k, double pr, int
 
         //Update greedyDiscount
 
-        for(auto u : G.adjList[v]){
+        for(auto [u, pr] : G.adjList[v]){
             G.t[u]++;
             G.dd[u] = (double)G.d[u] - 2.0 * G.t[u] - (double)(G.d[u] - G.t[u]) * G.t[u] * p;
 
@@ -666,7 +582,7 @@ pair<set<int> , double> OptimalHints_iterative(Graph<int> & G, int k, double pr,
         S_prime.push_back(p);
         set<int> temp(S_prime.begin(), S_prime.end());
         if(memory_map.find(temp) == memory_map.end()) {
-            mp = monte_carlo_IC(S_prime, G, pr, MC_reps);
+            mp = monte_carlo_IC(S_prime, G, MC_reps);
             memory_map.insert({temp, mp});
         }else {
             mp = memory_map[temp];
@@ -677,7 +593,7 @@ pair<set<int> , double> OptimalHints_iterative(Graph<int> & G, int k, double pr,
             S_prime.push_back(g);
             set<int> temp2(S_prime.begin(), S_prime.end());
             if(memory_map.find(temp2) == memory_map.end()) {
-                mg = monte_carlo_IC(S_prime, G, pr, MC_reps);
+                mg = monte_carlo_IC(S_prime, G, MC_reps);
                 memory_map.insert({temp2, mg});
             }else{
                 mg = memory_map[temp2];
@@ -719,7 +635,7 @@ pair<set<int> , double> OptimalHints_iterative(Graph<int> & G, int k, double pr,
 
         //Update greedyDiscount
 
-        for(auto u : G.adjList[v]){
+        for(auto [u, pr] : G.adjList[v]){
             G.t[u]++;
             G.dd[u] = (double)G.d[u] - 2.0 * G.t[u] - (double)(G.d[u] - G.t[u]) * G.t[u] * p;
 
@@ -772,7 +688,7 @@ pair<set<int> , double> OptimalHints_fixedPredictions(Graph<int> & G, int k, dou
         S_prime.push_back(p);
         set<int> temp(S_prime.begin(), S_prime.end());
         if(memory_map.find(temp) == memory_map.end()) {
-            mp = monte_carlo_IC(S_prime, G, pr, MC_reps);
+            mp = monte_carlo_IC(S_prime, G, MC_reps);
             memory_map.insert({temp, mp});
         }else {
             mp = memory_map[temp];
@@ -783,7 +699,7 @@ pair<set<int> , double> OptimalHints_fixedPredictions(Graph<int> & G, int k, dou
             S_prime.push_back(g);
             set<int> temp2(S_prime.begin(), S_prime.end());
             if(memory_map.find(temp2) == memory_map.end()) {
-                mg = monte_carlo_IC(S_prime, G, pr, MC_reps);
+                mg = monte_carlo_IC(S_prime, G, MC_reps);
                 memory_map.insert({temp2, mg});
             }else{
                 mg = memory_map[temp2];
@@ -814,8 +730,8 @@ pair<set<int> , double> OptimalHints_fixedPredictions(Graph<int> & G, int k, dou
         //Update greedyDiscount
 
         for(auto u : G.adjList[v]){
-            G.t[u]++;
-            G.dd[u] = (double)G.d[u] - 2.0 * G.t[u] - (double)(G.d[u] - G.t[u]) * G.t[u] * p;
+            G.t[u.pr]++;
+            G.dd[u.pr] = (double)G.d[u.pr] - 2.0 * G.t[u.pr] - (double)(G.d[u.pr] - G.t[u.pr]) * G.t[u.pr] * p;
         }
 
         int x = find(ps.begin(), ps.end(), v) - ps.begin();
@@ -834,7 +750,7 @@ pair<set<int> , double> OptimalHints_fixedPredictions(Graph<int> & G, int k, dou
     return {S, prev};
 }
 
-set<int> singleDiscount(Graph<int> & G, int k){
+vector<int> singleDiscount(Graph<int> & G, int k){
     set<int> S;
     priority_queue<pair<double, int> > VmS;
 
@@ -857,61 +773,16 @@ set<int> singleDiscount(Graph<int> & G, int k){
 
         S.insert(g);
 
-        for(auto u : G.adjList[g]){
+        for(auto [u, pr] : G.adjList[g]){
             G.dd[u]--;
             VmS.push({G.dd[u], u});
         }
     }
 
-    return S;
+    vector<int> Sv(S.begin(), S.end());
+
+    return Sv;
 }
-
-vector<pair<double,pair<double, double>>> experiment(Graph<int> & G, int maxK, int roundsSeed, int roundsIC, int p){
-
-    double sum_greedy = 0, sum_opt = 0, sum_opt_hints = 0;
-    double mean_greedy = 0, mean_opt = 0, mean_opt_hints = 0;
-
-    vector<pair<double, pair<double, double>>> means;
-
-    for(int k = 1; k <= maxK; k++){
-
-        set<int> deegre_Discount = degreeDiscountIC(G, k, p);
-        set<int> single_Discount = singleDiscount(G, k);
-
-        mean_greedy = mean_opt = mean_opt_hints = 0;
-
-        for(int i = 0; i < roundsSeed; i++){
-
-            cout << "Round: " << k << "." << i << endl;
-
-            set<int> S = OptimalHints_fakeGreedy(G, k, deegre_Discount);
-
-            sum_greedy = sum_opt = sum_opt_hints = 0;
-
-            #pragma omp parallel for reduction(+:sum_opt_hints)
-            for(int j = 0; j < roundsIC; j++){
-
-                sum_opt_hints += IC(G, S, p);
-            }
-
-            mean_opt_hints += sum_opt_hints/(roundsSeed * roundsIC);
-        }
-
-        #pragma omp parallel for reduction(+:sum_greedy, sum_opt)
-        for(int i = 0; i < 20000; i++){
-            sum_greedy += IC(G, single_Discount, p);
-            sum_opt += IC(G, deegre_Discount, p);
-        }
-        
-        mean_greedy += sum_greedy/(roundsIC);
-        mean_opt += sum_opt/(roundsIC);
-
-        means.push_back({mean_opt, {mean_greedy, mean_opt_hints}});
-    }
-
-    return means;
-}
-
 
 pair<vector<pair<vector<int>, double>>, pair< vector<pair<vector<int>, double>>, vector<pair<vector<int>, double>> > > 
     experiment_OPTk_G_DD_OH(Graph<int> &G, int maxK, double p, int MC_reps){
@@ -927,8 +798,8 @@ pair<vector<pair<vector<int>, double>>, pair< vector<pair<vector<int>, double>>,
     IMM im(G.size);
 
     for(int i = 0; i < G.size; i++){
-        for(int u : G.adjList[i]){
-            im.add_edge(i, u, p);
+        for(auto [u, pr] : G.adjList[i]){
+            im.add_edge(i, u, pr);
         }
     }
 
@@ -945,7 +816,7 @@ pair<vector<pair<vector<int>, double>>, pair< vector<pair<vector<int>, double>>,
 
         set<int> temp(im_results.back().first.begin(), im_results.back().first.end());
         if(memory_map.find(temp) == memory_map.end()) {
-            im_results.back().second = monte_carlo_IC(im_results.back().first, G, p, MC_reps);
+            im_results.back().second = monte_carlo_IC(im_results.back().first, G, MC_reps);
             memory_map.insert({temp, im_results.back().second});
         }else {
             im_results.back().second = memory_map[temp];
@@ -956,17 +827,17 @@ pair<vector<pair<vector<int>, double>>, pair< vector<pair<vector<int>, double>>,
 
     cout << "Starting with Degree Discount" << endl;
 
-    set<int> seed_set;
+    vector<int> seed_set;
 
     // #pragma omp parallel for
     for(int i = 1; i <= maxK; i++){
         cout << "Working on k = " << i << endl;
         seed_set = degreeDiscountIC(G, i, p);
-        dd_results.push_back({vector<int> (seed_set.begin(), seed_set.end()), 0.0});
+        dd_results.push_back({seed_set, 0.0});
 
         set<int> temp(dd_results.back().first.begin(), dd_results.back().first.end());
         if(memory_map.find(temp) == memory_map.end()) {
-            dd_results.back().second = monte_carlo_IC(dd_results.back().first, G, p, MC_reps);
+            dd_results.back().second = monte_carlo_IC(dd_results.back().first, G, MC_reps);
             memory_map.insert({temp, dd_results.back().second});
         }else {
             dd_results.back().second = memory_map[temp];
@@ -998,34 +869,37 @@ pair<vector<pair<vector<int>, double>>, pair< vector<pair<vector<int>, double>>,
 int main() {
     string files[] = {/*"GrQc", "AstroPh" , "HepTh",*/ "HepPh"};
 
-    Graph<int> G = readGraph("data/CA-GrQc-0-idx.txt");
+    Graph<int> G = readGraph("data/CA-GrQc-dir.txt");
 
 
     vector<int> in({9, 103, 105, 281, 297, 579, 1039, 1286, 1291, 3139});
+    vector<int> GrQc_OPT_10({11,20,53,101,108,186,295,577,1037,1733});
+    // vector<int> GrQc_OPT_10({10,19,52,100,107,185,294,576,1036,1732});
     vector<int> gem({{297, 1286, 579, 1039, 4035, 3139, 110, 188, 223, 55}});
 
     IMM im(G.size);
 
     for(int i = 0; i < G.size; i++){
-        for(int u : G.adjList[i]){
-            im.add_edge(i, u, 0.01);
+        for(auto [u, pr] : G.adjList[i]){
+            im.add_edge(i, u, pr);
         }
     }
 
-    im.get_RR_sets(10);
+    vector<int> output = im.run(10).first;
 
-    double sum = 0.0;
+    sort(output.begin(), output.end());
 
-    vector<int> g;
-
-    for(int i = 1; i <= 10; i++) {
-        g.push_back(gem[i]);
-        cout << "(" << i << ", " << monte_carlo_IC(g, G, 0.01, 20000)  << ")" << ' ';
-    }
-
-    cout << endl;
-
-    return 0;
+    cout << "OPT: ";
+    for(auto x : GrQc_OPT_10)
+        cout << x << ' ';
+    
+    cout << endl << "Total influence spread: " << monte_carlo_IC(GrQc_OPT_10, G, 20000) << endl;
+    
+    cout << "Greedy: ";
+    for(auto x : output)
+        cout << x << ' ';
+    
+    cout << endl << "Total influence spread: " << monte_carlo_IC(output, G, 20000) << endl;
 
 
 
@@ -1100,34 +974,34 @@ int main() {
 //     cout << endl;
 
 
-    for(int j = 0; j < 1; j++){
+    // for(int j = 0; j < 1; j++){
 
-        // Graph<int> G = readGraph("data/girth11.txt");
+    //     // Graph<int> G = readGraph("data/girth11.txt");
 
 
-        pair<vector<pair<vector<int>, double>>, pair< vector<pair<vector<int>, double>>, vector<pair<vector<int>, double>> > > results = experiment_OPTk_G_DD_OH(G, 15, 0.01, 20000);
+    //     pair<vector<pair<vector<int>, double>>, pair< vector<pair<vector<int>, double>>, vector<pair<vector<int>, double>> > > results = experiment_OPTk_G_DD_OH(G, 15, 0.01, 20000);
 
-        cout << "##################################\nResults for " + files[j] << endl;
-        cout << "Degree discount: ";
-        for(int i = 0; i < (int)results.first.size(); i++){
-            cout << results.first[i].second << ' ';
-        }
-        cout << endl;
+    //     cout << "##################################\nResults for " + files[j] << endl;
+    //     cout << "Degree discount: ";
+    //     for(int i = 0; i < (int)results.first.size(); i++){
+    //         cout << results.first[i].second << ' ';
+    //     }
+    //     cout << endl;
 
-        cout << "Greedy: ";
-        for(int i = 0; i < (int)results.second.first.size(); i++){
-            cout << results.second.first[i].second << ' ';
-        }
-        cout << endl;
+    //     cout << "Greedy: ";
+    //     for(int i = 0; i < (int)results.second.first.size(); i++){
+    //         cout << results.second.first[i].second << ' ';
+    //     }
+    //     cout << endl;
 
-        cout << "Optimal Hints: ";
-        for(int i = 0; i < (int)results.second.second.size(); i++){
-            cout << results.second.second[i].second << ' ';
-        }
-        cout << endl;
-    }
+    //     cout << "Optimal Hints: ";
+    //     for(int i = 0; i < (int)results.second.second.size(); i++){
+    //         cout << results.second.second[i].second << ' ';
+    //     }
+    //     cout << endl;
+    // }
 
-    cout << "Gemini: (10, " << monte_carlo_IC(in, G, 0.01, 20000) << ")" << endl;
+    // cout << "Gemini: (10, " << monte_carlo_IC(in, G, 0.01, 20000) << ")" << endl;
 
     /*IMM Only*/
 

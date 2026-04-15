@@ -6,7 +6,7 @@ int main() {
 
     ifstream fin;
 
-    fin.open("data/CA-GrQc.txt");
+    fin.open("data/phy.txt");
 
     map<int, int> m;
     vector<pair<int, int> > e;
@@ -30,7 +30,7 @@ int main() {
     cout << m.size() << ' ' << e.size() << endl;
 
     for(auto [u, v] : e){
-        cout << u << ' ' << v << endl;
+        cout << u << ' ' << v << " 0.01" << endl;
     }
 
     return 0;

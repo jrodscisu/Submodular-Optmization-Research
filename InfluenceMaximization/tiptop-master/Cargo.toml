@@ -1,0 +1,95 @@
+[package]
+authors = ["J David Smith <emallson@atlanis.net>"]
+name = "tiptop"
+version = "0.1.0"
+
+[[bin]]
+name = "tiptop"
+path = "src/main.rs"
+
+[[bin]]
+name = "t-exact"
+path = "src/t-exact.rs"
+required-features = ["grb", "exact"]
+
+[[bin]]
+name = "e-exact"
+path = "src/e-exact.rs"
+required-features = ["grb", "exact"]
+
+[[bin]]
+name = "build-data"
+path = "src/bin/build-data.rs"
+
+[[bin]]
+name = "export-data"
+path = "src/bin/export-data.rs"
+
+[[bin]]
+name = "evaluate"
+path = "src/bin/evaluate.rs"
+
+[dependencies]
+bincode = "0.8.0"
+bit-set = "0.4.0"
+docopt = "0.8"
+lazy_static = "0.2.11"
+nom = "3.2.1"
+rand = "0.3.23"
+rayon = "0.8.2"
+rustc-serialize = "0.3.25"
+serde = { version = "1.0.228", features = ["derive"] }
+serde_derive = "1.0.228"
+serde_json = "1.0"
+slog = "1.7.1"
+slog-json = "1.2.1"
+slog-stream = "1.2.1"
+slog-term = "1.5.0"
+statrs = "0.8.0"
+
+[dependencies.capngraph]
+git = "https://github.com/emallson/capngraph.git"
+optional = false
+
+[dependencies.gurobi]
+git = "https://github.com/emallson/gurobi.rs.git"
+optional = true
+
+[dependencies.petgraph]
+features = ["quickcheck"]
+version = "0.4.13"
+
+[dependencies.rand-mersenne-twister]
+git = "https://github.com/emallson/rust-mersenne-twister.git"
+optional = false
+
+[dependencies.ris]
+features = ["hash"]
+git = "https://github.com/emallson/ris.rs.git"
+optional = false
+
+[dependencies.rplex]
+git = "https://github.com/emallson/rplex.git"
+optional = true
+version = "0.2.3"
+
+[dependencies.vec-graph]
+git = "https://github.com/emallson/vec-graph.git"
+optional = false
+
+[dev-dependencies]
+quickcheck = "0.4.1"
+
+[features]
+cplex = ["rplex"]
+default = ["grb"]
+grb = ["gurobi"]
+exact = []
+
+[profile]
+
+[profile.dev]
+opt-level = 2
+
+[profile.release]
+debug = true
