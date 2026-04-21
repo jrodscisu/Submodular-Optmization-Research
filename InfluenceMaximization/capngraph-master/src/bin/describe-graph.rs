@@ -1,15 +1,14 @@
 extern crate docopt;
-extern crate rustc_serialize;
+extern crate serde;
 extern crate capngraph;
 extern crate petgraph;
 extern crate serde_json;
-#[macro_use]
-extern crate serde_derive;
 extern crate colored;
 
 use capngraph::load_graph;
 use docopt::Docopt;
 use colored::*;
+use serde::{Deserialize, Serialize};
 
 const USAGE: &'static str = "
 Describe a given graph. Provides node and edge counts.
@@ -23,8 +22,7 @@ Options:
     --json          Output results as JSON.
 ";
 
-#[derive(RustcDecodable)]
-// #[derive(serde:Deserialize)]
+#[derive(Deserialize)]
 struct Args {
     arg_graph: String,
     flag_json: bool,
@@ -39,7 +37,7 @@ struct Description {
 
 fn main() {
     let args: Args = Docopt::new(USAGE)
-        .and_then(|d| d.decode())
+        .and_then(|d| d.deserialize())
         .unwrap_or_else(|e| e.exit());
 
     let graph = load_graph(args.arg_graph.as_str()).unwrap();

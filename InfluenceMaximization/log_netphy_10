@@ -1,0 +1,208 @@
+{"msg":"parameters","level":"INFO","ts":"2026-04-14T22:22:42.125366239-05:00","version":"0.1.0","args":"{\"arg_graph\":\"../data/phy_uniformp.bin\",\"arg_model\":\"IC\",\"arg_k\":10,\"arg_epsilon\":0.02,\"arg_delta\":null,\"flag_log\":\"../log_netphy_10\",\"flag_threads\":8,\"flag_costs\":null,\"flag_benefits\":null}"}
+{"msg":"loading graph","level":"INFO","ts":"2026-04-14T22:22:42.125414020-05:00","version":"0.1.0","path":"../data/phy_uniformp.bin"}
+{"msg":"constants","level":"INFO","ts":"2026-04-14T22:22:42.234939911-05:00","section":"tiptop","version":"0.1.0","Γ":37151.0,"Λ":57582.39542308456,"Λ_max":1054770.2705970654,"t_max":29.0,"v_max":6}
+{"msg":"sampling more sets","level":"INFO","ts":"2026-04-14T22:22:42.235002701-05:00","section":"tiptop","version":"0.1.0","total":58745,"additional":58745,"t":1.0}
+{"msg":"solving ip","level":"INFO","ts":"2026-04-14T22:22:42.248028817-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP variables","level":"INFO","ts":"2026-04-14T22:22:42.260988837-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP constraints","level":"INFO","ts":"2026-04-14T22:22:42.280978568-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"verifying solution","level":"INFO","ts":"2026-04-14T22:22:42.865724098-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"T_cap exceeded","level":"INFO","ts":"2026-04-14T22:22:43.437290040-05:00","section":"verify","section":"tiptop","version":"0.1.0","tcap":3759680}
+{"msg":"verification samples","level":"INFO","ts":"2026-04-14T22:22:43.437359442-05:00","section":"verify","section":"tiptop","version":"0.1.0","samples":3760000}
+{"msg":"sampling more sets","level":"INFO","ts":"2026-04-14T22:22:43.440437296-05:00","section":"tiptop","version":"0.1.0","total":434074,"additional":375329,"t":101.0}
+{"msg":"solving ip","level":"INFO","ts":"2026-04-14T22:22:43.499424450-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP variables","level":"INFO","ts":"2026-04-14T22:22:43.501807162-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP constraints","level":"INFO","ts":"2026-04-14T22:22:43.521064369-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"verifying solution","level":"INFO","ts":"2026-04-14T22:22:47.314086763-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"T_cap exceeded","level":"INFO","ts":"2026-04-14T22:22:50.420111290-05:00","section":"verify","section":"tiptop","version":"0.1.0","tcap":27780736}
+{"msg":"verification samples","level":"INFO","ts":"2026-04-14T22:22:50.420176094-05:00","section":"verify","section":"tiptop","version":"0.1.0","samples":27790000}
+{"msg":"sampling more sets","level":"INFO","ts":"2026-04-14T22:22:50.448114979-05:00","section":"tiptop","version":"0.1.0","total":3207403,"additional":2773329,"t":201.0}
+{"msg":"solving ip","level":"INFO","ts":"2026-04-14T22:22:50.815152515-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP variables","level":"INFO","ts":"2026-04-14T22:22:50.816911851-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP constraints","level":"INFO","ts":"2026-04-14T22:22:50.831445101-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"verifying solution","level":"INFO","ts":"2026-04-14T22:23:11.570691986-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"T_cap exceeded","level":"INFO","ts":"2026-04-14T22:23:33.202701270-05:00","section":"verify","section":"tiptop","version":"0.1.0","tcap":205273792}
+{"msg":"verification samples","level":"INFO","ts":"2026-04-14T22:23:33.202753589-05:00","section":"verify","section":"tiptop","version":"0.1.0","samples":205280000}
+{"msg":"sampling more sets","level":"INFO","ts":"2026-04-14T22:23:33.283304889-05:00","section":"tiptop","version":"0.1.0","total":3272196,"additional":64793,"t":202.0}
+{"msg":"solving ip","level":"INFO","ts":"2026-04-14T22:23:33.292513543-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP variables","level":"INFO","ts":"2026-04-14T22:23:33.299430321-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP constraints","level":"INFO","ts":"2026-04-14T22:23:33.310547644-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"verifying solution","level":"INFO","ts":"2026-04-14T22:23:52.496797664-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"T_cap exceeded","level":"INFO","ts":"2026-04-14T22:24:14.808017875-05:00","section":"verify","section":"tiptop","version":"0.1.0","tcap":209420544}
+{"msg":"verification samples","level":"INFO","ts":"2026-04-14T22:24:14.808092456-05:00","section":"verify","section":"tiptop","version":"0.1.0","samples":209430000}
+{"msg":"sampling more sets","level":"INFO","ts":"2026-04-14T22:24:14.910868147-05:00","section":"tiptop","version":"0.1.0","total":3338299,"additional":66103,"t":203.0}
+{"msg":"solving ip","level":"INFO","ts":"2026-04-14T22:24:14.918999066-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP variables","level":"INFO","ts":"2026-04-14T22:24:14.920531528-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP constraints","level":"INFO","ts":"2026-04-14T22:24:14.932325608-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"verifying solution","level":"INFO","ts":"2026-04-14T22:24:34.726315754-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"T_cap exceeded","level":"INFO","ts":"2026-04-14T22:24:57.160332002-05:00","section":"verify","section":"tiptop","version":"0.1.0","tcap":213651136}
+{"msg":"verification samples","level":"INFO","ts":"2026-04-14T22:24:57.160387858-05:00","section":"verify","section":"tiptop","version":"0.1.0","samples":213660000}
+{"msg":"sampling more sets","level":"INFO","ts":"2026-04-14T22:24:57.240815602-05:00","section":"tiptop","version":"0.1.0","total":3405737,"additional":67438,"t":204.0}
+{"msg":"solving ip","level":"INFO","ts":"2026-04-14T22:24:57.249372063-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP variables","level":"INFO","ts":"2026-04-14T22:24:57.251117107-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP constraints","level":"INFO","ts":"2026-04-14T22:24:57.262986771-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"verifying solution","level":"INFO","ts":"2026-04-14T22:25:17.344881225-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"T_cap exceeded","level":"INFO","ts":"2026-04-14T22:25:40.392230729-05:00","section":"verify","section":"tiptop","version":"0.1.0","tcap":217967168}
+{"msg":"verification samples","level":"INFO","ts":"2026-04-14T22:25:40.392286945-05:00","section":"verify","section":"tiptop","version":"0.1.0","samples":217970000}
+{"msg":"sampling more sets","level":"INFO","ts":"2026-04-14T22:25:40.478855859-05:00","section":"tiptop","version":"0.1.0","total":3474538,"additional":68801,"t":205.0}
+{"msg":"solving ip","level":"INFO","ts":"2026-04-14T22:25:40.487335017-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP variables","level":"INFO","ts":"2026-04-14T22:25:40.488967346-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP constraints","level":"INFO","ts":"2026-04-14T22:25:40.501733092-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"verifying solution","level":"INFO","ts":"2026-04-14T22:26:09.533323517-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"T_cap exceeded","level":"INFO","ts":"2026-04-14T22:26:27.698866505-05:00","section":"verify","section":"tiptop","version":"0.1.0","tcap":222370432}
+{"msg":"verification samples","level":"INFO","ts":"2026-04-14T22:26:27.698916329-05:00","section":"verify","section":"tiptop","version":"0.1.0","samples":222380000}
+{"msg":"sampling more sets","level":"INFO","ts":"2026-04-14T22:26:27.774798057-05:00","section":"tiptop","version":"0.1.0","total":3544728,"additional":70190,"t":206.0}
+{"msg":"solving ip","level":"INFO","ts":"2026-04-14T22:26:27.782444068-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP variables","level":"INFO","ts":"2026-04-14T22:26:27.783947791-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP constraints","level":"INFO","ts":"2026-04-14T22:26:27.796977820-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"verifying solution","level":"INFO","ts":"2026-04-14T22:26:53.061207958-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"T_cap exceeded","level":"INFO","ts":"2026-04-14T22:27:11.589879402-05:00","section":"verify","section":"tiptop","version":"0.1.0","tcap":226862592}
+{"msg":"verification samples","level":"INFO","ts":"2026-04-14T22:27:11.589931020-05:00","section":"verify","section":"tiptop","version":"0.1.0","samples":226870000}
+{"msg":"sampling more sets","level":"INFO","ts":"2026-04-14T22:27:11.675374760-05:00","section":"tiptop","version":"0.1.0","total":3616336,"additional":71608,"t":207.0}
+{"msg":"solving ip","level":"INFO","ts":"2026-04-14T22:27:11.683926274-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP variables","level":"INFO","ts":"2026-04-14T22:27:11.685393026-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP constraints","level":"INFO","ts":"2026-04-14T22:27:11.696445835-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"verifying solution","level":"INFO","ts":"2026-04-14T22:27:37.106455216-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"T_cap exceeded","level":"INFO","ts":"2026-04-14T22:27:58.195824617-05:00","section":"verify","section":"tiptop","version":"0.1.0","tcap":231445504}
+{"msg":"verification samples","level":"INFO","ts":"2026-04-14T22:27:58.195883329-05:00","section":"verify","section":"tiptop","version":"0.1.0","samples":231450000}
+{"msg":"sampling more sets","level":"INFO","ts":"2026-04-14T22:27:58.298710435-05:00","section":"tiptop","version":"0.1.0","total":3689391,"additional":73055,"t":208.0}
+{"msg":"solving ip","level":"INFO","ts":"2026-04-14T22:27:58.307701928-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP variables","level":"INFO","ts":"2026-04-14T22:27:58.309454441-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP constraints","level":"INFO","ts":"2026-04-14T22:27:58.322993409-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"verifying solution","level":"INFO","ts":"2026-04-14T22:28:25.303802655-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"T_cap exceeded","level":"INFO","ts":"2026-04-14T22:28:50.004038814-05:00","section":"verify","section":"tiptop","version":"0.1.0","tcap":236121024}
+{"msg":"verification samples","level":"INFO","ts":"2026-04-14T22:28:50.004095311-05:00","section":"verify","section":"tiptop","version":"0.1.0","samples":236130000}
+{"msg":"sampling more sets","level":"INFO","ts":"2026-04-14T22:28:50.089746009-05:00","section":"tiptop","version":"0.1.0","total":3763922,"additional":74531,"t":209.0}
+{"msg":"solving ip","level":"INFO","ts":"2026-04-14T22:28:50.098110938-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP variables","level":"INFO","ts":"2026-04-14T22:28:50.099750757-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP constraints","level":"INFO","ts":"2026-04-14T22:28:50.111320412-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"verifying solution","level":"INFO","ts":"2026-04-14T22:29:17.954593415-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"T_cap exceeded","level":"INFO","ts":"2026-04-14T22:29:42.987753510-05:00","section":"verify","section":"tiptop","version":"0.1.0","tcap":240891008}
+{"msg":"verification samples","level":"INFO","ts":"2026-04-14T22:29:42.987813964-05:00","section":"verify","section":"tiptop","version":"0.1.0","samples":240900000}
+{"msg":"sampling more sets","level":"INFO","ts":"2026-04-14T22:29:43.073782055-05:00","section":"tiptop","version":"0.1.0","total":3839958,"additional":76036,"t":210.0}
+{"msg":"solving ip","level":"INFO","ts":"2026-04-14T22:29:43.082235677-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP variables","level":"INFO","ts":"2026-04-14T22:29:43.083790073-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP constraints","level":"INFO","ts":"2026-04-14T22:29:43.095276865-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"verifying solution","level":"INFO","ts":"2026-04-14T22:30:10.470751399-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"T_cap exceeded","level":"INFO","ts":"2026-04-14T22:30:35.890682668-05:00","section":"verify","section":"tiptop","version":"0.1.0","tcap":245757312}
+{"msg":"verification samples","level":"INFO","ts":"2026-04-14T22:30:35.890757640-05:00","section":"verify","section":"tiptop","version":"0.1.0","samples":245760000}
+{"msg":"sampling more sets","level":"INFO","ts":"2026-04-14T22:30:35.981253457-05:00","section":"tiptop","version":"0.1.0","total":3917530,"additional":77572,"t":211.0}
+{"msg":"solving ip","level":"INFO","ts":"2026-04-14T22:30:35.990936244-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP variables","level":"INFO","ts":"2026-04-14T22:30:35.992482414-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP constraints","level":"INFO","ts":"2026-04-14T22:30:36.004042518-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"verifying solution","level":"INFO","ts":"2026-04-14T22:31:05.422600982-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"T_cap exceeded","level":"INFO","ts":"2026-04-14T22:31:31.391467948-05:00","section":"verify","section":"tiptop","version":"0.1.0","tcap":250721920}
+{"msg":"verification samples","level":"INFO","ts":"2026-04-14T22:31:31.391522972-05:00","section":"verify","section":"tiptop","version":"0.1.0","samples":250730000}
+{"msg":"sampling more sets","level":"INFO","ts":"2026-04-14T22:31:31.484191400-05:00","section":"tiptop","version":"0.1.0","total":3996670,"additional":79140,"t":212.0}
+{"msg":"solving ip","level":"INFO","ts":"2026-04-14T22:31:31.493572982-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP variables","level":"INFO","ts":"2026-04-14T22:31:31.495243576-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP constraints","level":"INFO","ts":"2026-04-14T22:31:31.506534836-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"verifying solution","level":"INFO","ts":"2026-04-14T22:32:06.383861675-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"T_cap exceeded","level":"INFO","ts":"2026-04-14T22:32:33.155332330-05:00","section":"verify","section":"tiptop","version":"0.1.0","tcap":255786880}
+{"msg":"verification samples","level":"INFO","ts":"2026-04-14T22:32:33.155400900-05:00","section":"verify","section":"tiptop","version":"0.1.0","samples":255790000}
+{"msg":"sampling more sets","level":"INFO","ts":"2026-04-14T22:32:33.245338080-05:00","section":"tiptop","version":"0.1.0","total":4077408,"additional":80738,"t":213.0}
+{"msg":"solving ip","level":"INFO","ts":"2026-04-14T22:32:33.254891794-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP variables","level":"INFO","ts":"2026-04-14T22:32:33.256520689-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP constraints","level":"INFO","ts":"2026-04-14T22:32:33.267937020-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"verifying solution","level":"INFO","ts":"2026-04-14T22:33:08.705848266-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"T_cap exceeded","level":"INFO","ts":"2026-04-14T22:33:35.840541925-05:00","section":"verify","section":"tiptop","version":"0.1.0","tcap":260954112}
+{"msg":"verification samples","level":"INFO","ts":"2026-04-14T22:33:35.840595958-05:00","section":"verify","section":"tiptop","version":"0.1.0","samples":260960000}
+{"msg":"sampling more sets","level":"INFO","ts":"2026-04-14T22:33:35.930243060-05:00","section":"tiptop","version":"0.1.0","total":4159777,"additional":82369,"t":214.0}
+{"msg":"solving ip","level":"INFO","ts":"2026-04-14T22:33:35.941080521-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP variables","level":"INFO","ts":"2026-04-14T22:33:35.942668918-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP constraints","level":"INFO","ts":"2026-04-14T22:33:35.954332553-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"verifying solution","level":"INFO","ts":"2026-04-14T22:34:05.536698508-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"T_cap exceeded","level":"INFO","ts":"2026-04-14T22:34:26.893685328-05:00","section":"verify","section":"tiptop","version":"0.1.0","tcap":266225728}
+{"msg":"verification samples","level":"INFO","ts":"2026-04-14T22:34:26.893735202-05:00","section":"verify","section":"tiptop","version":"0.1.0","samples":266230000}
+{"msg":"sampling more sets","level":"INFO","ts":"2026-04-14T22:34:26.986135579-05:00","section":"tiptop","version":"0.1.0","total":4243810,"additional":84033,"t":215.0}
+{"msg":"solving ip","level":"INFO","ts":"2026-04-14T22:34:26.995142911-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP variables","level":"INFO","ts":"2026-04-14T22:34:26.996742389-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP constraints","level":"INFO","ts":"2026-04-14T22:34:27.007866909-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"verifying solution","level":"INFO","ts":"2026-04-14T22:34:56.454760834-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"T_cap exceeded","level":"INFO","ts":"2026-04-14T22:35:18.439532068-05:00","section":"verify","section":"tiptop","version":"0.1.0","tcap":271603840}
+{"msg":"verification samples","level":"INFO","ts":"2026-04-14T22:35:18.439794174-05:00","section":"verify","section":"tiptop","version":"0.1.0","samples":271610000}
+{"msg":"sampling more sets","level":"INFO","ts":"2026-04-14T22:35:18.532484593-05:00","section":"tiptop","version":"0.1.0","total":4329541,"additional":85731,"t":216.0}
+{"msg":"solving ip","level":"INFO","ts":"2026-04-14T22:35:18.541642557-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP variables","level":"INFO","ts":"2026-04-14T22:35:18.543142577-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP constraints","level":"INFO","ts":"2026-04-14T22:35:18.554027420-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"verifying solution","level":"INFO","ts":"2026-04-14T22:35:48.711253642-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"T_cap exceeded","level":"INFO","ts":"2026-04-14T22:36:11.019847942-05:00","section":"verify","section":"tiptop","version":"0.1.0","tcap":277090624}
+{"msg":"verification samples","level":"INFO","ts":"2026-04-14T22:36:11.019897175-05:00","section":"verify","section":"tiptop","version":"0.1.0","samples":277100000}
+{"msg":"sampling more sets","level":"INFO","ts":"2026-04-14T22:36:11.114334265-05:00","section":"tiptop","version":"0.1.0","total":4417003,"additional":87462,"t":217.0}
+{"msg":"solving ip","level":"INFO","ts":"2026-04-14T22:36:11.123751909-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP variables","level":"INFO","ts":"2026-04-14T22:36:11.125251877-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP constraints","level":"INFO","ts":"2026-04-14T22:36:11.136730001-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"verifying solution","level":"INFO","ts":"2026-04-14T22:36:42.541374480-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"T_cap exceeded","level":"INFO","ts":"2026-04-14T22:37:05.276719634-05:00","section":"verify","section":"tiptop","version":"0.1.0","tcap":282688192}
+{"msg":"verification samples","level":"INFO","ts":"2026-04-14T22:37:05.276767775-05:00","section":"verify","section":"tiptop","version":"0.1.0","samples":282690000}
+{"msg":"sampling more sets","level":"INFO","ts":"2026-04-14T22:37:05.382820282-05:00","section":"tiptop","version":"0.1.0","total":4506233,"additional":89230,"t":218.0}
+{"msg":"solving ip","level":"INFO","ts":"2026-04-14T22:37:05.391861431-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP variables","level":"INFO","ts":"2026-04-14T22:37:05.393280446-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP constraints","level":"INFO","ts":"2026-04-14T22:37:05.404493064-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"verifying solution","level":"INFO","ts":"2026-04-14T22:37:37.351116679-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"T_cap exceeded","level":"INFO","ts":"2026-04-14T22:38:00.528713343-05:00","section":"verify","section":"tiptop","version":"0.1.0","tcap":288398912}
+{"msg":"verification samples","level":"INFO","ts":"2026-04-14T22:38:00.528767145-05:00","section":"verify","section":"tiptop","version":"0.1.0","samples":288400000}
+{"msg":"sampling more sets","level":"INFO","ts":"2026-04-14T22:38:00.632668699-05:00","section":"tiptop","version":"0.1.0","total":4597265,"additional":91032,"t":219.0}
+{"msg":"solving ip","level":"INFO","ts":"2026-04-14T22:38:00.641961151-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP variables","level":"INFO","ts":"2026-04-14T22:38:00.643447593-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP constraints","level":"INFO","ts":"2026-04-14T22:38:00.654621746-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"verifying solution","level":"INFO","ts":"2026-04-14T22:38:37.430647013-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"T_cap exceeded","level":"INFO","ts":"2026-04-14T22:39:01.312442987-05:00","section":"verify","section":"tiptop","version":"0.1.0","tcap":294224960}
+{"msg":"verification samples","level":"INFO","ts":"2026-04-14T22:39:01.312488533-05:00","section":"verify","section":"tiptop","version":"0.1.0","samples":294230000}
+{"msg":"sampling more sets","level":"INFO","ts":"2026-04-14T22:39:01.411936097-05:00","section":"tiptop","version":"0.1.0","total":4690136,"additional":92871,"t":220.0}
+{"msg":"solving ip","level":"INFO","ts":"2026-04-14T22:39:01.421157974-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP variables","level":"INFO","ts":"2026-04-14T22:39:01.422677819-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP constraints","level":"INFO","ts":"2026-04-14T22:39:01.433556340-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"verifying solution","level":"INFO","ts":"2026-04-14T22:39:33.456327080-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"T_cap exceeded","level":"INFO","ts":"2026-04-14T22:39:57.651039532-05:00","section":"verify","section":"tiptop","version":"0.1.0","tcap":300168704}
+{"msg":"verification samples","level":"INFO","ts":"2026-04-14T22:39:57.651090539-05:00","section":"verify","section":"tiptop","version":"0.1.0","samples":300170000}
+{"msg":"sampling more sets","level":"INFO","ts":"2026-04-14T22:39:57.753153552-05:00","section":"tiptop","version":"0.1.0","total":4784883,"additional":94747,"t":221.0}
+{"msg":"solving ip","level":"INFO","ts":"2026-04-14T22:39:57.763310867-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP variables","level":"INFO","ts":"2026-04-14T22:39:57.764838567-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP constraints","level":"INFO","ts":"2026-04-14T22:39:57.776006954-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"verifying solution","level":"INFO","ts":"2026-04-14T22:40:37.990484744-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"T_cap exceeded","level":"INFO","ts":"2026-04-14T22:41:02.921042889-05:00","section":"verify","section":"tiptop","version":"0.1.0","tcap":306232512}
+{"msg":"verification samples","level":"INFO","ts":"2026-04-14T22:41:02.921093194-05:00","section":"verify","section":"tiptop","version":"0.1.0","samples":306240000}
+{"msg":"sampling more sets","level":"INFO","ts":"2026-04-14T22:41:03.024943659-05:00","section":"tiptop","version":"0.1.0","total":4881544,"additional":96661,"t":222.0}
+{"msg":"solving ip","level":"INFO","ts":"2026-04-14T22:41:03.036366636-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP variables","level":"INFO","ts":"2026-04-14T22:41:03.038077252-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP constraints","level":"INFO","ts":"2026-04-14T22:41:03.049230218-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"verifying solution","level":"INFO","ts":"2026-04-14T22:41:44.448909325-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"T_cap exceeded","level":"INFO","ts":"2026-04-14T22:42:09.851211876-05:00","section":"verify","section":"tiptop","version":"0.1.0","tcap":312418816}
+{"msg":"verification samples","level":"INFO","ts":"2026-04-14T22:42:09.851255939-05:00","section":"verify","section":"tiptop","version":"0.1.0","samples":312420000}
+{"msg":"sampling more sets","level":"INFO","ts":"2026-04-14T22:42:09.957501218-05:00","section":"tiptop","version":"0.1.0","total":4980157,"additional":98613,"t":223.0}
+{"msg":"solving ip","level":"INFO","ts":"2026-04-14T22:42:09.967814467-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP variables","level":"INFO","ts":"2026-04-14T22:42:09.974641131-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP constraints","level":"INFO","ts":"2026-04-14T22:42:09.987954351-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"verifying solution","level":"INFO","ts":"2026-04-14T22:42:46.439575130-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"T_cap exceeded","level":"INFO","ts":"2026-04-14T22:43:12.140329455-05:00","section":"verify","section":"tiptop","version":"0.1.0","tcap":318730048}
+{"msg":"verification samples","level":"INFO","ts":"2026-04-14T22:43:12.140384278-05:00","section":"verify","section":"tiptop","version":"0.1.0","samples":318740000}
+{"msg":"sampling more sets","level":"INFO","ts":"2026-04-14T22:43:12.249445449-05:00","section":"tiptop","version":"0.1.0","total":5080763,"additional":100606,"t":224.0}
+{"msg":"solving ip","level":"INFO","ts":"2026-04-14T22:43:12.259509534-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP variables","level":"INFO","ts":"2026-04-14T22:43:12.261034649-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP constraints","level":"INFO","ts":"2026-04-14T22:43:12.272421397-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"verifying solution","level":"INFO","ts":"2026-04-14T22:43:48.861291811-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"T_cap exceeded","level":"INFO","ts":"2026-04-14T22:44:15.158224919-05:00","section":"verify","section":"tiptop","version":"0.1.0","tcap":325168832}
+{"msg":"verification samples","level":"INFO","ts":"2026-04-14T22:44:15.158276366-05:00","section":"verify","section":"tiptop","version":"0.1.0","samples":325170000}
+{"msg":"sampling more sets","level":"INFO","ts":"2026-04-14T22:44:15.272948252-05:00","section":"tiptop","version":"0.1.0","total":5183402,"additional":102639,"t":225.0}
+{"msg":"solving ip","level":"INFO","ts":"2026-04-14T22:44:15.283158433-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP variables","level":"INFO","ts":"2026-04-14T22:44:15.284625481-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP constraints","level":"INFO","ts":"2026-04-14T22:44:15.295741645-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"verifying solution","level":"INFO","ts":"2026-04-14T22:44:58.688285712-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"T_cap exceeded","level":"INFO","ts":"2026-04-14T22:45:25.784179296-05:00","section":"verify","section":"tiptop","version":"0.1.0","tcap":331737728}
+{"msg":"verification samples","level":"INFO","ts":"2026-04-14T22:45:25.784223369-05:00","section":"verify","section":"tiptop","version":"0.1.0","samples":331740000}
+{"msg":"sampling more sets","level":"INFO","ts":"2026-04-14T22:45:25.906321716-05:00","section":"tiptop","version":"0.1.0","total":5288113,"additional":104711,"t":226.0}
+{"msg":"solving ip","level":"INFO","ts":"2026-04-14T22:45:25.917457539-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP variables","level":"INFO","ts":"2026-04-14T22:45:25.918967389-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP constraints","level":"INFO","ts":"2026-04-14T22:45:25.930223599-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"verifying solution","level":"INFO","ts":"2026-04-14T22:46:04.890074570-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"T_cap exceeded","level":"INFO","ts":"2026-04-14T22:46:33.693641120-05:00","section":"verify","section":"tiptop","version":"0.1.0","tcap":338439232}
+{"msg":"verification samples","level":"INFO","ts":"2026-04-14T22:46:33.693694941-05:00","section":"verify","section":"tiptop","version":"0.1.0","samples":338440000}
+{"msg":"sampling more sets","level":"INFO","ts":"2026-04-14T22:46:33.810572093-05:00","section":"tiptop","version":"0.1.0","total":5394940,"additional":106827,"t":227.0}
+{"msg":"solving ip","level":"INFO","ts":"2026-04-14T22:46:33.821982304-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP variables","level":"INFO","ts":"2026-04-14T22:46:33.823441390-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"building IP constraints","level":"INFO","ts":"2026-04-14T22:46:33.834569400-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"verifying solution","level":"INFO","ts":"2026-04-14T22:47:13.320498576-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"verification succeeded","level":"INFO","ts":"2026-04-14T22:47:41.010848375-05:00","section":"verify","section":"tiptop","version":"0.1.0","ε₁":-0.013099738304515052,"ε₂":0.01,"ε₃":0.011379523736994385,"ε":0.02,"product":0.9915554343266906}
+{"msg":"verification samples","level":"INFO","ts":"2026-04-14T22:47:41.010898800-05:00","section":"verify","section":"tiptop","version":"0.1.0","samples":341150000}
+{"msg":"solution passed","level":"INFO","ts":"2026-04-14T22:47:41.010912005-05:00","section":"tiptop","version":"0.1.0"}
+{"msg":"optimal solution","level":"INFO","ts":"2026-04-14T22:47:41.142745325-05:00","version":"0.1.0","seeds":"[13543,13544,17526,22754,22757,22762,25574,25575,25577,25578]"}

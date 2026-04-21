@@ -1,5 +1,5 @@
 extern crate docopt;
-extern crate rustc_serialize;
+extern crate serde;
 extern crate capngraph;
 extern crate petgraph;
 
@@ -8,7 +8,10 @@ use std::fs::File;
 
 use capngraph::load_graph;
 use docopt::Docopt;
+use serde::Deserialize;
 use petgraph::visit::EdgeRef;
+
+
 
 const USAGE: &'static str = "
 Convert the input packed binary graph to the edge-list format.
@@ -21,8 +24,7 @@ Options:
   -h --help        Show this screen.
 ";
 
-#[derive(RustcDecodable)]
-// #[derive(serde:Deserialize)]
+#[derive(Deserialize)]
 struct Args {
     arg_bin: String,
     arg_dest: String,
@@ -30,7 +32,7 @@ struct Args {
 
 fn main() {
     let args: Args = Docopt::new(USAGE)
-        .and_then(|d| d.decode())
+        .and_then(|d| d.deserialize())
         .unwrap_or_else(|e| e.exit());
 
     let graph = load_graph(args.arg_bin.as_str()).unwrap();

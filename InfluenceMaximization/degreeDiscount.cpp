@@ -422,12 +422,27 @@ Graph<int> readGraph(string filename){
 
         // Zero-idx solution
 
-        G.addEdge(u, v, p); 
+        G.addEdge(u, v, 0.01); 
     }
 
     file.close();
 
     return G;
+}
+
+vector<int> readOptimal(string filename, int n){
+    ifstream fin;
+    fin.open(filename);
+
+    vector<int> v(n);
+
+    for(int i = 0; i < n; i++){
+        fin >> v[i];
+    }
+
+    fin.close();
+
+    return v;
 }
 
 pair<set<int> , double> OptimalHints_OPT_k(Graph<int> & G, int k, double pr, int MC_reps, IMM & im){
@@ -687,23 +702,23 @@ pair<set<int> , double> OptimalHints_fixedPredictions(Graph<int> & G, int k, dou
         // mg = im.estimated_spread(mg);
         S_prime.push_back(p);
         set<int> temp(S_prime.begin(), S_prime.end());
-        if(memory_map.find(temp) == memory_map.end()) {
+        // if(memory_map.find(temp) == memory_map.end()) {
             mp = monte_carlo_IC(S_prime, G, MC_reps);
-            memory_map.insert({temp, mp});
-        }else {
-            mp = memory_map[temp];
-        }
+            // memory_map.insert({temp, mp});
+        // }else {
+            // mp = memory_map[temp];
+        // }
         S_prime.pop_back();
 
         if(g != p) {
             S_prime.push_back(g);
             set<int> temp2(S_prime.begin(), S_prime.end());
-            if(memory_map.find(temp2) == memory_map.end()) {
+            // if(memory_map.find(temp2) == memory_map.end()) {
                 mg = monte_carlo_IC(S_prime, G, MC_reps);
-                memory_map.insert({temp2, mg});
-            }else{
-                mg = memory_map[temp2];
-            }
+            //     memory_map.insert({temp2, mg});
+            // }else{
+            //     mg = memory_map[temp2];
+            // }
             S_prime.pop_back();
         }else {
             mg = mp;
@@ -866,18 +881,38 @@ pair<vector<pair<vector<int>, double>>, pair< vector<pair<vector<int>, double>>,
     return {dd_results, {im_results, oh_results}}; 
 }
 
-int main() {
-    string files[] = {/*"GrQc", "AstroPh" , "HepTh",*/ "HepPh"};
+int main(int argc, char * argv[]) {
 
-    Graph<int> G = readGraph("data/CA-GrQc-dir.txt");
+    ofstream log_output("logs.txt", std::ios::app);
+
+    auto old_rdbuf = clog.rdbuf();
+
+    clog.rdbuf(log_output.rdbuf());
+
+    int k = 1;
+    string graph_file = "data/CA-GrQc.txt", optimal_file;
+    vector<int> opt;
+
+    if(argc > 1){
+        k = atoi(argv[1]);
+        graph_file = argv[2];
+        optimal_file = argv[3];
+        opt = readOptimal(optimal_file, k);
+    }
+
+    Graph<int> G = readGraph("data/" + graph_file + ".txt");
 
 
-    vector<int> in({9, 103, 105, 281, 297, 579, 1039, 1286, 1291, 3139});
-    vector<int> GrQc_OPT_10({11,20,53,101,108,186,295,577,1037,1733});
-    // vector<int> GrQc_OPT_10({10,19,52,100,107,185,294,576,1036,1732});
-    vector<int> gem({{297, 1286, 579, 1039, 4035, 3139, 110, 188, 223, 55}});
+    clog << "######################################################" << endl;
+    clog << "             Starting OH with K = " << k << endl;
+    clog << "            " << __DATE__ << ", Graph: " << graph_file <<  endl;
+    clog << "######################################################" << endl;
+    cout << "######################################################" << endl;
+    cout << "             Starting OH with K = " << k << endl;
+    cout << "######################################################" << endl;
 
     IMM im(G.size);
+
 
     for(int i = 0; i < G.size; i++){
         for(auto [u, pr] : G.adjList[i]){
@@ -885,171 +920,66 @@ int main() {
         }
     }
 
-    vector<int> output = im.run(10).first;
+    vector<int> output = im.run(k).first;
 
     sort(output.begin(), output.end());
 
+    double value;
+
+    ofstream fout;
+
+    clog << "OPT: ";
     cout << "OPT: ";
-    for(auto x : GrQc_OPT_10)
+    for(auto x : opt) {
         cout << x << ' ';
+        clog << x << ' ';
+    }
+
+    value = monte_carlo_IC(opt, G, 20000);
+    clog << endl << "Total influence spread: " << value << endl;
+    cout << endl << "Total influence spread: " << value << endl;
+
+    cout << "Done with OPT" << endl;
+
+    fout.open("results/"+graph_file+"_OPT.txt", std::ios::app);
+    fout << "(" << k << ", " << value << ")" << endl;
+    fout.close();
     
-    cout << endl << "Total influence spread: " << monte_carlo_IC(GrQc_OPT_10, G, 20000) << endl;
-    
+    clog << "Greedy: ";
     cout << "Greedy: ";
-    for(auto x : output)
-        cout << x << ' ';
+    for(auto x : output){
+       clog << x << ' ';
+       cout << x << ' ';
+    }
     
-    cout << endl << "Total influence spread: " << monte_carlo_IC(output, G, 20000) << endl;
+    value = monte_carlo_IC(output, G, 20000);
+    clog << endl << "Total influence spread: " << value << endl;
+    cout << endl << "Total influence spread: " << value << endl;
 
-
-
-    // vector<pair<vector<int>, double>> oh_results;
-
-    // // Compute greedy using IMM for k = 1 ... maxK
-
-    // cout << "Starting with IMM: " << endl;
-
-    // IMM im(G.size);
-
-    // for(int i = 0; i < G.size; i++){
-    //     for(int u : G.adjList[i]){
-    //         im.add_edge(i, u, 0.01);
-    //     }
-    // }
-
-    // im.get_RR_sets(10);
-
-
-    // double oh_sum = 0.0;
-
-    // pair<set<int>, double> temp;
-    // for(int j = 0; j < 10; j++){
-    //     temp = OptimalHints_iterative(G, 10, 0.01, 20000, im);
-    //     cout << "Result: " << temp.second << endl << "Seeds selected: " << endl;
-
-    //     for(int x : temp.first){
-    //         cout << x << ' ';
-    //         cerr << x << ' ';
-    //     }
-
-    //     cout << endl;
-    //     cerr << endl;
-
-    //     cerr << "Result: " << temp.second << endl;
-    //     oh_sum += temp.second;
-    // }
-
-    // cout << oh_sum/10 << endl;
-    // cerr << oh_sum/10 << endl;
-
-    // gs.push_back({130, 128, 127, 131, 132});
-    // gs.push_back({130, 128, 127, 131, 132, 134, 125, 126, 133, 135});
-    // gs.push_back({130, 128, 127, 131, 132, 134, 125, 126, 133, 135, 124, 137, 140, 136, 123, 138, 141, 129, 298, 483});
-    // gs.push_back({130, 128, 127, 131, 132, 134, 125, 126, 133, 135, 124, 137, 140, 136, 123, 138, 141, 129, 298, 483, 456, 478, 290, 355, 369, 463, 469, 496, 271, 283, 366, 388, 393, 454, 480});
-    // gs.push_back({130, 128, 127, 131, 132, 134, 125, 126, 133, 135, 124, 137, 140, 136, 123, 138, 141, 129, 298, 483, 456, 478, 290, 355, 369, 463, 469, 496, 271, 283, 366, 388, 393, 454, 480, 253, 263, 272, 281, 292, 299, 356, 361, 376, 381, 396, 459, 471, 475, 493});
-
-//     vector<int> gs({126, 356, 19,355,133,483,127,296,130,263,125,472,132,283,27,457,136,262,135,498,140,467,123,377,381,393,124,366,128,137,480,290,131,373,280,469,259,298,379,496,292,134,99,493,475,256,297,455,359,294});
+    cout << "Done with greedy" << endl;
     
-//     vector<int> gpt({
-// 356, 355, 483, 469, 480, 475, 490, 492, 496, 499,
-// 500, 487, 471, 472, 474, 476, 478, 481, 482, 485,
-// 463, 462, 464, 465, 467, 468, 470, 473, 477, 479,
-// 451, 452, 453, 454, 455, 456, 457, 458, 459, 460,
-// 350, 351, 352, 353, 354, 357, 359, 361, 17, 27
-// });
+    fout.open("results/"+graph_file+"_Greedy.txt", std::ios::app);
+    fout << "(" << k << ", " << value << ")" << endl;
+    fout.close();
 
-//     vector<int> claude({{17, 19, 27,
-//  123, 124, 125, 126, 127, 128, 129, 130, 131, 132,
-//  133, 134, 135, 136, 137, 138, 139, 140, 141, 142,
-//  250, 251, 252, 253, 254, 255, 256, 257, 258,
-//  350, 351, 352, 353, 354, 355, 356, 357, 358,
-//  450, 451, 452, 453, 454, 455, 456, 457, 458}});
+    value = 0.0;
 
-//     vector<int> g;
-//     for(int i = 0; i < gpt.size(); i++){
-//         g.push_back(gpt[i] - 1);
-//         cout << "(" << i + 1 << ", " << monte_carlo_IC(g, G, 0.01, 20000) << ") \n";
-//     }
+    for(int i = 0; i < 50; i++){
+        value += OptimalHints_fixedPredictions(G, k, 0.01, 20000, im, opt).second;
+    }
 
-//     cout << endl;
+    value /= 50;
 
+    clog << "Optimal Hints Spread: " << value << endl; 
+    cout << "Optimal Hints Spread: " << value << endl; 
 
-    // for(int j = 0; j < 1; j++){
+    cout << "Done with OH" << endl;
 
-    //     // Graph<int> G = readGraph("data/girth11.txt");
+    fout.open("results/"+graph_file+"_OH_alpha1.txt", std::ios::app);
+    fout << "(" << k << ", " << value << ")" << endl;
+    fout.close();
 
-
-    //     pair<vector<pair<vector<int>, double>>, pair< vector<pair<vector<int>, double>>, vector<pair<vector<int>, double>> > > results = experiment_OPTk_G_DD_OH(G, 15, 0.01, 20000);
-
-    //     cout << "##################################\nResults for " + files[j] << endl;
-    //     cout << "Degree discount: ";
-    //     for(int i = 0; i < (int)results.first.size(); i++){
-    //         cout << results.first[i].second << ' ';
-    //     }
-    //     cout << endl;
-
-    //     cout << "Greedy: ";
-    //     for(int i = 0; i < (int)results.second.first.size(); i++){
-    //         cout << results.second.first[i].second << ' ';
-    //     }
-    //     cout << endl;
-
-    //     cout << "Optimal Hints: ";
-    //     for(int i = 0; i < (int)results.second.second.size(); i++){
-    //         cout << results.second.second[i].second << ' ';
-    //     }
-    //     cout << endl;
-    // }
-
-    // cout << "Gemini: (10, " << monte_carlo_IC(in, G, 0.01, 20000) << ")" << endl;
-
-    /*IMM Only*/
-
-    // IMM im(G.size);
-
-    // for(int i = 0; i < G.size; i++){
-    //     for(int u : G.adjList[i]){
-    //         im.add_edge(i, u, 0.01);
-    //     }
-    // }
-
-    // vector<double> results;
-
-    // for(int i = 1; i < 51; i++){
-    //     results.push_back(im.run(i).second);
-    // }
-
-    // cout << "IMM results:" << endl;
-    // for(auto x : results){
-    //     cout << x << ' ';
-    // }
-
-    // cout << endl;
-
-    /*First set of experiments*/
-
-    // //vector<pair<double, pair<double, double>>> G_25_results = experiment(G, 50, 30, 20000, 1);
-
-    // cout << "OPT: \t";
-
-    // for(auto x : G_25_results){
-    //     cout << x.first << ' ';
-    // }
-
-    // cout << endl << "Greedy: \t";
-
-    // for(auto x : G_25_results){
-    //     cout << x.second.first << ' ';
-    // }
-
-    // cout << endl << "Optimal Hints: \t";
-
-    // for(auto x : G_25_results){
-    //     cout << x.second.second << ' ';
-    // }
-    
-    // cout << endl;
-
+    clog.rdbuf(old_rdbuf);
 
     return 0;
 }

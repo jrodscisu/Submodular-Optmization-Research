@@ -6,7 +6,9 @@ use capnp::serialize_packed;
 use graph_capnp::{edge, graph_header};
 extern crate docopt;
 use docopt::Docopt;
-extern crate rustc_serialize;
+extern crate serde;
+use serde::Deserialize;
+
 use std::fs::File;
 use std::io::{BufRead, BufReader, BufWriter, Read};
 use std::path::Path;
@@ -29,8 +31,7 @@ Options:
   --grouped          The <source> is grouped by source node. Enable only if true, produces a smaller output.
 ";
 
-#[derive(RustcDecodable)]
-// #[derive(serde:Deserialize)]
+#[derive(Deserialize)]
 struct Args {
     arg_source: String,
     arg_dest: String,
@@ -138,7 +139,7 @@ fn build_edge(from: u32, to: u32, weight: f32) -> HeapBuilder {
 
 fn main() {
     let args: Args = Docopt::new(USAGE)
-        .and_then(|d| d.decode())
+        .and_then(|d| d.deserialize())
         .unwrap_or_else(|e| e.exit());
 
     let (iter, (num_nodes, num_edges)) =

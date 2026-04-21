@@ -44,6 +44,7 @@ use rand::distributions::IndependentSample;
 use rand_mersenne_twister::{MTRng64, mersenne};
 use bincode::{deserialize_from as bin_read_from, Infinite};
 use std::cell::RefCell;
+use std::io::Write;
 
 use ris::*;
 
@@ -449,15 +450,26 @@ fn main() {
     }
 
     let seeds = tiptop(g,
-                       costs,
-                       bens,
-                       args.arg_model,
-                       args.arg_k,
-                       args.arg_epsilon,
-                       delta,
-                       args.flag_threads.unwrap_or(1),
-                       log.new(o!("section" => "tiptop")));
-    info!(log, "optimal solution"; "seeds" => json_string(&seeds.into_iter().map(|node| node.index()).collect::<Vec<_>>()).unwrap());
+                   costs,
+                   bens,
+                   args.arg_model,
+                   args.arg_k,
+                   args.arg_epsilon,
+                   delta,
+                   args.flag_threads.unwrap_or(1),
+                   log.new(o!("section" => "tiptop")));
+
+    // Collect seed indices as a space-separated string
+    let seed_indices: Vec<usize> = seeds.iter().map(|node| node.index()).collect();
+
+    info!(log, "optimal solution"; "seeds" => json_string(&seed_indices).unwrap());
+
+    // Prepare seed string for file writing
+    let seed_string = seed_indices.iter().map(|&x| x.to_string()).collect::<Vec<_>>().join(" ");
+
+    // Write to file
+    let mut file = File::create("../data/temp_opt.txt").unwrap();
+    file.write_all(seed_string.as_bytes()).unwrap();
 }
 
 #[cfg(test)]
