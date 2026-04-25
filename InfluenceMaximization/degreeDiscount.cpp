@@ -231,8 +231,6 @@ public:
         int covered = count_covered_sets(RR_sets, final_seeds);
         double estimated_spread = (double) num_nodes * ((double)covered / theta);
 
-        // cout << "Estiamted Influence Spread: " << estimated_spread << " nodes " << endl;
-
         return {final_seeds, estimated_spread};
     }
 
@@ -266,8 +264,17 @@ public:
         curr_covered_sets_forMG = 0;
     }
 
+    double compute_influence(const vector<int> & seeds){
+
+        int covered = count_covered_sets(RR_sets, seeds);
+
+        double estimated_spread = (double) num_nodes * ((double) covered / theta);
+
+        return estimated_spread;
+    }
+
     void reset_forMG() {
-        node_to_rr_forMG.resize(num_nodes);
+        node_to_rr_forMG.assign(num_nodes, vector<int>());
         degrees_forMG.assign(num_nodes, 0);
 
         int num_sets = RR_sets.size();
@@ -284,18 +291,49 @@ public:
         curr_covered_sets_forMG = 0;
     }
 
+    int getMG_for_node(int p){
+        return degrees_forMG[p];
+    }
+
     pair<int, double>  node_selection_next_wo_S(){
 
         int be = max_element(degrees_forMG.begin(), degrees_forMG.end()) - degrees_forMG.begin();
         return {be, degrees_forMG[be]};
     }
 
+    vector<pair<int, double>>  r_predictions(int r){
+        priority_queue<pair<int, int> , vector<pair<int, int> > , greater<pair<int, int>> > pq;
+        vector<pair<int, double>> ps;
+
+        for(int i = 0; i < r; i++){
+            pq.push({degrees_forMG[i], i});
+        }
+
+        for(int i = r; i < num_nodes; i++){
+            if(degrees_forMG[i] > pq.top().second){
+                pq.pop();
+                pq.push({degrees_forMG[i], i});
+            }
+        }
+
+        while(!pq.empty()){
+            auto [du, u] = pq.top();
+            ps.push_back({u, du});
+            pq.pop();
+        }
+
+        return ps;
+    } 
+
     void update_node_selection(int u) {
+        
+        assert(u < (int)node_to_rr_forMG.size());
         for(int set_idx : node_to_rr_forMG[u]){
             if(!covered_sets_forMG[set_idx]){
                 covered_sets_forMG[set_idx] = true;
                 curr_covered_sets_forMG++;
 
+                assert(set_idx < (int)RR_sets.size());
                 for(int v : RR_sets[set_idx]){
                     degrees_forMG[v]--;
                 }
@@ -422,7 +460,7 @@ Graph<int> readGraph(string filename){
 
         // Zero-idx solution
 
-        G.addEdge(u, v, 0.01); 
+        G.addEdge(u, v, p); 
     }
 
     file.close();
@@ -430,14 +468,20 @@ Graph<int> readGraph(string filename){
     return G;
 }
 
-vector<int> readOptimal(string filename, int n){
+vector<vector<int>> readOptimal(string filename, int n){
     ifstream fin;
     fin.open(filename);
 
-    vector<int> v(n);
+    vector<vector<int>> v;
 
-    for(int i = 0; i < n; i++){
-        fin >> v[i];
+    int x;
+
+    for(int i = 1; i <= n; i++){
+        v.push_back(vector<int>());
+        for(int j = 0; j < i; j++){
+            fin >> x;
+            v.back().push_back(x);
+        }
     }
 
     fin.close();
@@ -445,7 +489,7 @@ vector<int> readOptimal(string filename, int n){
     return v;
 }
 
-pair<set<int> , double> OptimalHints_OPT_k(Graph<int> & G, int k, double pr, int MC_reps, IMM & im){
+pair<set<int> , double> OH_OPT_k(Graph<int> & G, int k, double pr, int MC_reps, IMM & im){
 
     std::random_device rd;  
     std::mt19937 gen(rd());
@@ -556,7 +600,7 @@ pair<set<int> , double> OptimalHints_OPT_k(Graph<int> & G, int k, double pr, int
     return {S, prev};
 }
 
-pair<set<int> , double> OptimalHints_iterative(Graph<int> & G, int k, double pr, int MC_reps, IMM & im){
+pair<set<int> , double> OH_iter(Graph<int> & G, int k, double pr, int MC_reps, IMM & im){
 
     std::random_device rd;  
     std::mt19937 gen(rd());
@@ -665,7 +709,8 @@ pair<set<int> , double> OptimalHints_iterative(Graph<int> & G, int k, double pr,
 
     return {S, prev};
 }
-pair<set<int> , double> OptimalHints_fixedPredictions(Graph<int> & G, int k, double pr, int MC_reps, IMM & im, vector<int> ps){
+
+pair<set<int> , double> OH_fixedPred_old(Graph<int> & G, int k, double pr, int MC_reps, IMM & im, vector<int> ps){
 
     std::random_device rd;  
     std::mt19937 gen(rd());
@@ -673,6 +718,7 @@ pair<set<int> , double> OptimalHints_fixedPredictions(Graph<int> & G, int k, dou
 
     //Init graph in IMM
 
+    // cout << "Running OH with fixed prediction..." << endl;
 
     vector<double> g_seed;
 
@@ -683,12 +729,7 @@ pair<set<int> , double> OptimalHints_fixedPredictions(Graph<int> & G, int k, dou
 
     im.reset_forMG();
 
-    for(int i = 0; i < G.size; i++){
-
-        G.dd[i] = G.d[i];
-        G.t[i] = 0;
-    }
-
+    
     double mp, prev = 0.0;
 
     int p;
@@ -699,26 +740,15 @@ pair<set<int> , double> OptimalHints_fixedPredictions(Graph<int> & G, int k, dou
         
         auto [g, mg] = im.node_selection_next_wo_S();
 
-        // mg = im.estimated_spread(mg);
         S_prime.push_back(p);
         set<int> temp(S_prime.begin(), S_prime.end());
-        // if(memory_map.find(temp) == memory_map.end()) {
-            mp = monte_carlo_IC(S_prime, G, MC_reps);
-            // memory_map.insert({temp, mp});
-        // }else {
-            // mp = memory_map[temp];
-        // }
+        mp = im.compute_influence(S_prime);
         S_prime.pop_back();
 
         if(g != p) {
             S_prime.push_back(g);
             set<int> temp2(S_prime.begin(), S_prime.end());
-            // if(memory_map.find(temp2) == memory_map.end()) {
-                mg = monte_carlo_IC(S_prime, G, MC_reps);
-            //     memory_map.insert({temp2, mg});
-            // }else{
-            //     mg = memory_map[temp2];
-            // }
+            mg = im.compute_influence(S_prime);
             S_prime.pop_back();
         }else {
             mg = mp;
@@ -742,12 +772,79 @@ pair<set<int> , double> OptimalHints_fixedPredictions(Graph<int> & G, int k, dou
         S_prime.push_back(v);
 
 
-        //Update greedyDiscount
+        int x = find(ps.begin(), ps.end(), v) - ps.begin();
 
-        for(auto u : G.adjList[v]){
-            G.t[u.pr]++;
-            G.dd[u.pr] = (double)G.d[u.pr] - 2.0 * G.t[u.pr] - (double)(G.d[u.pr] - G.t[u.pr]) * G.t[u.pr] * p;
+        if(x < (int)ps.size()){
+            ps.erase(ps.begin() + x);
         }
+
+        //Update im
+
+        im.update_node_selection(v);
+    }
+
+    return {S, prev};
+}
+
+pair<set<int> , double> OH_fixedPred(Graph<int> & G, int k, double pr, int MC_reps, IMM & im, vector<int> ps){
+
+    std::random_device rd;  
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<double> coin(0.0, 1.0);
+
+    //Init graph in IMM
+
+    // cout << "Running OH with fixed prediction..." << endl;
+
+    vector<double> g_seed;
+
+    set<int> S;
+    vector<int> S_prime;
+
+    // Setting up IMM
+
+    im.reset_forMG();
+
+    
+    double mp, prev = 0.0;
+
+    int p;
+
+    for(int i = 0; i < k; i++){
+
+        p = ps[0];
+        
+        auto [g, mg] = im.node_selection_next_wo_S();
+
+        S_prime.push_back(p);
+        set<int> temp(S_prime.begin(), S_prime.end());
+        // mp = im.compute_influence(S_prime);
+        mp = im.getMG_for_node(p);
+        S_prime.pop_back();
+
+        // if(g != p) {
+        //     S_prime.push_back(g);
+        //     set<int> temp2(S_prime.begin(), S_prime.end());
+        //     mg = im.compute_influence(S_prime);
+        //     S_prime.pop_back();
+        // }else {
+        //     mg = mp;
+        // }
+
+
+        int v = g;
+
+        if(coin(gen) <= (mp / (mp + mg))){
+            v = p;
+            mg = mp;
+        }
+
+        prev += mg;
+
+
+        S.insert(v);
+        S_prime.push_back(v);
+
 
         int x = find(ps.begin(), ps.end(), v) - ps.begin();
 
@@ -760,9 +857,76 @@ pair<set<int> , double> OptimalHints_fixedPredictions(Graph<int> & G, int k, dou
         im.update_node_selection(v);
     }
 
-    // cout << ">>>>>>Done with k = " << k << endl;
+    return {S, im.estimated_spread(0)};
+}
 
-    return {S, prev};
+pair<set<int> , double> OH_topr(Graph<int> & G, int k, double pr, int MC_reps, IMM & im, int r){
+
+    std::random_device rd;  
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<double> coin(0.0, 1.0);
+    std::uniform_int_distribution p_node(0, r - 1);
+    //Init graph in IMM
+
+    // cout << "Running OH with fixed prediction..." << endl;
+
+    vector<double> g_seed;
+
+    set<int> S;
+    vector<int> S_prime;
+
+    // Setting up IMM
+
+    im.reset_forMG();
+
+    
+    double mp, prev = 0.0;
+
+    int p;
+
+    for(int i = 0; i < k; i++){
+
+        vector<pair<int, double>>  predictions = im.r_predictions(r); 
+        int random_pred = p_node(gen);
+        p = predictions[random_pred].first;
+        
+        auto [g, mg] = im.node_selection_next_wo_S();
+
+        S_prime.push_back(p);
+        set<int> temp(S_prime.begin(), S_prime.end());
+        // mp = im.compute_influence(S_prime);
+        mp = im.getMG_for_node(p);
+        S_prime.pop_back();
+
+        // if(g != p) {
+        //     S_prime.push_back(g);
+        //     set<int> temp2(S_prime.begin(), S_prime.end());
+        //     mg = im.compute_influence(S_prime);
+        //     S_prime.pop_back();
+        // }else {
+        //     mg = mp;
+        // }
+
+
+        int v = g;
+
+        if(coin(gen) <= (mp / (mp + mg))){
+            v = p;
+            mg = mp;
+        }
+
+        prev += mg;
+
+
+        S.insert(v);
+        S_prime.push_back(v);
+
+        //Update im
+
+        im.update_node_selection(v);
+    }
+
+    return {S, im.estimated_spread(0)};
 }
 
 vector<int> singleDiscount(Graph<int> & G, int k){
@@ -799,88 +963,6 @@ vector<int> singleDiscount(Graph<int> & G, int k){
     return Sv;
 }
 
-pair<vector<pair<vector<int>, double>>, pair< vector<pair<vector<int>, double>>, vector<pair<vector<int>, double>> > > 
-    experiment_OPTk_G_DD_OH(Graph<int> &G, int maxK, double p, int MC_reps){
-
-    vector<pair<vector<int>, double>> im_results;
-    vector<pair<vector<int>, double>> dd_results;
-    vector<pair<vector<int>, double>> oh_results;
-
-    // Compute greedy using IMM for k = 1 ... maxK
-
-    cout << "Starting with IMM: " << endl;
-
-    IMM im(G.size);
-
-    for(int i = 0; i < G.size; i++){
-        for(auto [u, pr] : G.adjList[i]){
-            im.add_edge(i, u, pr);
-        }
-    }
-
-    im.get_RR_sets(maxK);
-
-    for(int i = 1; i <= maxK; i++){
-        cout << "done with: " << endl;
-        im_results.push_back({vector<int>(), 0.0});
-        im.reset_forMG();
-        for(int k = 1; k <= i; k++){
-            im_results.back().first.push_back(im.node_selection_next_wo_S().first); 
-            im.update_node_selection(im_results.back().first.back());
-        }
-
-        set<int> temp(im_results.back().first.begin(), im_results.back().first.end());
-        if(memory_map.find(temp) == memory_map.end()) {
-            im_results.back().second = monte_carlo_IC(im_results.back().first, G, MC_reps);
-            memory_map.insert({temp, im_results.back().second});
-        }else {
-            im_results.back().second = memory_map[temp];
-        }
-    }
-
-    // Compute Degree Discount
-
-    cout << "Starting with Degree Discount" << endl;
-
-    vector<int> seed_set;
-
-    // #pragma omp parallel for
-    for(int i = 1; i <= maxK; i++){
-        cout << "Working on k = " << i << endl;
-        seed_set = degreeDiscountIC(G, i, p);
-        dd_results.push_back({seed_set, 0.0});
-
-        set<int> temp(dd_results.back().first.begin(), dd_results.back().first.end());
-        if(memory_map.find(temp) == memory_map.end()) {
-            dd_results.back().second = monte_carlo_IC(dd_results.back().first, G, MC_reps);
-            memory_map.insert({temp, dd_results.back().second});
-        }else {
-            dd_results.back().second = memory_map[temp];
-        }
-    }
-
-    //Compute OPT_k with Optimal Hints
-
-    cout << "Starting witih OH" << endl;
-
-    double oh_sum;
-
-    pair<set<int>, double> temp;
-    // #pragma omp parallel for
-    for(int i = 1; i <= maxK; i++){
-         cout << "Working on k = " << i << endl;
-        oh_sum = 0.0;
-        
-        for(int j = 0; j < 20; j++){
-            temp = OptimalHints_OPT_k(G, i, p, MC_reps, im);
-            oh_sum += temp.second;
-        }
-        oh_results.push_back({vector<int>(), oh_sum/20});
-    }
-
-    return {dd_results, {im_results, oh_results}}; 
-}
-
 int main(int argc, char * argv[]) {
 
     ofstream log_output("logs.txt", std::ios::app);
@@ -891,7 +973,7 @@ int main(int argc, char * argv[]) {
 
     int k = 1;
     string graph_file = "data/CA-GrQc.txt", optimal_file;
-    vector<int> opt;
+    vector<vector<int>> opt;
 
     if(argc > 1){
         k = atoi(argv[1]);
@@ -902,82 +984,93 @@ int main(int argc, char * argv[]) {
 
     Graph<int> G = readGraph("data/" + graph_file + ".txt");
 
-
-    clog << "######################################################" << endl;
-    clog << "             Starting OH with K = " << k << endl;
-    clog << "            " << __DATE__ << ", Graph: " << graph_file <<  endl;
-    clog << "######################################################" << endl;
-    cout << "######################################################" << endl;
-    cout << "             Starting OH with K = " << k << endl;
-    cout << "######################################################" << endl;
-
     IMM im(G.size);
+    IMM im_oh(G.size);
 
 
     for(int i = 0; i < G.size; i++){
         for(auto [u, pr] : G.adjList[i]){
             im.add_edge(i, u, pr);
+            im_oh.add_edge(i, u, pr);
         }
     }
 
-    vector<int> output = im.run(k).first;
+    for(int z = 0; z < k; z++){
 
-    sort(output.begin(), output.end());
+        clog << "######################################################" << endl;
+        clog << "             Starting OH with K = " << z + 1 << endl;
+        clog << "            " << __DATE__ << ", Graph: " << graph_file <<  endl;
+        clog << "######################################################" << endl;
+        cout << "######################################################" << endl;
+        cout << "             Starting OH with K = " << z + 1 << endl;
+        cout << "######################################################" << endl;
 
-    double value;
 
-    ofstream fout;
+        auto [output, greedy_spread] = im.run(z + 1);
+        im_oh.run(z + 1);
 
-    clog << "OPT: ";
-    cout << "OPT: ";
-    for(auto x : opt) {
-        cout << x << ' ';
+        double value;
+
+        greedy_spread = im_oh.compute_influence(output);
+
+        ofstream fout;
+
+        clog << "OPT: " << z;
+        cout << "OPT: ";
+        for(auto x : opt[z]) {
+            cout << x << ' ';
+            clog << x << ' ';
+        }
+
+        value = im_oh.compute_influence(opt[z]);
+        clog << endl << "Total influence spread: " << value << endl;
+        cout << endl << "Total influence spread: " << value << endl;
+
+        cout << "Done with OPT" << endl;
+
+        fout.open("results/"+graph_file+"_OPT.txt", std::ios::app);
+        fout << "(" << z + 1 << ", " << value << ")" << endl;
+        fout.close();
+        
+        clog << "Greedy: ";
+        cout << "Greedy: ";
+        for(auto x : output){
         clog << x << ' ';
+        cout << x << ' ';
+        }
+        
+        clog << endl << "Total influence spread: " << greedy_spread << endl;
+        cout << endl << "Total influence spread: " << greedy_spread << endl;
+
+        cout << "Done with greedy" << endl;
+        
+        fout.open("results/"+graph_file+"_Greedy.txt", std::ios::app);
+        fout << "(" << z + 1 << ", " << value << ")" << endl;
+        fout.close();
+
+        vector<double> oh_outputs;
+        set<int> diff_outputs;
+        for(int i = 0; i < 50; i++){
+            pair<set<int>, double> temp = OH_fixedPred(G, z + 1, 0.01, 20000, im_oh, opt[z]);
+
+            diff_outputs.merge(temp.first);
+            oh_outputs.push_back(temp.second);
+        }
+
+        sort(oh_outputs.begin(), oh_outputs.end());
+
+        value = oh_outputs[25];
+
+        clog << "Optimal Hints Spread: " << value << endl; 
+        cout << "Optimal Hints Spread: " << value << endl; 
+        cout << "Total #of distinct vertices selected as seed: " << diff_outputs.size() << endl;
+
+        cout << "Done with OH" << endl;
+
+        fout.open("results/"+graph_file+"_OH_alpha1.txt", std::ios::app);
+        fout << "(" << z + 1 << ", " << value << ")" << endl;
+        fout.close();
     }
-
-    value = monte_carlo_IC(opt, G, 20000);
-    clog << endl << "Total influence spread: " << value << endl;
-    cout << endl << "Total influence spread: " << value << endl;
-
-    cout << "Done with OPT" << endl;
-
-    fout.open("results/"+graph_file+"_OPT.txt", std::ios::app);
-    fout << "(" << k << ", " << value << ")" << endl;
-    fout.close();
-    
-    clog << "Greedy: ";
-    cout << "Greedy: ";
-    for(auto x : output){
-       clog << x << ' ';
-       cout << x << ' ';
-    }
-    
-    value = monte_carlo_IC(output, G, 20000);
-    clog << endl << "Total influence spread: " << value << endl;
-    cout << endl << "Total influence spread: " << value << endl;
-
-    cout << "Done with greedy" << endl;
-    
-    fout.open("results/"+graph_file+"_Greedy.txt", std::ios::app);
-    fout << "(" << k << ", " << value << ")" << endl;
-    fout.close();
-
-    value = 0.0;
-
-    for(int i = 0; i < 50; i++){
-        value += OptimalHints_fixedPredictions(G, k, 0.01, 20000, im, opt).second;
-    }
-
-    value /= 50;
-
-    clog << "Optimal Hints Spread: " << value << endl; 
-    cout << "Optimal Hints Spread: " << value << endl; 
-
-    cout << "Done with OH" << endl;
-
-    fout.open("results/"+graph_file+"_OH_alpha1.txt", std::ios::app);
-    fout << "(" << k << ", " << value << ")" << endl;
-    fout.close();
 
     clog.rdbuf(old_rdbuf);
 

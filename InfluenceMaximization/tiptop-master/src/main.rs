@@ -30,7 +30,7 @@ extern crate quickcheck;
 extern crate gurobi;
 
 use std::collections::{BTreeMap, BTreeSet};
-use std::fs::File;
+use std::fs::{File, OpenOptions};
 use petgraph::visit::NodeCount;
 use vec_graph::{Graph, NodeIndex, EdgeIndex};
 use rayon::prelude::*;
@@ -470,6 +470,15 @@ fn main() {
     // Write to file
     let mut file = File::create("../data/temp_opt.txt").unwrap();
     file.write_all(seed_string.as_bytes()).unwrap();
+
+    let mut opt_file = OpenOptions::new()
+    .write(true)
+    .append(true)
+    .create(true)
+    .open("../data/optimals/NetPHY-Optimal.txt") // Change to your desired filename
+    .expect("Unable to open file");
+
+    writeln!(opt_file, "{}", seed_string).expect("Unable to write data");
 }
 
 #[cfg(test)]
