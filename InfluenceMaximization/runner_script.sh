@@ -18,7 +18,7 @@ K=$2
 shift 2  # Shift to pass remaining args to tiptop
 
 # Change to tiptop-master directory and run tiptop
-for i in $(seq 11 "$K"); do
+for i in $(seq 12 "$K"); do
     cd tiptop-master || { echo "Error: tiptop-master directory not found"; exit 1; }
     echo "Running tiptop with graph=$GRAPH, k=$i, epsilon=$0.02"
     cargo run --bin tiptop "../data/${GRAPH}.bin" "IC" "$i" "0.02" --threads 12 "$@"
