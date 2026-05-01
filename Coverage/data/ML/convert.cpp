@@ -1,5 +1,7 @@
 #include <iostream>
 #include <fstream>
+#include <vector>
+#include <algorithm>
 #include <map>
 
 using namespace std;
@@ -17,7 +19,7 @@ int main(int argc, char * argv[]) {
     int u, m;
     while(!fin.eof()){
 
-        fin >> u >> m >> ws;
+        fin >> m >> u >> ws;
 
         if(m_user.find(u) == m_user.end()){
             m_user.insert({u, m_user.size()});
@@ -26,16 +28,17 @@ int main(int argc, char * argv[]) {
             m_movie.insert({m, m_movie.size()});
         }
 
-        e.push_back({m_user[u], m_movie[m]});
+        e.push_back({m_movie[m], m_user[u]});
         cont++;
     }
 
-    fout << m_user.size() << ' ' << m_movie.size() << ' ' << cont << endl;
+    fout << m_user.size() + m_movie.size() << ' ' << cont << endl;
 
+    cout << m_user.size() << ' ' << m_movie.size() << endl;
     sort(e.begin(), e.end());
     
     for(auto [a, b] : e){
-        fout << a << ' ' << b << endl;
+        fout << a << ' ' << b + (int)m_movie.size() << " " << 1 << endl;
     }
 
     return 0;

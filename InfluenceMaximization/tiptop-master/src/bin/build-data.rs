@@ -71,23 +71,37 @@ fn main() {
         let mut rng = rand::thread_rng();
         bincode::serialize_into(&mut out,
                                 &(0..g.node_count())
-                                    .map(|_| dist.ind_sample(&mut rng))
+                                    // .map(|_| dist.ind_sample(&mut rng))
+                                    .map(|v| if v < 1682 {
+                                        dist.ind_sample(&mut rng)
+                                    } else {
+                                        100000.0
+                                    })
                                     .collect::<Vec<f64>>(),
                                 bincode::Infinite)
             .unwrap();
     } else if args.cmd_out_degree {
-        let scale = |w: f64| {
-            g.node_count() as f64 / g.edge_count() as f64 *
-            if args.flag_linear {
-                w
-            } else {
-                if w > 0.0 { w.ln() } else { 0.0 }
+        let scale = |v: usize, w: f64| {
+            if v >= 1682 { //change for the number or movies
+                100000.0
+            }else {
+                //Take this out to keep original setting.
+                (g.node_count() as f64 / g.edge_count() as f64) *
+                if args.flag_linear {
+                    w
+                } else {
+                    if w > 0.0 { w.ln() } else { 0.0 }
+                }
             }
         };
         bincode::serialize_into(&mut out,
                                 &g.node_indices()
-                                    .map(|v| g.neighbors_directed(v, Outgoing).count() as f64)
-                                    .map(scale)
+                                    .map(|v| {
+                                        let deg = g.neighbors_directed(v, Outgoing).count() as f64;
+                                        scale(v.index(), deg)
+                                    })
+                                    // .map(|v| g.neighbors_directed(v, Outgoing).count() as f64)
+                                    // .map(scale)
                                     .collect::<Vec<f64>>(),
                                 bincode::Infinite)
             .unwrap();

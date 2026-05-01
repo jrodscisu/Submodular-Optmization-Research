@@ -163,7 +163,10 @@ public:
         double e = exp(1.0);
         thread_local uniform_int_distribution<int> node_dist(0, n - 1);
 
-        // cout << "=== Starting parameter Estimation ===" << endl;
+        //Increasing l by a factor of 1 + log(2)/log(n)
+
+        l = l * (1 + log(2) / log(n));
+
 
         //calculating the theoretical ceiling of lambda star
 
@@ -182,7 +185,8 @@ public:
 
 
             //Calculate the number or RR sets to generate for this iteration
-            double theta_i = (2.0 + (2.0 / 3.0) * epsilon_prime) * (log_n_choose_k(n, k) + l * log(n) + log(log2(n))) * n / (pow(epsilon_prime, 2) * x);
+            // double theta_i = (2.0 + (2.0 / 3.0) * epsilon_prime) * (log_n_choose_k(n, k) + l * log(n) + log(log2(n))) * n / (pow(epsilon_prime, 2) * x);
+            double theta_i = (2.0 + (2.0 / 3.0) * epsilon_prime) * (log_n_choose_k(n, k) + log(n) + log(log2(n))) * n / (pow(epsilon_prime, 2) * x);
 
             int num_rr_sets = ceil(theta_i);
 
@@ -476,7 +480,7 @@ vector<vector<int>> readOptimal(string filename, int n){
 
     int x;
 
-    for(int i = 1; i <= n; i++){
+    for(int i = n; i <= n; i++){
         v.push_back(vector<int>());
         for(int j = 0; j < i; j++){
             fin >> x;
@@ -963,6 +967,30 @@ vector<int> singleDiscount(Graph<int> & G, int k){
     return Sv;
 }
 
+
+// int main(int argc, char * argv[]){
+//     // vector<int> OPT({14,15,37,41,60,66,80,99,100,105,124,128,131,140,192,196,221,236,239,274,287,307,412,474,507,525,535,559,562,563,599,606,632,634,639,649,682,989,1156,1162,1429,1520,1827,1987,2461,4824,5629,6072,6638,9994});
+//     vector<int> OPT({66,80,100,124,196,239,474,606,639,1162});
+//     vector<int> seeds;
+
+//     int x;
+
+//     Graph<int> G = readGraph("data/imm_external/NetHept_ic.txt");
+
+//     for(int i = 0; i < 10; i++){
+//         cin >> x;
+//         seeds.push_back(x);
+//     }
+
+    
+//     double opt_val = monte_carlo_IC(OPT, G, 20000);
+//     double greedy_val = monte_carlo_IC(seeds, G, 20000);
+
+//     cout << opt_val << ' ' << greedy_val << endl;
+
+//     return 0;
+// }
+
 int main(int argc, char * argv[]) {
 
     ofstream log_output("logs.txt", std::ios::app);
@@ -982,54 +1010,49 @@ int main(int argc, char * argv[]) {
         opt = readOptimal(optimal_file, k);
     }
 
-    Graph<int> G = readGraph("data/" + graph_file + ".txt");
+    Graph<int> G = readGraph("data/txts/" + graph_file + ".txt");
 
     IMM im(G.size);
-    IMM im_oh(G.size);
 
 
     for(int i = 0; i < G.size; i++){
         for(auto [u, pr] : G.adjList[i]){
             im.add_edge(i, u, pr);
-            im_oh.add_edge(i, u, pr);
         }
     }
 
-    for(int z = 0; z < k; z++){
+    for(int z = k; z < k + 1; z++){
 
         clog << "######################################################" << endl;
-        clog << "             Starting OH with K = " << z + 1 << endl;
+        clog << "             Starting OH with K = " << z  << endl;
         clog << "            " << __DATE__ << ", Graph: " << graph_file <<  endl;
         clog << "######################################################" << endl;
         cout << "######################################################" << endl;
-        cout << "             Starting OH with K = " << z + 1 << endl;
+        cout << "             Starting OH with K = " << z << endl;
         cout << "######################################################" << endl;
 
 
-        auto [output, greedy_spread] = im.run(z + 1);
-        im_oh.run(z + 1);
+        auto [output, greedy_spread] = im.run(z);
 
         double value;
-
-        greedy_spread = im_oh.compute_influence(output);
 
         ofstream fout;
 
         clog << "OPT: " << z;
         cout << "OPT: ";
-        for(auto x : opt[z]) {
+        for(auto x : opt[0]) {
             cout << x << ' ';
             clog << x << ' ';
         }
 
-        value = im_oh.compute_influence(opt[z]);
+        value = im.compute_influence(opt[0]);
         clog << endl << "Total influence spread: " << value << endl;
         cout << endl << "Total influence spread: " << value << endl;
 
         cout << "Done with OPT" << endl;
 
         fout.open("results/"+graph_file+"_OPT.txt", std::ios::app);
-        fout << "(" << z + 1 << ", " << value << ")" << endl;
+        fout << "(" << z << ", " << value << ")" << endl;
         fout.close();
         
         clog << "Greedy: ";
@@ -1045,13 +1068,13 @@ int main(int argc, char * argv[]) {
         cout << "Done with greedy" << endl;
         
         fout.open("results/"+graph_file+"_Greedy.txt", std::ios::app);
-        fout << "(" << z + 1 << ", " << value << ")" << endl;
+        fout << "(" << z << ", " << value << ")" << endl;
         fout.close();
 
         vector<double> oh_outputs;
         set<int> diff_outputs;
         for(int i = 0; i < 50; i++){
-            pair<set<int>, double> temp = OH_fixedPred(G, z + 1, 0.01, 20000, im_oh, opt[z]);
+            pair<set<int>, double> temp = OH_fixedPred(G, 7, 0.01, 20000, im, opt[0]);
 
             diff_outputs.merge(temp.first);
             oh_outputs.push_back(temp.second);
@@ -1068,7 +1091,7 @@ int main(int argc, char * argv[]) {
         cout << "Done with OH" << endl;
 
         fout.open("results/"+graph_file+"_OH_alpha1.txt", std::ios::app);
-        fout << "(" << z + 1 << ", " << value << ")" << endl;
+        fout << "(" << z << ", " << value << ")" << endl;
         fout.close();
     }
 

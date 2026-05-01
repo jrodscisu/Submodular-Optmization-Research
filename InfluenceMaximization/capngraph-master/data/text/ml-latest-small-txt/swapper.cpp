@@ -13,7 +13,7 @@ int main() {
 
     while(!fin.eof()){
         fin >> a >> b >> ws;
-        cout << b << ' ' << a + 9724 << endl;
+        cout << b << ' ' << a + 9724 << ' ' << 1.0 << endl;
     }
 
     return 0;
