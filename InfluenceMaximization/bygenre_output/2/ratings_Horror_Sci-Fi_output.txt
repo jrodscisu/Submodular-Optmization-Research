@@ -1,0 +1,176 @@
+--------------- K = 5---------------
+Greedy coverage is: 4944
+Seeds: 0 2 5 13 37 
+TipTop coverage: 4944
+Seeds: 0
+2
+5
+13
+37
+
+OH coverage: 4944
+--------------- K = 6---------------
+Greedy coverage is: 5098
+Seeds: 0 1 2 5 13 37 
+TipTop coverage: 5093
+Seeds: 0
+1
+2
+5
+13
+111
+
+OH coverage: 5098
+--------------- K = 7---------------
+Greedy coverage is: 5229
+Seeds: 0 1 2 3 5 13 37 
+TipTop coverage: 5221
+Seeds: 0
+1
+2
+5
+9
+13
+37
+
+OH coverage: 5229
+--------------- K = 8---------------
+Greedy coverage is: 5328
+Seeds: 0 1 2 3 5 9 13 37 
+TipTop coverage: 5323
+Seeds: 0
+1
+2
+3
+5
+13
+32
+37
+
+OH coverage: 5328
+--------------- K = 9---------------
+Greedy coverage is: 5410
+Seeds: 0 1 2 3 5 9 13 37 111 
+TipTop coverage: 5410
+Seeds: 0
+1
+2
+3
+5
+9
+13
+37
+111
+
+OH coverage: 5410
+--------------- K = 10---------------
+Greedy coverage is: 5483
+Seeds: 0 1 2 3 5 9 13 15 37 111 
+TipTop coverage: 5483
+Seeds: 0
+1
+2
+3
+5
+9
+13
+15
+37
+111
+
+OH coverage: 5483
+--------------- K = 11---------------
+Greedy coverage is: 5542
+Seeds: 0 1 2 3 5 9 13 15 32 37 111 
+TipTop coverage: 5542
+Seeds: 0
+1
+2
+3
+5
+9
+13
+15
+32
+37
+111
+
+OH coverage: 5542
+--------------- K = 12---------------
+Greedy coverage is: 5590
+Seeds: 0 1 2 3 5 9 13 15 32 37 85 111 
+TipTop coverage: 5588
+Seeds: 0
+1
+2
+3
+5
+9
+13
+32
+37
+85
+96
+111
+
+OH coverage: 5588
+--------------- K = 13---------------
+Greedy coverage is: 5636
+Seeds: 0 1 2 3 5 9 13 15 32 37 85 96 111 
+TipTop coverage: 5636
+Seeds: 0
+1
+2
+3
+5
+9
+13
+15
+32
+37
+85
+96
+111
+
+OH coverage: 5636
+--------------- K = 14---------------
+Greedy coverage is: 5667
+Seeds: 0 1 2 3 5 9 13 15 32 37 85 96 100 111 
+TipTop coverage: 5667
+Seeds: 0
+1
+2
+3
+5
+9
+13
+15
+32
+37
+85
+96
+100
+111
+
+OH coverage: 5667
+--------------- K = 15---------------
+Greedy coverage is: 5692
+Seeds: 0 1 2 3 5 9 13 15 22 32 37 85 96 100 111 
+TipTop coverage: 5692
+Seeds: 0
+1
+2
+3
+5
+9
+13
+15
+22
+32
+37
+85
+96
+100
+111
+
+OH coverage: 5692

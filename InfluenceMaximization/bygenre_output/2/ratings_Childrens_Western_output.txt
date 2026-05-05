@@ -1,0 +1,176 @@
+--------------- K = 5---------------
+Greedy coverage is: 4231
+Seeds: 1 8 15 26 51 
+TipTop coverage: 4238
+Seeds: 1
+8
+26
+34
+51
+
+OH coverage: 4238
+--------------- K = 6---------------
+Greedy coverage is: 4442
+Seeds: 1 3 8 15 26 51 
+TipTop coverage: 4451
+Seeds: 1
+3
+8
+26
+34
+51
+
+OH coverage: 4442
+--------------- K = 7---------------
+Greedy coverage is: 4598
+Seeds: 1 3 8 15 26 34 51 
+TipTop coverage: 4598
+Seeds: 1
+3
+8
+15
+26
+34
+51
+
+OH coverage: 4598
+--------------- K = 8---------------
+Greedy coverage is: 4699
+Seeds: 1 3 8 15 22 26 34 51 
+TipTop coverage: 4698
+Seeds: 1
+3
+8
+15
+26
+34
+46
+51
+
+OH coverage: 4699
+--------------- K = 9---------------
+Greedy coverage is: 4783
+Seeds: 1 3 8 15 22 26 34 46 51 
+TipTop coverage: 4783
+Seeds: 1
+3
+8
+15
+22
+26
+34
+46
+51
+
+OH coverage: 4783
+--------------- K = 10---------------
+Greedy coverage is: 4860
+Seeds: 1 3 8 15 22 26 34 46 51 106 
+TipTop coverage: 4860
+Seeds: 1
+3
+8
+15
+22
+26
+34
+46
+51
+106
+
+OH coverage: 4860
+--------------- K = 11---------------
+Greedy coverage is: 4920
+Seeds: 1 3 8 15 19 22 26 34 46 51 106 
+TipTop coverage: 4920
+Seeds: 1
+3
+8
+15
+19
+22
+26
+34
+46
+51
+106
+
+OH coverage: 4920
+--------------- K = 12---------------
+Greedy coverage is: 4968
+Seeds: 1 3 8 15 19 22 26 33 34 46 51 106 
+TipTop coverage: 4968
+Seeds: 1
+3
+8
+15
+19
+22
+26
+33
+34
+46
+51
+106
+
+OH coverage: 4968
+--------------- K = 13---------------
+Greedy coverage is: 5009
+Seeds: 1 3 8 15 19 22 26 33 34 46 51 106 110 
+TipTop coverage: 5009
+Seeds: 1
+3
+8
+15
+19
+22
+26
+33
+34
+46
+51
+106
+110
+
+OH coverage: 5009
+--------------- K = 14---------------
+Greedy coverage is: 5043
+Seeds: 1 3 8 15 19 22 26 27 33 34 46 51 106 110 
+TipTop coverage: 5042
+Seeds: 1
+3
+8
+15
+19
+22
+26
+33
+34
+46
+51
+86
+106
+110
+
+OH coverage: 5042
+--------------- K = 15---------------
+Greedy coverage is: 5075
+Seeds: 1 3 8 15 19 22 26 27 33 34 46 51 86 106 110 
+TipTop coverage: 5075
+Seeds: 1
+3
+8
+15
+19
+22
+26
+27
+33
+34
+46
+51
+86
+106
+110
+
+OH coverage: 5075

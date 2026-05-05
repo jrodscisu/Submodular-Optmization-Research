@@ -1,0 +1,176 @@
+--------------- K = 5---------------
+Greedy coverage is: 5034
+Seeds: 0 4 8 13 42 
+TipTop coverage: 5034
+Seeds: 0
+4
+8
+13
+42
+
+OH coverage: 5034
+--------------- K = 6---------------
+Greedy coverage is: 5170
+Seeds: 0 4 8 13 42 43 
+TipTop coverage: 5170
+Seeds: 0
+4
+8
+13
+42
+43
+
+OH coverage: 5170
+--------------- K = 7---------------
+Greedy coverage is: 5276
+Seeds: 0 4 8 13 17 42 43 
+TipTop coverage: 5276
+Seeds: 0
+4
+8
+13
+17
+42
+43
+
+OH coverage: 5276
+--------------- K = 8---------------
+Greedy coverage is: 5362
+Seeds: 0 4 6 8 13 17 42 43 
+TipTop coverage: 5364
+Seeds: 0
+2
+4
+6
+8
+13
+42
+43
+
+OH coverage: 5364
+--------------- K = 9---------------
+Greedy coverage is: 5432
+Seeds: 0 4 6 8 13 17 20 42 43 
+TipTop coverage: 5434
+Seeds: 0
+4
+6
+8
+13
+20
+30
+42
+43
+
+OH coverage: 5432
+--------------- K = 10---------------
+Greedy coverage is: 5496
+Seeds: 0 4 6 8 13 17 20 42 43 54 
+TipTop coverage: 5506
+Seeds: 0
+2
+4
+6
+8
+13
+20
+42
+43
+54
+
+OH coverage: 5496
+--------------- K = 11---------------
+Greedy coverage is: 5552
+Seeds: 0 4 6 8 10 13 17 20 42 43 54 
+TipTop coverage: 5561
+Seeds: 0
+2
+4
+6
+8
+13
+20
+30
+42
+43
+54
+
+OH coverage: 5561
+--------------- K = 12---------------
+Greedy coverage is: 5598
+Seeds: 0 4 6 8 10 13 17 20 42 43 46 54 
+TipTop coverage: 5603
+Seeds: 0
+2
+4
+6
+8
+10
+13
+20
+42
+43
+54
+88
+
+OH coverage: 5603
+--------------- K = 13---------------
+Greedy coverage is: 5637
+Seeds: 0 2 4 6 8 10 13 17 20 42 43 46 54 
+TipTop coverage: 5642
+Seeds: 0
+2
+4
+6
+8
+10
+13
+20
+30
+42
+43
+46
+54
+
+OH coverage: 5642
+--------------- K = 14---------------
+Greedy coverage is: 5669
+Seeds: 0 2 4 6 8 10 13 17 20 42 43 46 54 88 
+TipTop coverage: 5669
+Seeds: 0
+2
+4
+6
+8
+10
+13
+17
+20
+42
+43
+46
+54
+88
+
+OH coverage: 5669
+--------------- K = 15---------------
+Greedy coverage is: 5695
+Seeds: 0 2 4 6 8 10 13 17 20 30 42 43 46 54 88 
+TipTop coverage: 5696
+Seeds: 0
+2
+4
+6
+8
+10
+13
+17
+20
+30
+41
+42
+43
+54
+56
+
+OH coverage: 5692

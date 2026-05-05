@@ -1,0 +1,176 @@
+--------------- K = 5---------------
+Greedy coverage is: 4453
+Seeds: 1 14 19 49 53 
+TipTop coverage: 4453
+Seeds: 1
+14
+19
+49
+53
+
+OH coverage: 4453
+--------------- K = 6---------------
+Greedy coverage is: 4628
+Seeds: 1 14 19 49 50 53 
+TipTop coverage: 4628
+Seeds: 1
+14
+19
+49
+50
+53
+
+OH coverage: 4628
+--------------- K = 7---------------
+Greedy coverage is: 4748
+Seeds: 1 14 19 49 50 53 62 
+TipTop coverage: 4748
+Seeds: 1
+14
+19
+49
+50
+53
+62
+
+OH coverage: 4748
+--------------- K = 8---------------
+Greedy coverage is: 4850
+Seeds: 1 14 18 19 49 50 53 62 
+TipTop coverage: 4850
+Seeds: 1
+14
+18
+19
+49
+50
+53
+62
+
+OH coverage: 4850
+--------------- K = 9---------------
+Greedy coverage is: 4932
+Seeds: 1 14 18 19 42 49 50 53 62 
+TipTop coverage: 4932
+Seeds: 1
+14
+18
+19
+42
+49
+50
+53
+62
+
+OH coverage: 4932
+--------------- K = 10---------------
+Greedy coverage is: 5007
+Seeds: 1 14 18 19 42 49 50 53 62 66 
+TipTop coverage: 5007
+Seeds: 1
+14
+18
+19
+42
+49
+50
+53
+62
+66
+
+OH coverage: 5007
+--------------- K = 11---------------
+Greedy coverage is: 5069
+Seeds: 1 14 18 19 41 42 49 50 53 62 66 
+TipTop coverage: 5069
+Seeds: 1
+14
+18
+19
+41
+42
+49
+50
+53
+62
+66
+
+OH coverage: 5069
+--------------- K = 12---------------
+Greedy coverage is: 5127
+Seeds: 1 14 18 19 34 41 42 49 50 53 62 66 
+TipTop coverage: 5127
+Seeds: 1
+14
+18
+19
+34
+41
+42
+49
+50
+53
+62
+66
+
+OH coverage: 5127
+--------------- K = 13---------------
+Greedy coverage is: 5174
+Seeds: 1 14 18 19 34 41 42 49 50 53 54 62 66 
+TipTop coverage: 5174
+Seeds: 1
+14
+18
+19
+34
+41
+42
+49
+50
+53
+54
+62
+66
+
+OH coverage: 5174
+--------------- K = 14---------------
+Greedy coverage is: 5221
+Seeds: 0 1 14 18 19 34 41 42 49 50 53 54 62 66 
+TipTop coverage: 5221
+Seeds: 0
+1
+14
+18
+19
+34
+41
+42
+49
+50
+53
+54
+62
+66
+
+OH coverage: 5221
+--------------- K = 15---------------
+Greedy coverage is: 5260
+Seeds: 0 1 14 18 19 34 41 42 45 49 50 53 54 62 66 
+TipTop coverage: 5257
+Seeds: 0
+1
+14
+18
+19
+33
+34
+41
+42
+49
+50
+53
+54
+62
+66
+
+OH coverage: 5252

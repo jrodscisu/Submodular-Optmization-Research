@@ -1,0 +1,176 @@
+--------------- K = 5---------------
+Greedy coverage is: 4761
+Seeds: 1 2 17 23 48 
+TipTop coverage: 4776
+Seeds: 1
+17
+23
+38
+48
+
+OH coverage: 4776
+--------------- K = 6---------------
+Greedy coverage is: 4935
+Seeds: 1 2 17 23 38 48 
+TipTop coverage: 4935
+Seeds: 1
+2
+17
+23
+38
+48
+
+OH coverage: 4935
+--------------- K = 7---------------
+Greedy coverage is: 5054
+Seeds: 1 2 17 23 38 48 99 
+TipTop coverage: 5054
+Seeds: 1
+2
+17
+23
+38
+48
+99
+
+OH coverage: 5054
+--------------- K = 8---------------
+Greedy coverage is: 5150
+Seeds: 1 2 17 23 38 48 68 99 
+TipTop coverage: 5150
+Seeds: 1
+2
+17
+23
+38
+48
+68
+99
+
+OH coverage: 5150
+--------------- K = 9---------------
+Greedy coverage is: 5237
+Seeds: 1 2 17 23 38 48 59 68 99 
+TipTop coverage: 5235
+Seeds: 1
+2
+17
+23
+38
+48
+68
+93
+99
+
+OH coverage: 5235
+--------------- K = 10---------------
+Greedy coverage is: 5306
+Seeds: 1 2 17 23 38 48 59 68 99 105 
+TipTop coverage: 5305
+Seeds: 1
+2
+17
+23
+38
+48
+59
+68
+98
+105
+
+OH coverage: 5305
+--------------- K = 11---------------
+Greedy coverage is: 5360
+Seeds: 1 2 17 23 38 48 59 68 99 105 109 
+TipTop coverage: 5358
+Seeds: 1
+2
+17
+23
+25
+38
+48
+59
+68
+98
+105
+
+OH coverage: 5363
+--------------- K = 12---------------
+Greedy coverage is: 5412
+Seeds: 1 2 17 23 38 48 59 68 98 99 105 109 
+TipTop coverage: 5413
+Seeds: 1
+2
+17
+23
+38
+48
+56
+68
+93
+98
+99
+109
+
+OH coverage: 5413
+--------------- K = 13---------------
+Greedy coverage is: 5458
+Seeds: 1 2 17 23 38 48 59 68 98 99 105 109 181 
+TipTop coverage: 5458
+Seeds: 1
+2
+17
+23
+38
+48
+56
+68
+93
+98
+99
+109
+181
+
+OH coverage: 5458
+--------------- K = 14---------------
+Greedy coverage is: 5500
+Seeds: 1 2 17 23 38 48 56 59 68 98 99 105 109 181 
+TipTop coverage: 5496
+Seeds: 1
+2
+10
+17
+23
+38
+48
+56
+68
+93
+99
+109
+181
+292
+
+OH coverage: 5496
+--------------- K = 15---------------
+Greedy coverage is: 5537
+Seeds: 1 2 10 17 23 38 48 56 59 68 98 99 105 109 181 
+TipTop coverage: 5535
+Seeds: 1
+2
+10
+17
+23
+38
+48
+59
+68
+99
+105
+109
+135
+181
+292
+
+OH coverage: 5537

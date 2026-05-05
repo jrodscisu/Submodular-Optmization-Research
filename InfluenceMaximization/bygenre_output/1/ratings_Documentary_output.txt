@@ -1,0 +1,192 @@
+--------------- K = 10---------------
+Greedy coverage is: 1797
+Seeds: 3 7 9 11 19 21 24 27 28 59 
+TipTop coverage: 1797
+Seeds: 3
+7
+9
+11
+19
+21
+24
+27
+28
+59
+
+OH coverage: 1797
+--------------- K = 5---------------
+Greedy coverage is: 1528
+Seeds: 3 7 9 11 24 
+TipTop coverage: 1528
+Seeds: 3
+7
+9
+11
+24
+
+OH coverage: 1528
+--------------- K = 6---------------
+Greedy coverage is: 1597
+Seeds: 3 7 9 11 24 28 
+TipTop coverage: 1597
+Seeds: 3
+7
+9
+11
+24
+28
+
+OH coverage: 1597
+--------------- K = 7---------------
+Greedy coverage is: 1655
+Seeds: 3 7 9 11 24 28 59 
+TipTop coverage: 1655
+Seeds: 3
+7
+9
+11
+24
+28
+59
+
+OH coverage: 1655
+--------------- K = 8---------------
+Greedy coverage is: 1705
+Seeds: 3 7 9 11 19 24 28 59 
+TipTop coverage: 1703
+Seeds: 3
+7
+9
+11
+24
+27
+28
+59
+
+OH coverage: 1705
+--------------- K = 9---------------
+Greedy coverage is: 1753
+Seeds: 3 7 9 11 19 24 27 28 59 
+TipTop coverage: 1753
+Seeds: 3
+7
+9
+11
+19
+24
+27
+28
+59
+
+OH coverage: 1753
+--------------- K = 10---------------
+Greedy coverage is: 1797
+Seeds: 3 7 9 11 19 21 24 27 28 59 
+TipTop coverage: 1797
+Seeds: 3
+7
+9
+11
+19
+21
+24
+27
+28
+59
+
+OH coverage: 1797
+--------------- K = 11---------------
+Greedy coverage is: 1832
+Seeds: 3 7 9 11 18 19 21 24 27 28 59 
+TipTop coverage: 1832
+Seeds: 3
+7
+9
+11
+18
+19
+21
+24
+27
+28
+59
+
+OH coverage: 1832
+--------------- K = 12---------------
+Greedy coverage is: 1864
+Seeds: 3 7 9 11 12 18 19 21 24 27 28 59 
+TipTop coverage: 1861
+Seeds: 3
+7
+9
+11
+18
+19
+21
+24
+27
+28
+29
+59
+
+OH coverage: 1864
+--------------- K = 13---------------
+Greedy coverage is: 1892
+Seeds: 1 3 7 9 11 12 18 19 21 24 27 28 59 
+TipTop coverage: 1892
+Seeds: 1
+3
+7
+9
+11
+12
+18
+19
+21
+24
+27
+28
+59
+
+OH coverage: 1892
+--------------- K = 14---------------
+Greedy coverage is: 1919
+Seeds: 1 3 7 9 11 12 18 19 21 24 27 28 43 59 
+TipTop coverage: 1916
+Seeds: 1
+3
+7
+9
+11
+18
+19
+21
+24
+27
+28
+29
+43
+59
+
+OH coverage: 1919
+--------------- K = 15---------------
+Greedy coverage is: 1943
+Seeds: 1 3 7 9 11 12 18 19 21 24 27 28 29 43 59 
+TipTop coverage: 1943
+Seeds: 1
+3
+7
+9
+11
+12
+18
+19
+21
+24
+27
+28
+29
+43
+59
+
+OH coverage: 1943

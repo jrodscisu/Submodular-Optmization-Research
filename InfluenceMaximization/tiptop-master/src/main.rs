@@ -475,7 +475,7 @@ fn main() {
     .write(true)
     .append(true)
     .create(true)
-    .open("../data/optimals/ratings_inv_ca_outd_linear-Optimal.txt") // Change to your desired filename
+    .open("../data/optimals/ratings_1m_middle2-4_Optimal.txt") // Change to your desired filename
     .expect("Unable to open file");
 
     writeln!(opt_file, "{}", seed_string).expect("Unable to write data");

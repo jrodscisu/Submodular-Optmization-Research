@@ -1,0 +1,176 @@
+--------------- K = 5---------------
+Greedy coverage is: 4047
+Seeds: 0 3 7 9 17 
+TipTop coverage: 4047
+Seeds: 0
+3
+7
+9
+17
+
+OH coverage: 4047
+--------------- K = 6---------------
+Greedy coverage is: 4183
+Seeds: 0 3 7 9 10 17 
+TipTop coverage: 4183
+Seeds: 0
+3
+7
+9
+10
+17
+
+OH coverage: 4183
+--------------- K = 7---------------
+Greedy coverage is: 4279
+Seeds: 0 3 7 9 10 17 37 
+TipTop coverage: 4279
+Seeds: 0
+3
+7
+9
+10
+15
+17
+
+OH coverage: 4279
+--------------- K = 8---------------
+Greedy coverage is: 4374
+Seeds: 0 3 7 9 10 15 17 37 
+TipTop coverage: 4374
+Seeds: 0
+3
+7
+9
+10
+15
+17
+37
+
+OH coverage: 4374
+--------------- K = 9---------------
+Greedy coverage is: 4451
+Seeds: 0 3 7 9 10 14 15 17 37 
+TipTop coverage: 4451
+Seeds: 0
+3
+7
+9
+10
+14
+15
+17
+37
+
+OH coverage: 4451
+--------------- K = 10---------------
+Greedy coverage is: 4510
+Seeds: 0 3 4 7 9 10 14 15 17 37 
+TipTop coverage: 4510
+Seeds: 0
+3
+4
+7
+9
+10
+14
+15
+17
+37
+
+OH coverage: 4510
+--------------- K = 11---------------
+Greedy coverage is: 4562
+Seeds: 0 3 4 7 9 10 13 14 15 17 37 
+TipTop coverage: 4562
+Seeds: 0
+3
+4
+7
+9
+10
+13
+14
+15
+17
+37
+
+OH coverage: 4562
+--------------- K = 12---------------
+Greedy coverage is: 4607
+Seeds: 0 3 4 7 9 10 13 14 15 17 28 37 
+TipTop coverage: 4607
+Seeds: 0
+3
+4
+7
+9
+10
+13
+14
+15
+17
+28
+37
+
+OH coverage: 4607
+--------------- K = 13---------------
+Greedy coverage is: 4647
+Seeds: 0 3 4 7 9 10 13 14 15 16 17 28 37 
+TipTop coverage: 4647
+Seeds: 0
+3
+4
+7
+9
+10
+13
+14
+15
+16
+17
+28
+37
+
+OH coverage: 4647
+--------------- K = 14---------------
+Greedy coverage is: 4683
+Seeds: 0 2 3 4 7 9 10 13 14 15 16 17 28 37 
+TipTop coverage: 4683
+Seeds: 0
+2
+3
+4
+7
+9
+10
+13
+14
+15
+16
+17
+28
+37
+
+OH coverage: 4683
+--------------- K = 15---------------
+Greedy coverage is: 4711
+Seeds: 0 2 3 4 7 9 10 13 14 15 16 17 28 37 40 
+TipTop coverage: 4709
+Seeds: 0
+2
+3
+4
+7
+8
+9
+10
+13
+14
+15
+16
+17
+37
+40
+
+OH coverage: 4709

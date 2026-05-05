@@ -1,0 +1,176 @@
+--------------- K = 5---------------
+Greedy coverage is: 5027
+Seeds: 7 10 17 26 28 
+TipTop coverage: 5052
+Seeds: 1
+2
+10
+17
+28
+
+OH coverage: 5052
+--------------- K = 6---------------
+Greedy coverage is: 5187
+Seeds: 7 10 17 26 28 39 
+TipTop coverage: 5210
+Seeds: 1
+2
+10
+17
+28
+39
+
+OH coverage: 5204
+--------------- K = 7---------------
+Greedy coverage is: 5313
+Seeds: 2 7 10 17 26 28 39 
+TipTop coverage: 5328
+Seeds: 1
+2
+7
+10
+17
+28
+39
+
+OH coverage: 5328
+--------------- K = 8---------------
+Greedy coverage is: 5420
+Seeds: 1 2 7 10 17 26 28 39 
+TipTop coverage: 5427
+Seeds: 1
+2
+7
+10
+17
+28
+39
+90
+
+OH coverage: 5427
+--------------- K = 9---------------
+Greedy coverage is: 5504
+Seeds: 1 2 7 10 17 26 28 39 90 
+TipTop coverage: 5507
+Seeds: 1
+2
+7
+10
+17
+28
+39
+53
+90
+
+OH coverage: 5504
+--------------- K = 10---------------
+Greedy coverage is: 5579
+Seeds: 1 2 7 10 17 26 28 39 53 90 
+TipTop coverage: 5579
+Seeds: 1
+2
+7
+10
+17
+26
+28
+39
+53
+90
+
+OH coverage: 5579
+--------------- K = 11---------------
+Greedy coverage is: 5632
+Seeds: 1 2 7 10 17 26 28 39 53 81 90 
+TipTop coverage: 5632
+Seeds: 1
+2
+7
+10
+17
+26
+28
+39
+53
+81
+90
+
+OH coverage: 5632
+--------------- K = 12---------------
+Greedy coverage is: 5675
+Seeds: 1 2 5 7 10 17 26 28 39 53 81 90 
+TipTop coverage: 5675
+Seeds: 1
+2
+5
+7
+10
+17
+26
+28
+39
+53
+81
+90
+
+OH coverage: 5675
+--------------- K = 13---------------
+Greedy coverage is: 5714
+Seeds: 1 2 5 7 10 17 26 28 39 53 81 90 157 
+TipTop coverage: 5714
+Seeds: 1
+2
+5
+7
+10
+17
+26
+28
+39
+53
+81
+90
+157
+
+OH coverage: 5714
+--------------- K = 14---------------
+Greedy coverage is: 5739
+Seeds: 1 2 5 7 10 17 26 28 33 39 53 81 90 157 
+TipTop coverage: 5738
+Seeds: 1
+2
+5
+7
+10
+17
+26
+28
+39
+53
+81
+90
+157
+178
+
+OH coverage: 5739
+--------------- K = 15---------------
+Greedy coverage is: 5763
+Seeds: 1 2 5 7 10 17 26 28 33 39 53 81 90 157 178 
+TipTop coverage: 5761
+Seeds: 1
+2
+5
+7
+10
+17
+26
+28
+33
+39
+53
+81
+90
+157
+190
+
+OH coverage: 5763

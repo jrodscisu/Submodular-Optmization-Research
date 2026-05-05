@@ -1,0 +1,176 @@
+--------------- K = 5---------------
+Greedy coverage is: 4998
+Seeds: 3 4 9 12 32 
+TipTop coverage: 5016
+Seeds: 0
+4
+9
+32
+162
+
+OH coverage: 4998
+--------------- K = 6---------------
+Greedy coverage is: 5195
+Seeds: 3 4 9 12 32 162 
+TipTop coverage: 5215
+Seeds: 0
+4
+9
+12
+32
+162
+
+OH coverage: 5215
+--------------- K = 7---------------
+Greedy coverage is: 5356
+Seeds: 0 3 4 9 12 32 162 
+TipTop coverage: 5356
+Seeds: 0
+3
+4
+9
+12
+32
+162
+
+OH coverage: 5356
+--------------- K = 8---------------
+Greedy coverage is: 5459
+Seeds: 0 3 4 9 12 24 32 162 
+TipTop coverage: 5459
+Seeds: 0
+3
+4
+9
+12
+24
+32
+162
+
+OH coverage: 5459
+--------------- K = 9---------------
+Greedy coverage is: 5528
+Seeds: 0 3 4 7 9 12 24 32 162 
+TipTop coverage: 5528
+Seeds: 0
+3
+4
+7
+9
+12
+24
+32
+162
+
+OH coverage: 5528
+--------------- K = 10---------------
+Greedy coverage is: 5585
+Seeds: 0 3 4 7 9 12 24 32 42 162 
+TipTop coverage: 5583
+Seeds: 0
+3
+4
+7
+9
+12
+24
+32
+134
+162
+
+OH coverage: 5585
+--------------- K = 11---------------
+Greedy coverage is: 5635
+Seeds: 0 3 4 7 9 12 24 32 42 95 162 
+TipTop coverage: 5635
+Seeds: 0
+3
+4
+7
+9
+12
+24
+32
+42
+95
+162
+
+OH coverage: 5635
+--------------- K = 12---------------
+Greedy coverage is: 5675
+Seeds: 0 3 4 7 9 12 24 32 42 75 95 162 
+TipTop coverage: 5672
+Seeds: 0
+3
+4
+7
+9
+12
+24
+32
+42
+67
+95
+162
+
+OH coverage: 5675
+--------------- K = 13---------------
+Greedy coverage is: 5710
+Seeds: 0 3 4 7 9 12 24 32 42 67 75 95 162 
+TipTop coverage: 5710
+Seeds: 0
+3
+4
+7
+9
+12
+24
+32
+42
+67
+75
+95
+162
+
+OH coverage: 5710
+--------------- K = 14---------------
+Greedy coverage is: 5736
+Seeds: 0 3 4 7 9 12 13 24 32 42 67 75 95 162 
+TipTop coverage: 5736
+Seeds: 0
+3
+4
+7
+9
+12
+13
+24
+32
+42
+67
+75
+95
+162
+
+OH coverage: 5736
+--------------- K = 15---------------
+Greedy coverage is: 5758
+Seeds: 0 3 4 7 9 12 13 24 32 39 42 67 75 95 162 
+TipTop coverage: 5754
+Seeds: 0
+3
+4
+7
+9
+12
+13
+24
+32
+42
+67
+75
+80
+134
+162
+
+OH coverage: 5758

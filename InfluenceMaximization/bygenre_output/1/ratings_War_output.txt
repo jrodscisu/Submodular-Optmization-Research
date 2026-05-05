@@ -1,0 +1,176 @@
+--------------- K = 5---------------
+Greedy coverage is: 4917
+Seeds: 1 3 6 11 15 
+TipTop coverage: 4943
+Seeds: 0
+3
+6
+11
+15
+
+OH coverage: 4917
+--------------- K = 6---------------
+Greedy coverage is: 5100
+Seeds: 1 3 6 11 15 21 
+TipTop coverage: 5106
+Seeds: 0
+3
+6
+11
+15
+21
+
+OH coverage: 5106
+--------------- K = 7---------------
+Greedy coverage is: 5232
+Seeds: 0 1 3 6 11 15 21 
+TipTop coverage: 5232
+Seeds: 0
+1
+3
+6
+11
+15
+21
+
+OH coverage: 5232
+--------------- K = 8---------------
+Greedy coverage is: 5325
+Seeds: 0 1 3 6 11 15 19 21 
+TipTop coverage: 5325
+Seeds: 0
+1
+3
+6
+11
+15
+19
+21
+
+OH coverage: 5325
+--------------- K = 9---------------
+Greedy coverage is: 5381
+Seeds: 0 1 3 6 11 13 15 19 21 
+TipTop coverage: 5381
+Seeds: 0
+1
+3
+6
+11
+13
+15
+19
+21
+
+OH coverage: 5381
+--------------- K = 10---------------
+Greedy coverage is: 5431
+Seeds: 0 1 3 6 11 13 14 15 19 21 
+TipTop coverage: 5431
+Seeds: 0
+1
+3
+6
+11
+13
+14
+15
+19
+21
+
+OH coverage: 5431
+--------------- K = 11---------------
+Greedy coverage is: 5468
+Seeds: 0 1 3 6 11 13 14 15 19 21 31 
+TipTop coverage: 5468
+Seeds: 0
+1
+3
+6
+11
+13
+14
+15
+19
+21
+31
+
+OH coverage: 5468
+--------------- K = 12---------------
+Greedy coverage is: 5496
+Seeds: 0 1 3 6 11 13 14 15 19 21 31 33 
+TipTop coverage: 5496
+Seeds: 0
+1
+3
+6
+11
+13
+14
+15
+19
+21
+31
+33
+
+OH coverage: 5496
+--------------- K = 13---------------
+Greedy coverage is: 5519
+Seeds: 0 1 3 6 11 13 14 15 19 21 31 33 51 
+TipTop coverage: 5519
+Seeds: 0
+1
+3
+6
+11
+13
+14
+15
+19
+21
+31
+33
+51
+
+OH coverage: 5519
+--------------- K = 14---------------
+Greedy coverage is: 5538
+Seeds: 0 1 3 6 11 13 14 15 19 21 31 33 49 51 
+TipTop coverage: 5534
+Seeds: 0
+1
+3
+6
+11
+13
+14
+15
+19
+20
+21
+31
+33
+51
+
+OH coverage: 5538
+--------------- K = 15---------------
+Greedy coverage is: 5554
+Seeds: 0 1 3 6 11 13 14 15 19 21 31 33 35 49 51 
+TipTop coverage: 5554
+Seeds: 0
+1
+3
+6
+11
+13
+14
+15
+19
+21
+31
+33
+35
+49
+51
+
+OH coverage: 5554

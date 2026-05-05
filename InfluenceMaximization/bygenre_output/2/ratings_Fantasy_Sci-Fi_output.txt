@@ -1,0 +1,176 @@
+--------------- K = 5---------------
+Greedy coverage is: 4899
+Seeds: 1 2 3 6 14 
+TipTop coverage: 4899
+Seeds: 1
+2
+3
+6
+14
+
+OH coverage: 4899
+--------------- K = 6---------------
+Greedy coverage is: 5059
+Seeds: 1 2 3 6 14 96 
+TipTop coverage: 5059
+Seeds: 1
+2
+3
+6
+14
+96
+
+OH coverage: 5059
+--------------- K = 7---------------
+Greedy coverage is: 5180
+Seeds: 1 2 3 6 10 14 96 
+TipTop coverage: 5186
+Seeds: 1
+2
+3
+4
+6
+14
+28
+
+OH coverage: 5186
+--------------- K = 8---------------
+Greedy coverage is: 5279
+Seeds: 1 2 3 6 10 14 28 96 
+TipTop coverage: 5277
+Seeds: 1
+2
+3
+4
+6
+14
+16
+44
+
+OH coverage: 5281
+--------------- K = 9---------------
+Greedy coverage is: 5360
+Seeds: 1 2 3 6 10 14 16 28 96 
+TipTop coverage: 5361
+Seeds: 1
+2
+3
+4
+6
+14
+16
+28
+31
+
+OH coverage: 5360
+--------------- K = 10---------------
+Greedy coverage is: 5433
+Seeds: 1 2 3 6 10 14 16 28 44 96 
+TipTop coverage: 5436
+Seeds: 1
+2
+3
+4
+6
+10
+14
+16
+28
+44
+
+OH coverage: 5436
+--------------- K = 11---------------
+Greedy coverage is: 5496
+Seeds: 1 2 3 4 6 10 14 16 28 44 96 
+TipTop coverage: 5496
+Seeds: 1
+2
+3
+4
+6
+10
+14
+16
+28
+44
+96
+
+OH coverage: 5490
+--------------- K = 12---------------
+Greedy coverage is: 5542
+Seeds: 1 2 3 4 6 10 14 16 28 44 81 96 
+TipTop coverage: 5542
+Seeds: 1
+2
+3
+4
+6
+10
+14
+16
+23
+28
+44
+96
+
+OH coverage: 5533
+--------------- K = 13---------------
+Greedy coverage is: 5577
+Seeds: 1 2 3 4 6 10 14 16 28 44 81 96 102 
+TipTop coverage: 5577
+Seeds: 1
+2
+3
+4
+6
+10
+14
+16
+28
+44
+81
+96
+102
+
+OH coverage: 5570
+--------------- K = 14---------------
+Greedy coverage is: 5607
+Seeds: 1 2 3 4 6 10 14 16 22 28 44 81 96 102 
+TipTop coverage: 5607
+Seeds: 1
+2
+3
+4
+6
+10
+14
+16
+22
+28
+44
+81
+96
+102
+
+OH coverage: 5607
+--------------- K = 15---------------
+Greedy coverage is: 5632
+Seeds: 1 2 3 4 6 10 14 16 22 28 33 44 81 96 102 
+TipTop coverage: 5632
+Seeds: 1
+2
+3
+4
+6
+10
+14
+16
+22
+28
+33
+44
+81
+96
+102
+
+OH coverage: 5627

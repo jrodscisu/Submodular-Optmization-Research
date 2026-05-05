@@ -1,0 +1,176 @@
+--------------- K = 5---------------
+Greedy coverage is: 4939
+Seeds: 0 4 8 14 48 
+TipTop coverage: 4939
+Seeds: 0
+4
+8
+14
+48
+
+OH coverage: 4939
+--------------- K = 6---------------
+Greedy coverage is: 5080
+Seeds: 0 4 6 8 14 48 
+TipTop coverage: 5080
+Seeds: 0
+4
+6
+8
+14
+48
+
+OH coverage: 5080
+--------------- K = 7---------------
+Greedy coverage is: 5201
+Seeds: 0 2 4 6 8 14 48 
+TipTop coverage: 5190
+Seeds: 0
+2
+4
+8
+14
+31
+48
+
+OH coverage: 5201
+--------------- K = 8---------------
+Greedy coverage is: 5296
+Seeds: 0 2 4 6 8 14 48 123 
+TipTop coverage: 5296
+Seeds: 0
+2
+4
+6
+8
+14
+48
+123
+
+OH coverage: 5296
+--------------- K = 9---------------
+Greedy coverage is: 5380
+Seeds: 0 2 4 6 8 14 48 67 123 
+TipTop coverage: 5380
+Seeds: 0
+2
+4
+6
+8
+14
+48
+67
+123
+
+OH coverage: 5380
+--------------- K = 10---------------
+Greedy coverage is: 5447
+Seeds: 0 2 4 6 8 14 20 48 67 123 
+TipTop coverage: 5446
+Seeds: 0
+2
+4
+6
+8
+14
+17
+48
+67
+123
+
+OH coverage: 5447
+--------------- K = 11---------------
+Greedy coverage is: 5505
+Seeds: 0 2 4 6 8 14 20 31 48 67 123 
+TipTop coverage: 5505
+Seeds: 0
+2
+4
+6
+8
+14
+20
+31
+48
+67
+123
+
+OH coverage: 5505
+--------------- K = 12---------------
+Greedy coverage is: 5549
+Seeds: 0 2 4 6 8 14 17 20 31 48 67 123 
+TipTop coverage: 5547
+Seeds: 0
+2
+4
+6
+8
+14
+16
+20
+31
+48
+67
+123
+
+OH coverage: 5547
+--------------- K = 13---------------
+Greedy coverage is: 5586
+Seeds: 0 2 4 6 8 14 17 20 31 48 49 67 123 
+TipTop coverage: 5588
+Seeds: 0
+2
+4
+6
+8
+14
+16
+20
+31
+48
+49
+67
+123
+
+OH coverage: 5586
+--------------- K = 14---------------
+Greedy coverage is: 5622
+Seeds: 0 2 4 6 8 14 16 17 20 31 48 49 67 123 
+TipTop coverage: 5621
+Seeds: 0
+2
+4
+6
+8
+14
+16
+20
+31
+48
+49
+67
+123
+233
+
+OH coverage: 5621
+--------------- K = 15---------------
+Greedy coverage is: 5653
+Seeds: 0 2 4 6 8 14 16 17 20 31 48 49 67 123 233 
+TipTop coverage: 5653
+Seeds: 0
+2
+4
+6
+8
+14
+16
+17
+20
+31
+48
+49
+67
+123
+233
+
+OH coverage: 5653

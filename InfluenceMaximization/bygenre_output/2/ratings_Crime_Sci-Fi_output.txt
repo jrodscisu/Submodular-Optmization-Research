@@ -1,0 +1,176 @@
+--------------- K = 5---------------
+Greedy coverage is: 5064
+Seeds: 0 3 4 9 23 
+TipTop coverage: 5048
+Seeds: 3
+4
+9
+23
+45
+
+OH coverage: 5064
+--------------- K = 6---------------
+Greedy coverage is: 5240
+Seeds: 0 3 4 9 23 45 
+TipTop coverage: 5240
+Seeds: 0
+3
+4
+9
+23
+45
+
+OH coverage: 5240
+--------------- K = 7---------------
+Greedy coverage is: 5360
+Seeds: 0 3 4 9 23 45 113 
+TipTop coverage: 5360
+Seeds: 0
+3
+4
+9
+23
+45
+113
+
+OH coverage: 5360
+--------------- K = 8---------------
+Greedy coverage is: 5464
+Seeds: 0 3 4 9 23 45 79 113 
+TipTop coverage: 5462
+Seeds: 0
+3
+4
+9
+23
+45
+113
+123
+
+OH coverage: 5462
+--------------- K = 9---------------
+Greedy coverage is: 5540
+Seeds: 0 1 3 4 9 23 45 79 113 
+TipTop coverage: 5540
+Seeds: 0
+1
+4
+7
+9
+23
+45
+79
+113
+
+OH coverage: 5540
+--------------- K = 10---------------
+Greedy coverage is: 5610
+Seeds: 0 1 3 4 7 9 23 45 79 113 
+TipTop coverage: 5604
+Seeds: 0
+1
+4
+7
+9
+23
+42
+45
+51
+113
+
+OH coverage: 5604
+--------------- K = 11---------------
+Greedy coverage is: 5667
+Seeds: 0 1 3 4 7 9 23 42 45 79 113 
+TipTop coverage: 5667
+Seeds: 0
+1
+3
+4
+7
+9
+23
+42
+45
+79
+113
+
+OH coverage: 5667
+--------------- K = 12---------------
+Greedy coverage is: 5710
+Seeds: 0 1 3 4 7 9 23 42 45 79 113 123 
+TipTop coverage: 5710
+Seeds: 0
+1
+3
+4
+7
+9
+23
+42
+45
+79
+113
+123
+
+OH coverage: 5710
+--------------- K = 13---------------
+Greedy coverage is: 5738
+Seeds: 0 1 3 4 7 9 23 42 45 69 79 113 123 
+TipTop coverage: 5738
+Seeds: 0
+1
+3
+4
+7
+9
+23
+42
+45
+69
+79
+113
+123
+
+OH coverage: 5738
+--------------- K = 14---------------
+Greedy coverage is: 5764
+Seeds: 0 1 3 4 7 9 23 26 42 45 69 79 113 123 
+TipTop coverage: 5762
+Seeds: 0
+1
+3
+4
+7
+9
+23
+26
+42
+45
+51
+113
+123
+159
+
+OH coverage: 5762
+--------------- K = 15---------------
+Greedy coverage is: 5788
+Seeds: 0 1 3 4 7 9 23 26 42 45 69 79 113 123 159 
+TipTop coverage: 5786
+Seeds: 0
+1
+3
+4
+7
+9
+23
+26
+35
+42
+45
+69
+79
+113
+123
+
+OH coverage: 5788

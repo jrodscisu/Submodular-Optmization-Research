@@ -1,0 +1,176 @@
+--------------- K = 5---------------
+Greedy coverage is: 3760
+Seeds: 1 2 4 5 7 
+TipTop coverage: 3760
+Seeds: 1
+2
+4
+5
+7
+
+OH coverage: 3760
+--------------- K = 6---------------
+Greedy coverage is: 3830
+Seeds: 1 2 3 4 5 7 
+TipTop coverage: 3830
+Seeds: 1
+2
+3
+4
+5
+7
+
+OH coverage: 3830
+--------------- K = 7---------------
+Greedy coverage is: 3897
+Seeds: 1 2 3 4 5 7 14 
+TipTop coverage: 3897
+Seeds: 1
+2
+3
+4
+5
+7
+14
+
+OH coverage: 3897
+--------------- K = 8---------------
+Greedy coverage is: 3943
+Seeds: 1 2 3 4 5 7 9 14 
+TipTop coverage: 3943
+Seeds: 1
+2
+3
+4
+5
+7
+9
+14
+
+OH coverage: 3943
+--------------- K = 9---------------
+Greedy coverage is: 3979
+Seeds: 1 2 3 4 5 7 9 14 25 
+TipTop coverage: 3979
+Seeds: 1
+2
+3
+4
+5
+7
+9
+14
+25
+
+OH coverage: 3979
+--------------- K = 10---------------
+Greedy coverage is: 4009
+Seeds: 1 2 3 4 5 7 9 14 16 25 
+TipTop coverage: 4009
+Seeds: 1
+2
+3
+4
+5
+7
+9
+14
+16
+25
+
+OH coverage: 4009
+--------------- K = 11---------------
+Greedy coverage is: 4032
+Seeds: 1 2 3 4 5 7 9 14 16 24 25 
+TipTop coverage: 4031
+Seeds: 1
+2
+3
+4
+5
+7
+9
+14
+16
+18
+25
+
+OH coverage: 4031
+--------------- K = 12---------------
+Greedy coverage is: 4053
+Seeds: 1 2 3 4 5 7 9 14 16 24 25 28 
+TipTop coverage: 4052
+Seeds: 1
+2
+3
+4
+5
+7
+9
+14
+16
+18
+25
+28
+
+OH coverage: 4052
+--------------- K = 13---------------
+Greedy coverage is: 4073
+Seeds: 1 2 3 4 5 7 9 14 16 18 24 25 28 
+TipTop coverage: 4073
+Seeds: 1
+2
+3
+4
+5
+7
+9
+14
+16
+18
+24
+25
+28
+
+OH coverage: 4073
+--------------- K = 14---------------
+Greedy coverage is: 4087
+Seeds: 0 1 2 3 4 5 7 9 14 16 18 24 25 28 
+TipTop coverage: 4087
+Seeds: 0
+1
+2
+3
+4
+5
+7
+9
+14
+16
+18
+24
+25
+28
+
+OH coverage: 4087
+--------------- K = 15---------------
+Greedy coverage is: 4097
+Seeds: 0 1 2 3 4 5 7 9 14 15 16 18 24 25 28 
+TipTop coverage: 4097
+Seeds: 0
+1
+2
+3
+4
+5
+7
+9
+14
+15
+16
+18
+24
+25
+28
+
+OH coverage: 4095

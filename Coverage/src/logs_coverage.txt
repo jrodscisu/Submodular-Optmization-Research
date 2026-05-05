@@ -1,0 +1,200 @@
+--------------- K = 1---------------
+Greedy coverage is: 10
+TipTop coverage: 10
+OH coverage: 10
+--------------- K = 2---------------
+Greedy coverage is: 20
+TipTop coverage: 20
+OH coverage: 20
+--------------- K = 3---------------
+Greedy coverage is: 30
+TipTop coverage: 30
+OH coverage: 30
+--------------- K = 4---------------
+Greedy coverage is: 40
+TipTop coverage: 40
+OH coverage: 40
+--------------- K = 5---------------
+Greedy coverage is: 50
+TipTop coverage: 50
+OH coverage: 50
+--------------- K = 6---------------
+Greedy coverage is: 60
+TipTop coverage: 60
+OH coverage: 60
+--------------- K = 7---------------
+Greedy coverage is: 70
+TipTop coverage: 70
+OH coverage: 69
+--------------- K = 8---------------
+Greedy coverage is: 80
+TipTop coverage: 80
+OH coverage: 78
+--------------- K = 9---------------
+Greedy coverage is: 89
+TipTop coverage: 89
+OH coverage: 88
+--------------- K = 10---------------
+Greedy coverage is: 98
+TipTop coverage: 98
+OH coverage: 97
+--------------- K = 11---------------
+Greedy coverage is: 106
+TipTop coverage: 107
+OH coverage: 106
+--------------- K = 12---------------
+Greedy coverage is: 114
+TipTop coverage: 115
+OH coverage: 115
+--------------- K = 13---------------
+Greedy coverage is: 122
+TipTop coverage: 124
+OH coverage: 122
+--------------- K = 14---------------
+Greedy coverage is: 130
+TipTop coverage: 132
+OH coverage: 131
+--------------- K = 15---------------
+Greedy coverage is: 138
+TipTop coverage: 140
+OH coverage: 139
+--------------- K = 16---------------
+Greedy coverage is: 146
+TipTop coverage: 148
+OH coverage: 146
+--------------- K = 17---------------
+Greedy coverage is: 154
+TipTop coverage: 156
+OH coverage: 154
+--------------- K = 18---------------
+Greedy coverage is: 162
+TipTop coverage: 164
+OH coverage: 161
+--------------- K = 19---------------
+Greedy coverage is: 170
+TipTop coverage: 172
+OH coverage: 170
+--------------- K = 20---------------
+Greedy coverage is: 178
+TipTop coverage: 180
+OH coverage: 179
+--------------- K = 21---------------
+Greedy coverage is: 186
+TipTop coverage: 188
+OH coverage: 186
+--------------- K = 22---------------
+Greedy coverage is: 194
+TipTop coverage: 196
+OH coverage: 195
+--------------- K = 23---------------
+Greedy coverage is: 202
+TipTop coverage: 204
+OH coverage: 202
+--------------- K = 24---------------
+Greedy coverage is: 210
+TipTop coverage: 212
+OH coverage: 210
+--------------- K = 25---------------
+Greedy coverage is: 217
+TipTop coverage: 220
+OH coverage: 216
+--------------- K = 26---------------
+Greedy coverage is: 224
+TipTop coverage: 228
+OH coverage: 226
+--------------- K = 27---------------
+Greedy coverage is: 231
+TipTop coverage: 235
+OH coverage: 232
+--------------- K = 28---------------
+Greedy coverage is: 238
+TipTop coverage: 243
+OH coverage: 236
+--------------- K = 29---------------
+Greedy coverage is: 245
+TipTop coverage: 250
+OH coverage: 243
+--------------- K = 30---------------
+Greedy coverage is: 252
+TipTop coverage: 257
+OH coverage: 253
+--------------- K = 31---------------
+Greedy coverage is: 259
+TipTop coverage: 264
+OH coverage: 259
+--------------- K = 32---------------
+Greedy coverage is: 266
+TipTop coverage: 270
+OH coverage: 268
+--------------- K = 33---------------
+Greedy coverage is: 273
+TipTop coverage: 278
+OH coverage: 275
+--------------- K = 34---------------
+Greedy coverage is: 280
+TipTop coverage: 283
+OH coverage: 280
+--------------- K = 35---------------
+Greedy coverage is: 287
+TipTop coverage: 289
+OH coverage: 287
+--------------- K = 36---------------
+Greedy coverage is: 293
+TipTop coverage: 296
+OH coverage: 292
+--------------- K = 37---------------
+Greedy coverage is: 299
+TipTop coverage: 300
+OH coverage: 300
+--------------- K = 38---------------
+Greedy coverage is: 305
+TipTop coverage: 308
+OH coverage: 308
+--------------- K = 39---------------
+Greedy coverage is: 311
+TipTop coverage: 315
+OH coverage: 311
+--------------- K = 40---------------
+Greedy coverage is: 317
+TipTop coverage: 319
+OH coverage: 319
+--------------- K = 41---------------
+Greedy coverage is: 323
+TipTop coverage: 327
+OH coverage: 324
+--------------- K = 42---------------
+Greedy coverage is: 329
+TipTop coverage: 333
+OH coverage: 330
+--------------- K = 43---------------
+Greedy coverage is: 335
+TipTop coverage: 339
+OH coverage: 334
+--------------- K = 44---------------
+Greedy coverage is: 341
+TipTop coverage: 345
+OH coverage: 344
+--------------- K = 45---------------
+Greedy coverage is: 347
+TipTop coverage: 351
+OH coverage: 348
+--------------- K = 46---------------
+Greedy coverage is: 353
+TipTop coverage: 357
+OH coverage: 356
+--------------- K = 47---------------
+Greedy coverage is: 359
+TipTop coverage: 362
+OH coverage: 359
+--------------- K = 48---------------
+Greedy coverage is: 365
+TipTop coverage: 369
+OH coverage: 365
+--------------- K = 49---------------
+Greedy coverage is: 371
+TipTop coverage: 375
+OH coverage: 369
+--------------- K = 50---------------
+Greedy coverage is: 377
+TipTop coverage: 380
+OH coverage: 377

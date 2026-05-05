@@ -1,0 +1,176 @@
+--------------- K = 5---------------
+Greedy coverage is: 4899
+Seeds: 0 1 2 5 15 
+TipTop coverage: 4899
+Seeds: 0
+1
+2
+5
+15
+
+OH coverage: 4899
+--------------- K = 6---------------
+Greedy coverage is: 5059
+Seeds: 0 1 2 5 15 93 
+TipTop coverage: 5059
+Seeds: 0
+1
+2
+5
+15
+93
+
+OH coverage: 5059
+--------------- K = 7---------------
+Greedy coverage is: 5180
+Seeds: 0 1 2 5 11 15 93 
+TipTop coverage: 5186
+Seeds: 0
+1
+2
+3
+5
+15
+36
+
+OH coverage: 5186
+--------------- K = 8---------------
+Greedy coverage is: 5279
+Seeds: 0 1 2 5 11 15 36 93 
+TipTop coverage: 5271
+Seeds: 0
+1
+2
+5
+11
+15
+57
+93
+
+OH coverage: 5279
+--------------- K = 9---------------
+Greedy coverage is: 5360
+Seeds: 0 1 2 5 11 15 18 36 93 
+TipTop coverage: 5367
+Seeds: 0
+1
+2
+3
+5
+15
+18
+36
+57
+
+OH coverage: 5360
+--------------- K = 10---------------
+Greedy coverage is: 5433
+Seeds: 0 1 2 5 11 15 18 36 57 93 
+TipTop coverage: 5436
+Seeds: 0
+1
+2
+3
+5
+11
+15
+18
+36
+57
+
+OH coverage: 5439
+--------------- K = 11---------------
+Greedy coverage is: 5496
+Seeds: 0 1 2 3 5 11 15 18 36 57 93 
+TipTop coverage: 5501
+Seeds: 0
+1
+2
+3
+5
+11
+15
+18
+27
+36
+57
+
+OH coverage: 5501
+--------------- K = 12---------------
+Greedy coverage is: 5548
+Seeds: 0 1 2 3 5 11 15 18 27 36 57 93 
+TipTop coverage: 5548
+Seeds: 0
+1
+2
+3
+5
+11
+15
+18
+27
+36
+57
+93
+
+OH coverage: 5548
+--------------- K = 13---------------
+Greedy coverage is: 5592
+Seeds: 0 1 2 3 5 11 15 18 27 36 57 83 93 
+TipTop coverage: 5592
+Seeds: 0
+1
+2
+3
+5
+11
+15
+18
+27
+36
+57
+83
+93
+
+OH coverage: 5587
+--------------- K = 14---------------
+Greedy coverage is: 5622
+Seeds: 0 1 2 3 5 11 15 18 27 36 57 83 93 97 
+TipTop coverage: 5622
+Seeds: 0
+1
+2
+3
+5
+11
+15
+18
+27
+36
+57
+83
+93
+97
+
+OH coverage: 5622
+--------------- K = 15---------------
+Greedy coverage is: 5651
+Seeds: 0 1 2 3 5 11 15 17 18 27 36 57 83 93 97 
+TipTop coverage: 5651
+Seeds: 0
+1
+2
+3
+5
+11
+15
+17
+18
+27
+36
+57
+83
+93
+97
+
+OH coverage: 5651

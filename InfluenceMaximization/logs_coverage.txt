@@ -1,0 +1,4 @@
+--------------- K = 20---------------
+Greedy coverage is: 5695
+TipTop coverage: 5694
+OH coverage: 5695

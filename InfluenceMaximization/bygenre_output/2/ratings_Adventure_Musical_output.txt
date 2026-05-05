@@ -1,0 +1,176 @@
+--------------- K = 5---------------
+Greedy coverage is: 4853
+Seeds: 2 14 20 25 125 
+TipTop coverage: 4853
+Seeds: 2
+14
+20
+25
+125
+
+OH coverage: 4853
+--------------- K = 6---------------
+Greedy coverage is: 5001
+Seeds: 2 5 14 20 25 125 
+TipTop coverage: 4992
+Seeds: 2
+14
+18
+20
+25
+53
+
+OH coverage: 4992
+--------------- K = 7---------------
+Greedy coverage is: 5116
+Seeds: 2 5 14 18 20 25 125 
+TipTop coverage: 5123
+Seeds: 2
+5
+14
+18
+20
+25
+54
+
+OH coverage: 5123
+--------------- K = 8---------------
+Greedy coverage is: 5212
+Seeds: 2 5 14 18 20 25 31 125 
+TipTop coverage: 5224
+Seeds: 2
+14
+18
+20
+22
+25
+31
+54
+
+OH coverage: 5212
+--------------- K = 9---------------
+Greedy coverage is: 5301
+Seeds: 2 5 14 18 20 25 31 54 125 
+TipTop coverage: 5313
+Seeds: 2
+5
+14
+18
+20
+25
+31
+54
+77
+
+OH coverage: 5301
+--------------- K = 10---------------
+Greedy coverage is: 5377
+Seeds: 2 5 14 18 20 25 31 54 77 125 
+TipTop coverage: 5387
+Seeds: 2
+5
+14
+18
+20
+25
+31
+41
+54
+77
+
+OH coverage: 5377
+--------------- K = 11---------------
+Greedy coverage is: 5438
+Seeds: 2 5 14 18 20 22 25 31 54 77 125 
+TipTop coverage: 5449
+Seeds: 2
+5
+14
+18
+20
+25
+31
+41
+53
+54
+77
+
+OH coverage: 5438
+--------------- K = 12---------------
+Greedy coverage is: 5484
+Seeds: 2 5 14 18 20 22 25 27 31 54 77 125 
+TipTop coverage: 5500
+Seeds: 2
+5
+14
+18
+20
+22
+25
+31
+41
+53
+54
+77
+
+OH coverage: 5484
+--------------- K = 13---------------
+Greedy coverage is: 5528
+Seeds: 2 5 14 18 20 22 25 27 31 53 54 77 125 
+TipTop coverage: 5542
+Seeds: 2
+5
+14
+18
+20
+22
+25
+27
+31
+41
+53
+54
+77
+
+OH coverage: 5528
+--------------- K = 14---------------
+Greedy coverage is: 5566
+Seeds: 2 5 14 18 20 22 25 27 31 41 53 54 77 125 
+TipTop coverage: 5572
+Seeds: 2
+5
+14
+18
+20
+22
+25
+27
+28
+31
+41
+53
+54
+77
+
+OH coverage: 5572
+--------------- K = 15---------------
+Greedy coverage is: 5595
+Seeds: 2 5 14 18 20 22 25 27 28 31 41 53 54 77 125 
+TipTop coverage: 5599
+Seeds: 2
+5
+11
+14
+18
+20
+22
+25
+27
+28
+31
+41
+53
+54
+77
+
+OH coverage: 5595

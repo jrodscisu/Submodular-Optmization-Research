@@ -1,0 +1,176 @@
+--------------- K = 5---------------
+Greedy coverage is: 4985
+Seeds: 1 3 12 16 20 
+TipTop coverage: 4991
+Seeds: 3
+6
+12
+16
+20
+
+OH coverage: 4991
+--------------- K = 6---------------
+Greedy coverage is: 5162
+Seeds: 1 3 6 12 16 20 
+TipTop coverage: 5162
+Seeds: 1
+3
+6
+12
+16
+20
+
+OH coverage: 5162
+--------------- K = 7---------------
+Greedy coverage is: 5292
+Seeds: 1 3 6 12 16 20 25 
+TipTop coverage: 5287
+Seeds: 1
+3
+6
+12
+16
+17
+20
+
+OH coverage: 5287
+--------------- K = 8---------------
+Greedy coverage is: 5399
+Seeds: 1 3 6 12 16 17 20 25 
+TipTop coverage: 5399
+Seeds: 1
+3
+6
+12
+16
+17
+20
+25
+
+OH coverage: 5399
+--------------- K = 9---------------
+Greedy coverage is: 5485
+Seeds: 0 1 3 6 12 16 17 20 25 
+TipTop coverage: 5479
+Seeds: 1
+3
+6
+12
+16
+17
+20
+23
+25
+
+OH coverage: 5485
+--------------- K = 10---------------
+Greedy coverage is: 5551
+Seeds: 0 1 3 6 12 16 17 20 23 25 
+TipTop coverage: 5551
+Seeds: 0
+1
+3
+6
+12
+16
+17
+20
+23
+25
+
+OH coverage: 5551
+--------------- K = 11---------------
+Greedy coverage is: 5590
+Seeds: 0 1 3 6 12 14 16 17 20 23 25 
+TipTop coverage: 5590
+Seeds: 0
+1
+3
+6
+12
+14
+16
+17
+20
+23
+25
+
+OH coverage: 5590
+--------------- K = 12---------------
+Greedy coverage is: 5625
+Seeds: 0 1 3 6 12 14 15 16 17 20 23 25 
+TipTop coverage: 5625
+Seeds: 0
+1
+3
+6
+12
+14
+15
+16
+17
+20
+23
+25
+
+OH coverage: 5625
+--------------- K = 13---------------
+Greedy coverage is: 5653
+Seeds: 0 1 3 6 12 14 15 16 17 20 23 25 36 
+TipTop coverage: 5653
+Seeds: 0
+1
+3
+6
+12
+14
+15
+16
+17
+20
+23
+25
+36
+
+OH coverage: 5653
+--------------- K = 14---------------
+Greedy coverage is: 5672
+Seeds: 0 1 3 6 12 14 15 16 17 20 23 25 36 38 
+TipTop coverage: 5672
+Seeds: 0
+1
+3
+6
+12
+14
+15
+16
+17
+20
+23
+25
+31
+36
+
+OH coverage: 5672
+--------------- K = 15---------------
+Greedy coverage is: 5689
+Seeds: 0 1 3 6 12 14 15 16 17 20 23 25 31 36 38 
+TipTop coverage: 5689
+Seeds: 0
+1
+3
+6
+12
+14
+15
+16
+17
+20
+23
+25
+31
+36
+38
+
+OH coverage: 5685

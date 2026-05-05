@@ -1,0 +1,176 @@
+--------------- K = 5---------------
+Greedy coverage is: 5396
+Seeds: 18 34 62 69 81 
+TipTop coverage: 5396
+Seeds: 18
+34
+62
+69
+81
+
+OH coverage: 5396
+--------------- K = 6---------------
+Greedy coverage is: 5515
+Seeds: 2 18 34 62 69 81 
+TipTop coverage: 5516
+Seeds: 2
+34
+62
+69
+81
+371
+
+OH coverage: 5515
+--------------- K = 7---------------
+Greedy coverage is: 5610
+Seeds: 0 2 18 34 62 69 81 
+TipTop coverage: 5609
+Seeds: 2
+18
+34
+62
+69
+81
+371
+
+OH coverage: 5610
+--------------- K = 8---------------
+Greedy coverage is: 5681
+Seeds: 0 2 18 34 36 62 69 81 
+TipTop coverage: 5671
+Seeds: 0
+2
+8
+9
+18
+34
+62
+69
+
+OH coverage: 5680
+--------------- K = 9---------------
+Greedy coverage is: 5744
+Seeds: 0 2 18 34 36 62 69 81 371 
+TipTop coverage: 5744
+Seeds: 0
+2
+18
+34
+36
+62
+69
+81
+371
+
+OH coverage: 5744
+--------------- K = 10---------------
+Greedy coverage is: 5791
+Seeds: 0 2 9 18 34 36 62 69 81 371 
+TipTop coverage: 5791
+Seeds: 0
+2
+9
+18
+34
+36
+62
+69
+81
+371
+
+OH coverage: 5791
+--------------- K = 11---------------
+Greedy coverage is: 5826
+Seeds: 0 2 9 18 30 34 36 62 69 81 371 
+TipTop coverage: 5823
+Seeds: 0
+2
+9
+18
+34
+36
+62
+69
+80
+81
+371
+
+OH coverage: 5826
+--------------- K = 12---------------
+Greedy coverage is: 5859
+Seeds: 0 2 9 10 18 30 34 36 62 69 81 371 
+TipTop coverage: 5859
+Seeds: 0
+2
+9
+10
+18
+30
+34
+36
+62
+69
+81
+371
+
+OH coverage: 5856
+--------------- K = 13---------------
+Greedy coverage is: 5885
+Seeds: 0 2 9 10 18 30 34 36 62 69 81 128 371 
+TipTop coverage: 5877
+Seeds: 0
+2
+9
+10
+20
+30
+34
+62
+69
+81
+128
+224
+371
+
+OH coverage: 5885
+--------------- K = 14---------------
+Greedy coverage is: 5905
+Seeds: 0 2 9 10 18 30 34 36 62 69 80 81 128 371 
+TipTop coverage: 5904
+Seeds: 0
+2
+9
+10
+18
+30
+34
+36
+62
+69
+81
+107
+128
+371
+
+OH coverage: 5904
+--------------- K = 15---------------
+Greedy coverage is: 5924
+Seeds: 0 2 9 10 18 30 34 36 62 69 80 81 107 128 371 
+TipTop coverage: 5919
+Seeds: 0
+9
+10
+16
+18
+30
+34
+62
+69
+80
+81
+107
+128
+224
+371
+
+OH coverage: 5918

@@ -1,0 +1,176 @@
+--------------- K = 5---------------
+Greedy coverage is: 5198
+Seeds: 1 7 22 37 49 
+TipTop coverage: 5198
+Seeds: 1
+7
+22
+37
+49
+
+OH coverage: 5198
+--------------- K = 6---------------
+Greedy coverage is: 5314
+Seeds: 1 7 22 27 37 49 
+TipTop coverage: 5314
+Seeds: 1
+7
+22
+27
+37
+49
+
+OH coverage: 5314
+--------------- K = 7---------------
+Greedy coverage is: 5402
+Seeds: 1 7 22 27 37 49 57 
+TipTop coverage: 5402
+Seeds: 1
+7
+22
+27
+37
+49
+57
+
+OH coverage: 5402
+--------------- K = 8---------------
+Greedy coverage is: 5478
+Seeds: 1 7 22 27 37 49 57 156 
+TipTop coverage: 5478
+Seeds: 1
+7
+22
+27
+37
+49
+57
+156
+
+OH coverage: 5478
+--------------- K = 9---------------
+Greedy coverage is: 5543
+Seeds: 1 7 22 27 37 49 57 75 156 
+TipTop coverage: 5543
+Seeds: 1
+7
+22
+27
+37
+49
+57
+75
+156
+
+OH coverage: 5543
+--------------- K = 10---------------
+Greedy coverage is: 5592
+Seeds: 1 7 22 27 37 49 57 75 156 311 
+TipTop coverage: 5592
+Seeds: 1
+7
+22
+27
+37
+49
+57
+75
+156
+311
+
+OH coverage: 5592
+--------------- K = 11---------------
+Greedy coverage is: 5630
+Seeds: 1 7 22 27 35 37 49 57 75 156 311 
+TipTop coverage: 5630
+Seeds: 1
+7
+22
+27
+35
+37
+49
+57
+75
+156
+311
+
+OH coverage: 5630
+--------------- K = 12---------------
+Greedy coverage is: 5663
+Seeds: 1 7 22 27 35 37 49 57 75 146 156 311 
+TipTop coverage: 5657
+Seeds: 1
+7
+22
+27
+37
+49
+57
+75
+111
+156
+242
+311
+
+OH coverage: 5657
+--------------- K = 13---------------
+Greedy coverage is: 5691
+Seeds: 1 7 22 27 35 37 49 57 75 146 156 269 311 
+TipTop coverage: 5687
+Seeds: 1
+7
+22
+27
+37
+49
+57
+75
+99
+111
+156
+269
+311
+
+OH coverage: 5691
+--------------- K = 14---------------
+Greedy coverage is: 5718
+Seeds: 1 7 22 27 35 37 49 57 75 99 146 156 269 311 
+TipTop coverage: 5719
+Seeds: 1
+7
+22
+35
+37
+49
+57
+75
+99
+111
+146
+156
+269
+311
+
+OH coverage: 5719
+--------------- K = 15---------------
+Greedy coverage is: 5743
+Seeds: 1 7 22 27 35 37 49 57 75 99 111 146 156 269 311 
+TipTop coverage: 5740
+Seeds: 1
+7
+22
+27
+37
+49
+57
+75
+99
+111
+146
+156
+242
+269
+311
+
+OH coverage: 5740

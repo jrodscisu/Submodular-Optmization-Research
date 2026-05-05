@@ -1,0 +1,176 @@
+--------------- K = 5---------------
+Greedy coverage is: 4899
+Seeds: 3 4 6 10 20 
+TipTop coverage: 4899
+Seeds: 3
+4
+6
+10
+20
+
+OH coverage: 4899
+--------------- K = 6---------------
+Greedy coverage is: 5059
+Seeds: 3 4 6 10 20 131 
+TipTop coverage: 5055
+Seeds: 3
+4
+6
+10
+20
+54
+
+OH coverage: 5059
+--------------- K = 7---------------
+Greedy coverage is: 5185
+Seeds: 0 3 4 6 10 20 131 
+TipTop coverage: 5188
+Seeds: 3
+4
+6
+8
+10
+20
+54
+
+OH coverage: 5185
+--------------- K = 8---------------
+Greedy coverage is: 5293
+Seeds: 0 3 4 6 10 16 20 131 
+TipTop coverage: 5289
+Seeds: 3
+4
+6
+10
+16
+20
+26
+131
+
+OH coverage: 5293
+--------------- K = 9---------------
+Greedy coverage is: 5378
+Seeds: 0 3 4 6 8 10 16 20 131 
+TipTop coverage: 5378
+Seeds: 0
+3
+4
+6
+8
+10
+20
+26
+59
+
+OH coverage: 5369
+--------------- K = 10---------------
+Greedy coverage is: 5451
+Seeds: 0 3 4 6 8 10 16 20 26 131 
+TipTop coverage: 5455
+Seeds: 0
+3
+4
+6
+8
+10
+16
+20
+26
+59
+
+OH coverage: 5451
+--------------- K = 11---------------
+Greedy coverage is: 5514
+Seeds: 0 3 4 6 8 10 16 20 26 76 131 
+TipTop coverage: 5513
+Seeds: 0
+3
+4
+6
+8
+10
+16
+20
+26
+59
+131
+
+OH coverage: 5513
+--------------- K = 12---------------
+Greedy coverage is: 5565
+Seeds: 0 3 4 6 8 10 16 20 26 56 76 131 
+TipTop coverage: 5565
+Seeds: 0
+3
+4
+6
+8
+10
+16
+20
+26
+54
+59
+79
+
+OH coverage: 5563
+--------------- K = 13---------------
+Greedy coverage is: 5613
+Seeds: 0 2 3 4 6 8 10 16 20 26 56 76 131 
+TipTop coverage: 5611
+Seeds: 0
+3
+4
+6
+8
+10
+16
+20
+26
+56
+76
+113
+131
+
+OH coverage: 5611
+--------------- K = 14---------------
+Greedy coverage is: 5648
+Seeds: 0 2 3 4 6 8 10 16 20 26 56 76 113 131 
+TipTop coverage: 5645
+Seeds: 0
+2
+3
+4
+6
+8
+10
+16
+20
+26
+39
+54
+59
+79
+
+OH coverage: 5641
+--------------- K = 15---------------
+Greedy coverage is: 5677
+Seeds: 0 2 3 4 6 8 10 16 20 23 26 56 76 113 131 
+TipTop coverage: 5675
+Seeds: 0
+2
+3
+4
+6
+8
+10
+16
+20
+22
+26
+39
+54
+59
+79
+
+OH coverage: 5675

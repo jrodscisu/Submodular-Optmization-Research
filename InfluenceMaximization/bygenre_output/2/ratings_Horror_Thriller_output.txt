@@ -1,0 +1,176 @@
+--------------- K = 5---------------
+Greedy coverage is: 4841
+Seeds: 1 2 17 53 64 
+TipTop coverage: 4874
+Seeds: 1
+17
+24
+53
+64
+
+OH coverage: 4874
+--------------- K = 6---------------
+Greedy coverage is: 5010
+Seeds: 1 2 17 24 53 64 
+TipTop coverage: 5011
+Seeds: 1
+17
+24
+53
+64
+124
+
+OH coverage: 5011
+--------------- K = 7---------------
+Greedy coverage is: 5128
+Seeds: 1 2 17 24 53 64 124 
+TipTop coverage: 5128
+Seeds: 1
+2
+17
+24
+53
+64
+124
+
+OH coverage: 5128
+--------------- K = 8---------------
+Greedy coverage is: 5231
+Seeds: 1 2 17 24 53 64 108 124 
+TipTop coverage: 5231
+Seeds: 1
+2
+17
+24
+53
+64
+108
+124
+
+OH coverage: 5231
+--------------- K = 9---------------
+Greedy coverage is: 5310
+Seeds: 1 2 17 24 53 64 76 108 124 
+TipTop coverage: 5307
+Seeds: 1
+2
+17
+24
+53
+64
+108
+124
+134
+
+OH coverage: 5307
+--------------- K = 10---------------
+Greedy coverage is: 5384
+Seeds: 1 2 17 24 53 64 76 108 124 134 
+TipTop coverage: 5377
+Seeds: 1
+2
+17
+24
+53
+64
+65
+76
+108
+124
+
+OH coverage: 5377
+--------------- K = 11---------------
+Greedy coverage is: 5447
+Seeds: 1 2 17 24 53 61 64 76 108 124 134 
+TipTop coverage: 5444
+Seeds: 1
+2
+17
+24
+45
+53
+64
+76
+108
+124
+134
+
+OH coverage: 5444
+--------------- K = 12---------------
+Greedy coverage is: 5499
+Seeds: 1 2 17 24 45 53 61 64 76 108 124 134 
+TipTop coverage: 5499
+Seeds: 1
+2
+17
+24
+45
+53
+61
+64
+76
+108
+124
+134
+
+OH coverage: 5499
+--------------- K = 13---------------
+Greedy coverage is: 5539
+Seeds: 1 2 17 24 45 53 61 64 76 108 109 124 134 
+TipTop coverage: 5537
+Seeds: 1
+2
+10
+17
+24
+42
+53
+61
+64
+76
+108
+124
+134
+
+OH coverage: 5538
+--------------- K = 14---------------
+Greedy coverage is: 5574
+Seeds: 1 2 17 24 45 53 61 64 65 76 108 109 124 134 
+TipTop coverage: 5573
+Seeds: 0
+1
+2
+10
+17
+24
+45
+53
+61
+64
+76
+108
+124
+134
+
+OH coverage: 5573
+--------------- K = 15---------------
+Greedy coverage is: 5607
+Seeds: 0 1 2 17 24 45 53 61 64 65 76 108 109 124 134 
+TipTop coverage: 5604
+Seeds: 0
+1
+2
+17
+24
+45
+53
+61
+64
+65
+76
+109
+124
+134
+372
+
+OH coverage: 5604

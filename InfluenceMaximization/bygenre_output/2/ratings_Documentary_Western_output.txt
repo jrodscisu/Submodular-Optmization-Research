@@ -1,0 +1,176 @@
+--------------- K = 5---------------
+Greedy coverage is: 3200
+Seeds: 2 6 27 29 33 
+TipTop coverage: 3200
+Seeds: 2
+6
+27
+29
+33
+
+OH coverage: 3200
+--------------- K = 6---------------
+Greedy coverage is: 3392
+Seeds: 2 6 7 27 29 33 
+TipTop coverage: 3392
+Seeds: 2
+6
+7
+27
+29
+33
+
+OH coverage: 3392
+--------------- K = 7---------------
+Greedy coverage is: 3550
+Seeds: 2 6 7 22 27 29 33 
+TipTop coverage: 3550
+Seeds: 2
+6
+7
+22
+27
+29
+33
+
+OH coverage: 3550
+--------------- K = 8---------------
+Greedy coverage is: 3660
+Seeds: 2 6 7 22 27 29 33 35 
+TipTop coverage: 3660
+Seeds: 2
+6
+7
+22
+27
+29
+33
+35
+
+OH coverage: 3660
+--------------- K = 9---------------
+Greedy coverage is: 3739
+Seeds: 2 6 7 22 27 29 33 34 35 
+TipTop coverage: 3738
+Seeds: 2
+3
+6
+7
+22
+27
+29
+33
+35
+
+OH coverage: 3738
+--------------- K = 10---------------
+Greedy coverage is: 3815
+Seeds: 2 3 6 7 22 27 29 33 34 35 
+TipTop coverage: 3815
+Seeds: 2
+3
+6
+7
+22
+27
+29
+33
+34
+35
+
+OH coverage: 3815
+--------------- K = 11---------------
+Greedy coverage is: 3875
+Seeds: 1 2 3 6 7 22 27 29 33 34 35 
+TipTop coverage: 3875
+Seeds: 1
+2
+3
+6
+7
+22
+27
+29
+33
+34
+35
+
+OH coverage: 3875
+--------------- K = 12---------------
+Greedy coverage is: 3919
+Seeds: 1 2 3 6 7 22 27 29 33 34 35 49 
+TipTop coverage: 3919
+Seeds: 1
+2
+3
+6
+7
+22
+27
+29
+33
+34
+35
+49
+
+OH coverage: 3919
+--------------- K = 13---------------
+Greedy coverage is: 3959
+Seeds: 1 2 3 6 7 9 22 27 29 33 34 35 49 
+TipTop coverage: 3959
+Seeds: 1
+2
+3
+6
+7
+9
+22
+27
+29
+33
+34
+35
+49
+
+OH coverage: 3959
+--------------- K = 14---------------
+Greedy coverage is: 3995
+Seeds: 1 2 3 6 7 9 22 27 29 33 34 35 49 73 
+TipTop coverage: 3995
+Seeds: 1
+2
+3
+6
+7
+9
+22
+27
+29
+33
+34
+35
+49
+73
+
+OH coverage: 3995
+--------------- K = 15---------------
+Greedy coverage is: 4026
+Seeds: 1 2 3 6 7 9 13 22 27 29 33 34 35 49 73 
+TipTop coverage: 4025
+Seeds: 1
+2
+3
+6
+7
+9
+22
+27
+29
+33
+34
+35
+49
+65
+73
+
+OH coverage: 4026

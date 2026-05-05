@@ -1,0 +1,3 @@
+--------------- K = 30---------------
+Greedy coverage is: 3802
+TipTop coverage: 313

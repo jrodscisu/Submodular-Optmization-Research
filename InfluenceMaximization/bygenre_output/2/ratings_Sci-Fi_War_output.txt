@@ -1,0 +1,176 @@
+--------------- K = 5---------------
+Greedy coverage is: 5029
+Seeds: 3 4 8 21 32 
+TipTop coverage: 5063
+Seeds: 1
+3
+8
+21
+32
+
+OH coverage: 5063
+--------------- K = 6---------------
+Greedy coverage is: 5224
+Seeds: 0 3 4 8 21 32 
+TipTop coverage: 5247
+Seeds: 0
+1
+3
+8
+21
+32
+
+OH coverage: 5224
+--------------- K = 7---------------
+Greedy coverage is: 5369
+Seeds: 0 3 4 8 21 32 54 
+TipTop coverage: 5372
+Seeds: 0
+1
+3
+8
+21
+32
+54
+
+OH coverage: 5369
+--------------- K = 8---------------
+Greedy coverage is: 5476
+Seeds: 0 1 3 4 8 21 32 54 
+TipTop coverage: 5476
+Seeds: 0
+1
+3
+8
+13
+32
+54
+104
+
+OH coverage: 5476
+--------------- K = 9---------------
+Greedy coverage is: 5567
+Seeds: 0 1 3 4 8 21 32 44 54 
+TipTop coverage: 5567
+Seeds: 0
+1
+3
+8
+13
+21
+32
+44
+54
+
+OH coverage: 5567
+--------------- K = 10---------------
+Greedy coverage is: 5633
+Seeds: 0 1 3 4 8 13 21 32 44 54 
+TipTop coverage: 5632
+Seeds: 0
+1
+3
+6
+8
+13
+21
+32
+44
+54
+
+OH coverage: 5633
+--------------- K = 11---------------
+Greedy coverage is: 5686
+Seeds: 0 1 3 4 8 13 21 32 44 54 104 
+TipTop coverage: 5686
+Seeds: 0
+1
+3
+4
+6
+8
+21
+32
+44
+52
+54
+
+OH coverage: 5686
+--------------- K = 12---------------
+Greedy coverage is: 5729
+Seeds: 0 1 3 4 6 8 13 21 32 44 54 104 
+TipTop coverage: 5729
+Seeds: 0
+1
+3
+4
+6
+8
+13
+21
+32
+44
+54
+104
+
+OH coverage: 5729
+--------------- K = 13---------------
+Greedy coverage is: 5767
+Seeds: 0 1 3 4 6 8 13 21 32 44 52 54 104 
+TipTop coverage: 5767
+Seeds: 0
+1
+2
+3
+4
+6
+8
+21
+32
+44
+52
+54
+104
+
+OH coverage: 5767
+--------------- K = 14---------------
+Greedy coverage is: 5800
+Seeds: 0 1 2 3 4 6 8 13 21 32 44 52 54 104 
+TipTop coverage: 5800
+Seeds: 0
+1
+2
+3
+4
+6
+8
+13
+21
+32
+44
+52
+54
+104
+
+OH coverage: 5792
+--------------- K = 15---------------
+Greedy coverage is: 5823
+Seeds: 0 1 2 3 4 6 8 13 21 29 32 44 52 54 104 
+TipTop coverage: 5823
+Seeds: 0
+1
+2
+3
+4
+6
+8
+13
+21
+29
+32
+44
+52
+54
+104
+
+OH coverage: 5823
