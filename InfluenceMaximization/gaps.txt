@@ -1890,3 +1890,10 @@ bygenre_output/2/ratings_War_Western: 0
 bygenre_output/2/ratings_War_Western: 0
 bygenre_output/2/ratings_War_Western: 0
 bygenre_output/2/ratings_War_Western: -3
+bygenre_50_output/1/ratings_Action_50: 9
+bygenre_50_output/1/ratings_Action_50: 9
+bygenre_50_output/1/ratings_Action_50: 11
+bygenre_50_output/1/ratings_Action_50: 9
+bygenre_50_output/1/ratings_Action_50: 9
+bygenre_50_output/1/ratings_Action_50: 15
+bygenre_50_output/1/ratings_Action_50: 10

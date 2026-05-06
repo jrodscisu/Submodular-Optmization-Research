@@ -487,10 +487,9 @@ set<int> vec2set(vector<int> v){
 int main(int argc, char * argv[]) {
     int k = atoi(argv[1]);
     MovieRecommendation mR = read_graph_plus(argv[2]);
-    cout << "ssldkfjlsd" << endl;
     vector<vector<int> > opt = readOptimal(argv[3], k);
     ofstream fout(string(argv[4]) + "_output.txt", std::ios_base::app);
-    ofstream fout_gap("gaps.txt", std::ios_base::app);
+    ofstream fout_gap("gaps_50.txt", std::ios_base::app);
 
 
     vector<int> results_opt;
@@ -536,7 +535,9 @@ int main(int argc, char * argv[]) {
         cout << endl;
         fout << endl;
 
-        fout_gap << argv[4] << ": " << results_opt.back() - results_greedy.back() << endl;
+        double gap = 100.0 * (results_opt.back() - results_greedy.back())/results_greedy.back();
+
+        fout_gap << argv[4] << ": " << gap << endl;
 
         vector<int> ohs;
         for(int j = 0; j < 50; j++){
