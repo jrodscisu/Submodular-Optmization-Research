@@ -1369,3 +1369,159 @@ OH coverage for k = 14, x = 0: 910
 Greedy coverage is: 946
 Seeds: 758 937 1126 1645 1986 2386 2530 3019 3193 3283 5303 5996 6330 6452 9730 
 OH coverage for k = 15, x = 0: 891
+--------------- K = 3---------------
+Greedy coverage is: 481
+Seeds: 758 937 1986 
+OH coverage for k = 3, x = 0: 481
+--------------- K = 4---------------
+Greedy coverage is: 539
+Seeds: 758 937 1986 2530 
+OH coverage for k = 4, x = 0: 542
+--------------- K = 5---------------
+Greedy coverage is: 590
+Seeds: 758 937 1986 2530 5996 
+OH coverage for k = 5, x = 0: 597
+--------------- K = 6---------------
+Greedy coverage is: 635
+Seeds: 758 937 1986 2530 3283 5996 
+OH coverage for k = 6, x = 0: 661
+--------------- K = 7---------------
+Greedy coverage is: 680
+Seeds: 758 937 1126 1986 2530 3283 5996 
+OH coverage for k = 7, x = 0: 676
+--------------- K = 8---------------
+Greedy coverage is: 724
+Seeds: 758 937 1126 1986 2530 3283 5996 6452 
+OH coverage for k = 8, x = 0: 760
+--------------- K = 9---------------
+Greedy coverage is: 766
+Seeds: 758 937 1126 1986 2530 3283 5996 6330 6452 
+OH coverage for k = 9, x = 0: 755
+--------------- K = 10---------------
+Greedy coverage is: 807
+Seeds: 758 937 1126 1986 2530 3283 5303 5996 6330 6452 
+OH coverage for k = 10, x = 0: 880
+--------------- K = 11---------------
+Greedy coverage is: 846
+Seeds: 758 937 1126 1645 1986 2530 3283 5303 5996 6330 6452 
+OH coverage for k = 11, x = 0: 885
+--------------- K = 12---------------
+Greedy coverage is: 883
+Seeds: 758 937 1126 1645 1986 2386 2530 3283 5303 5996 6330 6452 
+OH coverage for k = 12, x = 0: 946
+--------------- K = 13---------------
+Greedy coverage is: 916
+Seeds: 758 937 1126 1645 1986 2386 2530 3193 3283 5303 5996 6330 6452 
+OH coverage for k = 13, x = 0: 908
+--------------- K = 14---------------
+Greedy coverage is: 945
+Seeds: 758 937 1126 1645 1986 2386 2530 3019 3193 3283 5303 5996 6330 6452 
+OH coverage for k = 14, x = 0: 947
+--------------- K = 15---------------
+Greedy coverage is: 946
+Seeds: 758 937 1126 1645 1986 2386 2530 3019 3193 3283 5303 5996 6330 6452 9730 
+OH coverage for k = 15, x = 0: 948
+--------------- K = 3---------------
+Greedy coverage is: 481
+Seeds: 758 937 1986 
+OH coverage for k = 3, x = 0: 481
+--------------- K = 4---------------
+Greedy coverage is: 539
+Seeds: 758 937 1986 2530 
+OH coverage for k = 4, x = 0: 536
+--------------- K = 5---------------
+Greedy coverage is: 590
+Seeds: 758 937 1986 2530 5996 
+OH coverage for k = 5, x = 0: 581
+--------------- K = 6---------------
+Greedy coverage is: 635
+Seeds: 758 937 1986 2530 3283 5996 
+OH coverage for k = 6, x = 0: 619
+--------------- K = 7---------------
+Greedy coverage is: 680
+Seeds: 758 937 1126 1986 2530 3283 5996 
+OH coverage for k = 7, x = 0: 700
+--------------- K = 8---------------
+Greedy coverage is: 724
+Seeds: 758 937 1126 1986 2530 3283 5996 6452 
+OH coverage for k = 8, x = 0: 733
+--------------- K = 9---------------
+Greedy coverage is: 766
+Seeds: 758 937 1126 1986 2530 3283 5996 6330 6452 
+OH coverage for k = 9, x = 0: 792
+--------------- K = 10---------------
+Greedy coverage is: 807
+Seeds: 758 937 1126 1986 2530 3283 5303 5996 6330 6452 
+OH coverage for k = 10, x = 0: 810
+--------------- K = 11---------------
+Greedy coverage is: 846
+Seeds: 758 937 1126 1645 1986 2530 3283 5303 5996 6330 6452 
+OH coverage for k = 11, x = 0: 894
+--------------- K = 12---------------
+Greedy coverage is: 883
+Seeds: 758 937 1126 1645 1986 2386 2530 3283 5303 5996 6330 6452 
+OH coverage for k = 12, x = 0: 907
+--------------- K = 13---------------
+Greedy coverage is: 916
+Seeds: 758 937 1126 1645 1986 2386 2530 3193 3283 5303 5996 6330 6452 
+OH coverage for k = 13, x = 0: 947
+--------------- K = 14---------------
+Greedy coverage is: 945
+Seeds: 758 937 1126 1645 1986 2386 2530 3019 3193 3283 5303 5996 6330 6452 
+OH coverage for k = 14, x = 0: 919
+--------------- K = 15---------------
+Greedy coverage is: 946
+Seeds: 758 937 1126 1645 1986 2386 2530 3019 3193 3283 5303 5996 6330 6452 9730 
+OH coverage for k = 15, x = 0: 948
+--------------- K = 3---------------
+Greedy coverage is: 481
+Seeds: 758 937 1986 
+OH coverage for k = 3, x = 0: 481
+--------------- K = 4---------------
+Greedy coverage is: 539
+Seeds: 758 937 1986 2530 
+OH coverage for k = 4, x = 0: 539
+--------------- K = 5---------------
+Greedy coverage is: 590
+Seeds: 758 937 1986 2530 5996 
+OH coverage for k = 5, x = 0: 590
+--------------- K = 6---------------
+Greedy coverage is: 635
+Seeds: 758 937 1986 2530 3283 5996 
+OH coverage for k = 6, x = 0: 635
+--------------- K = 7---------------
+Greedy coverage is: 680
+Seeds: 758 937 1126 1986 2530 3283 5996 
+OH coverage for k = 7, x = 0: 680
+--------------- K = 8---------------
+Greedy coverage is: 724
+Seeds: 758 937 1126 1986 2530 3283 5996 6452 
+OH coverage for k = 8, x = 0: 724
+--------------- K = 9---------------
+Greedy coverage is: 766
+Seeds: 758 937 1126 1986 2530 3283 5996 6330 6452 
+OH coverage for k = 9, x = 0: 766
+--------------- K = 10---------------
+Greedy coverage is: 807
+Seeds: 758 937 1126 1986 2530 3283 5303 5996 6330 6452 
+OH coverage for k = 10, x = 0: 807
+--------------- K = 11---------------
+Greedy coverage is: 846
+Seeds: 758 937 1126 1645 1986 2530 3283 5303 5996 6330 6452 
+OH coverage for k = 11, x = 0: 846
+--------------- K = 12---------------
+Greedy coverage is: 883
+Seeds: 758 937 1126 1645 1986 2386 2530 3283 5303 5996 6330 6452 
+OH coverage for k = 12, x = 0: 883
+--------------- K = 13---------------
+Greedy coverage is: 916
+Seeds: 758 937 1126 1645 1986 2386 2530 3193 3283 5303 5996 6330 6452 
+OH coverage for k = 13, x = 0: 916
+--------------- K = 14---------------
+Greedy coverage is: 945
+Seeds: 758 937 1126 1645 1986 2386 2530 3019 3193 3283 5303 5996 6330 6452 
+OH coverage for k = 14, x = 0: 945
+--------------- K = 15---------------
+Greedy coverage is: 946
+Seeds: 758 937 1126 1645 1986 2386 2530 3019 3193 3283 5303 5996 6330 6452 9730 
+OH coverage for k = 15, x = 0: 946

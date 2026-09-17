@@ -439,12 +439,12 @@ class MovieRecommendation{
                 //*********************************************************** */
                 double Beta_i = deltaP/ (deltaG + deltaP);
 
-                if(coin(gen) <= Beta_i){
-                    id = p;
-                    coverage += deltaP;
-                }else{
+                // if(coin(gen) <= Beta_i){
+                    // id = p;
+                    // coverage += deltaP;
+                // }else{
                     coverage += deltaG;
-                }
+                // }
 
                 seeds.push_back(id);
 
@@ -1088,12 +1088,15 @@ int main(int argc, char * argv[]) {
     MovieRecommendation mR = read_graph_plus(argv[2]);
     vector<set<int>> opt = readOptimal(argv[3], k);
     ofstream fout("output_Norm.txt", std::ios_base::app);
-    ofstream rhoout("output_rho.txt");
+    ofstream rhoout("output_rho.txt", std::ios_base::app);
 
 
     vector<int> results_opt;
     vector<int> results_greedy;
     vector<int> results_oh;
+
+    rhoout << "K,Step,rho_g,rho_p,id,p,deltaG,deltaP" << endl;
+
 
     for(int i = 2; i < k; i++){
 
@@ -1133,7 +1136,6 @@ int main(int argc, char * argv[]) {
         //     results_oh.push_back(ohs[25]);
         // }
 
-        rhoout << "Step,rho_g,rho_p,id,p,deltaG,deltaP" << endl;
         for(int z = 15; z <= 15; z++){
             double x = -7.50 + (double)z * 0.5;
             vector<int> ohs;
@@ -1144,7 +1146,7 @@ int main(int argc, char * argv[]) {
                 ohs.push_back(mR.compute_coverage_from_seeds(oh_seeds));
             
                 for(auto [k_val, rho_g, rho_p, id, p, deltaG, deltaP] : oh_history){
-                    rhoout << k_val << "," << rho_g << "," << rho_p << "," << id << "," << p << "," << deltaG << "," << deltaP << endl;
+                    rhoout << i + 1 << "," << k_val << "," << rho_g << "," << rho_p << "," << id << "," << p << "," << deltaG << "," << deltaP << endl;
                 }
             }
             cout << "OPT coverage for k = " << i + 1 << ": " << mR.compute_coverage_from_seeds(vector<int>(hints.begin(), hints.end())) << endl;
