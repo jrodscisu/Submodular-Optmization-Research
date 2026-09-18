@@ -469,266 +469,128 @@ class MovieRecommendation{
 
             return {coverage, seeds, history};
         }
+        pair<int, vector<int>> compute_coverage_OH_Knapsack(double B, set<int> hints){
+            int n = movie_n;
+            int coverage = 0;
 
-        //  pair<int, vector<int>> compute_coverage_OH_SD(int k, set<int> hints, double x_original, double R_original){
-        //     int n = movie_n;
-        //     int coverage = 0;
+            random_device rd;  
+            mt19937 gen(rd()); 
+            uniform_real_distribution<double> coin(0.0, 1.0);
 
-        //     double R_new = R_original;
-        //     double x_new = x_original;
+            priority_queue<pair<double, int> > density;
+            priority_queue<pair<int, int> > f;
+
+            vector<int> user_per_movie_temp = user_per_movie;
+            vector<int> user_covered(user_n, 0);
+
+            for(int i = 0; i < n; i++){
+
+                if(B - cost_movie[i] < 1e-6)
+                    continue;
+                density.push({(double)user_per_movie_temp[i]/cost_movie[i], i});
+                f.push({user_per_movie_temp[i], i});
+            }
+
+            vector<vector<int>> augmentations;
+
+            vector<int> S;
+            vector<int> G;
+            double budget = B;
+
+            int f_G = 0, f_S = 0;
+
+            while(budget > 1e-6 && !density.empty() && !f.empty()){
+                auto [dg, g] = density.top();
+
+                if(budget - cost_movie[g] < 1e-6 || user_per_movie_temp[g] == 0 || (double)user_per_movie_temp[g]/cost_movie[g] < dg){
+                    density.pop();
+                    if(budget - cost_movie[g] > 1e-6 && user_per_movie_temp[g] > 0)
+                        density.push({(double)user_per_movie_temp[g]/cost_movie[g], g});
+                    continue;
+                }
+
+                auto [f_v, v] = f.top();
+
+                if(budget - cost_movie[v] < 1e-6 || user_per_movie_temp[v] == 0 || f_v < user_per_movie_temp[v]){
+                    f.pop();
+                    if(budget - cost_movie[v] > 1e-6 && user_per_movie_temp[v] > 0)
+                        f.push({user_per_movie_temp[v], v});
+                    continue;
+                }
+
+                G.push_back(v);
+                augmentations.push_back(G);
+                G.pop_back();
+
+                int selected = g;
+
+                pair<double, int> best_prediction = {0.0, -1};
+
+                set<int> unavailable_hints;
+
+                for(auto h : hints){
+                    if(user_per_movie_temp[h] == 0 || cost_movie[h] > budget){
+                        unavailable_hints.insert(h);
+                        continue;
+                    }
+                    double density_h = (double)user_per_movie_temp[h]/cost_movie[h];
+                    if(density_h > best_prediction.first){
+                        best_prediction = {density_h, h};
+                    }
+                }
+
+                for(auto h : unavailable_hints){
+                    hints.erase(h);
+                }
 
 
-        //     random_device rd;  
-        //     mt19937 gen(rd()); 
-        //     uniform_real_distribution<double> coin(0.0, 1.0);
-
-        //     priority_queue<pair<int, int> > pq;
-
-        //     vector<int> user_per_movie_temp = user_per_movie;
-        //     vector<int> user_covered(user_n, 0);
-
-        //     for(int i = 0; i < n; i++){
-        //         pq.push({user_per_movie_temp[i], i});
-        //     }
-
-        //     vector<int> seeds;
-
-        //     while((int)seeds.size() < k && !pq.empty()){
-        //         auto [movie_counter, id] = pq.top(); pq.pop();
-
-        //         if(movie_counter > user_per_movie_temp[id]){
-        //             if(user_per_movie_temp[id])
-        //                 pq.push({user_per_movie_temp[id], id});
-
-        //             continue;
-        //         }
-
-        //         int p = 0;
-
-        //         vector<double> benefits;
-        //         vector<int> hint_vec(hints.begin(), hints.end());
-
-        //         for(auto x : hint_vec){
-        //             benefits.push_back((double)user_per_movie_temp[x]);
-        //         }
-
-        //         R_new = calculateSD(benefits);
-
-        //         benefits.clear();
-
-        //         for(auto x : hint_vec){
-        //             if(R_new == 0)
-        //                 x_new = 0;
-        //             else
-        //                 x_new = x_original * (R_original/R_new);
-        //             benefits.push_back(exp( x_new * user_per_movie_temp[x]));
-        //         }
-
-        //         discrete_distribution<int> hint_dist(benefits.begin(), benefits.end());
-
-        //         p = hint_vec[hint_dist(gen)];
-
-        //         double deltaG = user_per_movie_temp[id], deltaP = user_per_movie_temp[p];
-        //         double Beta_i = deltaP/ (deltaG + deltaP);
-
-        //         if(coin(gen) <= Beta_i){
-        //             id = p;
-        //         }
-
-        //         seeds.push_back(id);
-
-        //         coverage += movie_counter;
-        //         for(auto u : user_list[id]){
-        //             if(user_covered[u])
-        //                 continue;
+                if(hints.size() > 0){
+                    vector<int> predictions(hints.begin(), hints.end());
+                    uniform_real_distribution<int> coin_p(0, predictions.size() - 1);
                     
-        //             user_covered[u] = 1;
-        //             for(auto m : movie_list[u]){
-        //                 user_per_movie_temp[m]--;
-        //             }
-        //         }
+                    best_prediction.second = predictions[coin_p(gen)];
+                    best_prediction.first = (double)user_per_movie_temp[best_prediction.second]/cost_movie[best_prediction.second];
+                }
+                
+                if(best_prediction.second != -1){
+                    double d_p = best_prediction.first;
+                    double c_p = cost_movie[best_prediction.second];
+                    double c_g = cost_movie[g];
+                    double Beta_i = (d_p/c_p) / ((d_p/c_p) + (dg/c_g));
 
-        //         if(hints.find(id) != hints.end()){
-        //             hints.erase(id);
-        //         }
-        //     }
+                    if(coin(gen) <= Beta_i){
+                        cout << "Selected hint " << best_prediction.second << " over movie " << g << " with probability " << Beta_i << endl;
+                        selected = best_prediction.second;
+                    }
+                }
 
-        //     return {coverage, seeds};
-        // }
+                G.push_back(selected);
 
-        // pair<int, vector<int>> compute_coverage_OH_Norm(int k, set<int> hints, double x_original){
-        //     int n = movie_n;
-        //     int coverage = 0;
+                budget -= cost_movie[selected];
 
-        //     double R;
-
-        //     random_device rd;  
-        //     mt19937 gen(rd()); 
-        //     uniform_real_distribution<double> coin(0.0, 1.0);
-
-        //     priority_queue<pair<int, int> > pq;
-
-        //     vector<int> user_per_movie_temp = user_per_movie;
-        //     vector<int> user_covered(user_n, 0);
-
-        //     for(int i = 0; i < n; i++){
-        //         pq.push({user_per_movie_temp[i], i});
-        //     }
-
-        //     vector<int> seeds;
-
-        //     while((int)seeds.size() < k && !pq.empty()){
-        //         auto [movie_counter, id] = pq.top(); pq.pop();
-
-        //         if(movie_counter > user_per_movie_temp[id]){
-        //             if(user_per_movie_temp[id])
-        //                 pq.push({user_per_movie_temp[id], id});
-
-        //             continue;
-        //         }
-
-        //         int p = 0;
-
-        //         vector<double> benefits;
-        //         vector<int> hint_vec(hints.begin(), hints.end());
-        //         double min_benefit = 1e9, max_benefit = -1e9;
-        //         for(auto x : hint_vec){
-        //             min_benefit = min(min_benefit, (double)user_per_movie_temp[x]);
-        //             max_benefit = max(max_benefit, (double)user_per_movie_temp[x]);
-        //             benefits.push_back((double)user_per_movie_temp[x]);
-        //         }
-
-        //         R = max_benefit - min_benefit;
-
-        //         benefits.clear();
-
-        //         for(auto x : hint_vec){
-        //             double norm_benefit;
-        //             if(R == 0)
-        //                 norm_benefit = 0;
-        //             else
-        //                 norm_benefit = ((double)user_per_movie_temp[x] - min_benefit) / R;
-        //             benefits.push_back(exp(x_original * norm_benefit ));
-        //         }
-
-        //         discrete_distribution<int> hint_dist(benefits.begin(), benefits.end());
-
-        //         p = hint_vec[hint_dist(gen)];
-
-        //         double deltaG = user_per_movie_temp[id], deltaP = user_per_movie_temp[p];
-        //         double Beta_i = deltaP/ (deltaG + deltaP);
-
-        //         if(coin(gen) <= Beta_i){
-        //             id = p;
-        //         }
-
-        //         seeds.push_back(id);
-
-        //         coverage += movie_counter;
-        //         for(auto u : user_list[id]){
-        //             if(user_covered[u])
-        //                 continue;
+                for(auto u : user_list[selected]){
+                    if(user_covered[u])
+                        continue;
                     
-        //             user_covered[u] = 1;
-        //             for(auto m : movie_list[u]){
-        //                 user_per_movie_temp[m]--;
-        //             }
-        //         }
+                    user_covered[u] = 1;
+                    for(auto m : movie_list[u]){
+                        user_per_movie_temp[m]--;
+                    }
+                }
+            }
 
-        //         if(hints.find(id) != hints.end()){
-        //             hints.erase(id);
-        //         }
-        //     }
+            pair<int, vector<int>> best_augmentation = {compute_coverage_from_seeds(G), G};
 
-        //     return {coverage, seeds};
-        // }
-
-        //  pair<int, vector<int>> compute_coverage_OH_SD(int k, set<int> hints, double x_original, double R_original){
-        //     int n = movie_n;
-        //     int coverage = 0;
-
-        //     double R_new = R_original;
-        //     double x_new = x_original;
+            for(auto aug : augmentations){
+                int aug_coverage = compute_coverage_from_seeds(aug);
+                if(aug_coverage > best_augmentation.first){
+                    best_augmentation = {aug_coverage, aug};
+                }
+            }
 
 
-        //     random_device rd;  
-        //     mt19937 gen(rd()); 
-        //     uniform_real_distribution<double> coin(0.0, 1.0);
-
-        //     priority_queue<pair<int, int> > pq;
-
-        //     vector<int> user_per_movie_temp = user_per_movie;
-        //     vector<int> user_covered(user_n, 0);
-
-        //     for(int i = 0; i < n; i++){
-        //         pq.push({user_per_movie_temp[i], i});
-        //     }
-
-        //     vector<int> seeds;
-
-        //     while((int)seeds.size() < k && !pq.empty()){
-        //         auto [movie_counter, id] = pq.top(); pq.pop();
-
-        //         if(movie_counter > user_per_movie_temp[id]){
-        //             if(user_per_movie_temp[id])
-        //                 pq.push({user_per_movie_temp[id], id});
-
-        //             continue;
-        //         }
-
-        //         int p = 0;
-
-        //         vector<double> benefits;
-        //         vector<int> hint_vec(hints.begin(), hints.end());
-
-        //         for(auto x : hint_vec){
-        //             benefits.push_back((double)user_per_movie_temp[x]);
-        //         }
-
-        //         R_new = calculateSD(benefits);
-
-        //         benefits.clear();
-
-        //         for(auto x : hint_vec){
-        //             if(R_new == 0)
-        //                 x_new = 0;
-        //             else
-        //                 x_new = x_original * (R_original/R_new);
-        //             benefits.push_back(exp( x_new * user_per_movie_temp[x]));
-        //         }
-
-        //         discrete_distribution<int> hint_dist(benefits.begin(), benefits.end());
-
-        //         p = hint_vec[hint_dist(gen)];
-
-        //         double deltaG = user_per_movie_temp[id], deltaP = user_per_movie_temp[p];
-        //         double Beta_i = deltaP/ (deltaG + deltaP);
-
-        //         if(coin(gen) <= Beta_i){
-        //             id = p;
-        //         }
-
-        //         seeds.push_back(id);
-
-        //         coverage += movie_counter;
-        //         for(auto u : user_list[id]){
-        //             if(user_covered[u])
-        //                 continue;
-                    
-        //             user_covered[u] = 1;
-        //             for(auto m : movie_list[u]){
-        //                 user_per_movie_temp[m]--;
-        //             }
-        //         }
-
-        //         if(hints.find(id) != hints.end()){
-        //             hints.erase(id);
-        //         }
-        //     }
-
-        //     return {coverage, seeds};
-        // }
-
+            return best_augmentation;
+        }
         pair<int, vector<int>> compute_coverage_SG_Knapsack(double B){
             int n = movie_n;
             int coverage = 0;
@@ -741,11 +603,13 @@ class MovieRecommendation{
 
             for(int i = 0; i < n; i++){
 
-                if(cost_movie[i] > B)
+                if(B - cost_movie[i] < 1e-6)
                     continue;
                 density.push({(double)user_per_movie_temp[i]/cost_movie[i], i});
                 f.push({user_per_movie_temp[i], i});
             }
+
+            vector<vector<int>> augmentations;
 
             vector<int> S;
             vector<int> G;
@@ -753,61 +617,34 @@ class MovieRecommendation{
 
             int f_G = 0, f_S = 0;
 
-            while(budget > 0.0 && !density.empty() && !f.empty()){
-                auto [f_v, v] = f.top(); f.pop();
+            while(budget > 1e-6 && !density.empty() && !f.empty()){
+                auto [dg, g] = density.top();
 
-                //Make sure v fits the budget
-                while((cost_movie[v] > budget || f_v > user_per_movie_temp[v]) && !f.empty()){
-                    if(cost_movie[v] > budget) {
-                        f_v = f.top().first;
-                        v = f.top().second;
-                        f.pop();
-                        continue;
-                    }
-
-                    if(user_per_movie_temp[v]) 
-                        f.push({user_per_movie_temp[v], v});
-                    
-                    f_v = f.top().first;
-                    v = f.top().second;
-                    f.pop();
-                }
-                
-                //Augmenting Greedy if possible
-                if(budget >= cost_movie[v] && f_G + f_v > f_S){
-                    S = G;
-                    S.push_back(v);
-                    f_S = f_G + f_v;
-                }
-
-                auto [rho_v, id] = density.top(); density.pop();
-
-                while((cost_movie[id] > budget || rho_v > (double)user_per_movie_temp[id]/cost_movie[id]) && !density.empty()){
-                    if(cost_movie[id] > budget){    
-                        rho_v = density.top().first;
-                        id = density.top().second;
-                        density.pop();
-                        continue;
-                    }
-
-                    if(user_per_movie_temp[id])
-                        density.push({(double)user_per_movie_temp[id]/cost_movie[id], id});
-                    
-
-                    rho_v = density.top().first;
-                    id = density.top().second;
+                if(budget - cost_movie[g] < 1e-6 || user_per_movie_temp[g] == 0 || (double)user_per_movie_temp[g]/cost_movie[g] < dg){
                     density.pop();
+                    if(budget - cost_movie[g] > 1e-6 && user_per_movie_temp[g] > 0)
+                        density.push({(double)user_per_movie_temp[g]/cost_movie[g], g});
+                    continue;
                 }
 
-                if(cost_movie[id] > budget){
-                    break;
+                auto [f_v, v] = f.top();
+
+                if(budget - cost_movie[v] < 1e-6 || user_per_movie_temp[v] == 0 || f_v < user_per_movie_temp[v]){
+                    f.pop();
+                    if(budget - cost_movie[v] > 1e-6 && user_per_movie_temp[v] > 0)
+                        f.push({user_per_movie_temp[v], v});
+                    continue;
                 }
 
-                G.push_back(id);
-                f_G += user_per_movie_temp[id];
-                budget -= cost_movie[id];
+                G.push_back(v);
+                augmentations.push_back(G);
+                G.pop_back();
 
-                for(auto u : user_list[id]){
+                G.push_back(g);
+
+                budget -= cost_movie[g];
+
+                for(auto u : user_list[g]){
                     if(user_covered[u])
                         continue;
                     
@@ -818,9 +655,17 @@ class MovieRecommendation{
                 }
             }
 
-            coverage = f_S;
+            pair<int, vector<int>> best_augmentation = {compute_coverage_from_seeds(G), G};
 
-            return {coverage, S};
+            for(auto aug : augmentations){
+                int aug_coverage = compute_coverage_from_seeds(aug);
+                if(aug_coverage > best_augmentation.first){
+                    best_augmentation = {aug_coverage, aug};
+                }
+            }
+
+
+            return best_augmentation;
         }
 
         int compute_coverage_from_seeds(vector<int> seeds){
@@ -965,7 +810,7 @@ MovieRecommendation read_graph(string filename) {
     return mR;
 }
 
-MovieRecommendation read_graph_knapsack(string filename){
+MovieRecommendation read_graph_knapsack(string filename, string filename_cost){
 
     int n_users, n_movies = 0;
 
@@ -987,7 +832,7 @@ MovieRecommendation read_graph_knapsack(string filename){
 
     n_users -= n_movies;
 
-    cout << n_users << endl;
+    cout << n_movies << ' ' << n_users << endl;
 
     MovieRecommendation mR(n_users, n_movies);
 
@@ -997,13 +842,16 @@ MovieRecommendation read_graph_knapsack(string filename){
     
     fin.close();
 
-    ifstream fin_cost("Costs/" + filename + "_cost.txt");
+    ifstream fin_cost(filename_cost);
 
     for(int i = 0; i < n_movies; i++){
         double cost;
         fin_cost >> cost;
+
+        // cout << cost << ' ';
         mR.addMovieCost(i, cost);
     }
+    cout << endl;
 
     return mR;       
 }
@@ -1076,7 +924,7 @@ vector<set<int>> readOptimal_knapsack(string filename){
         string s, w;
         v.push_back(set<int>());
         getline(fin, s);
-
+        
         istringstream sin(s);
 
         while(sin >> w){
@@ -1095,10 +943,10 @@ set<int> vec2set(vector<int> v){
 
 int main(int argc, char * argv[]) {
     int k = atoi(argv[1]);
-    MovieRecommendation mR = read_graph_plus(argv[2]);
-    vector<set<int>> opt = readOptimal(argv[3], k);
+    MovieRecommendation mR = read_graph_knapsack(argv[2], argv[3]);
+    vector<set<int>> opt = readOptimal_knapsack(argv[4]);
     ofstream fout("output_Norm.txt", std::ios_base::app);
-    ofstream rhoout("output_rho_synthetic.txt");
+    ofstream rhoout("output_rho_knapsack.txt");
 
 
     vector<int> results_opt;
@@ -1108,11 +956,11 @@ int main(int argc, char * argv[]) {
     rhoout << "K,Step,rho_g,rho_p,id,p,deltaG,deltaP" << endl;
 
 
-    for(int i = 9; i < k; i++){
+    for(int i = 0; i < 1; i++){
 
-        cout << "--------------- K = " << i + 1 << "---------------" << endl;
-        fout << "--------------- K = " << i + 1 << "---------------" << endl;
-        auto [val, seeds] = mR.compute_coverage_SG(i + 1);
+        cout << "--------------- K = " << k << "---------------" << endl;
+        fout << "--------------- K = " << k << "---------------" << endl;
+        auto [val, seeds] = mR.compute_coverage_SG_Knapsack(k);
 
         sort(seeds.begin(), seeds.end());
         val = mR.compute_coverage_from_seeds(seeds);
@@ -1130,48 +978,40 @@ int main(int argc, char * argv[]) {
         cout << endl;
         fout << endl;
 
-        set<int> hints = opt[i - 2];
-
-        // for(int z = 0; z <= 30; z++){
-        //     double x = -7.50 + (double)z * 0.5;
-        //     vector<int> ohs;
-        //     for(int j = 0; j < 50; j++){
-
-        //         auto [c_, oh_seeds] = mR.compute_coverage_OH_Norm(i + 1, hints, x);
-
-        //         ohs.push_back(mR.compute_coverage_from_seeds(oh_seeds));
-        //     }
-        //     cout << "OH coverage for k = " << i + 1 << ", x = " << x << ": " << ohs[25] << endl;
-        //     fout << "OH coverage for k = " << i + 1 << ", x = " << x << ": " << ohs[25] << endl;
-        //     results_oh.push_back(ohs[25]);
-        // }
+        set<int> hints = opt[0];
 
         double avg_rho_g = 0.0, avg_rho_p = 0.0;
+        vector<int> ohs;
+        for(int j = 0; j < 50; j++){
 
-        for(int z = 15; z <= 15; z++){
-            double x = -7.50 + (double)z * 0.5;
-            vector<int> ohs;
-            for(int j = 49; j < 50; j++){
+            auto [coverage, seeds] = mR.compute_coverage_OH_Knapsack(k, hints);
 
-                auto [c_, oh_seeds, oh_history] = mR.compute_coverage_OH_Norm2(i + 1, hints, x);
-
-                ohs.push_back(mR.compute_coverage_from_seeds(oh_seeds));
-            
-                for(auto [k_val, rho_g, rho_p, id, p, deltaG, deltaP] : oh_history){
-                    rhoout << i + 1 << "," << k_val << "," << rho_g << "," << rho_p << "," << id << "," << p << "," << deltaG << "," << deltaP << endl;
-                    avg_rho_g += rho_g;
-                    avg_rho_p += rho_p;
-                }
-                avg_rho_g /= (double)oh_history.size();
-                avg_rho_p /= (double)oh_history.size();
-            }
-            cout << "OPT coverage for k = " << i + 1 << ": " << mR.compute_coverage_from_seeds(vector<int>(hints.begin(), hints.end())) << endl;
-            cout << "OH coverage for k = " << i + 1 << ", x = " << x << ": " << ohs[ohs.size()/2] << endl;
-            cout << "Average rho_g for k = " << i + 1 << ", x = " << x << ": " << avg_rho_g << endl;
-            cout << "Average rho_p for k = " << i + 1 << ", x = " << x << ": " << avg_rho_p << endl;
-            fout << "OH coverage for k = " << i + 1 << ", x = " << x << ": " << ohs[ohs.size()/2] << endl;
-            results_oh.push_back(ohs[ohs.size()/2]);
+            ohs.push_back(mR.compute_coverage_from_seeds(seeds));
+        
+            // for(auto [k_val, rho_g, rho_p, id, p, deltaG, deltaP] : oh_history){
+            //     rhoout << i + 1 << "," << k_val << "," << rho_g << "," << rho_p << "," << id << "," << p << "," << deltaG << "," << deltaP << endl;
+            //     avg_rho_g += rho_g;
+            //     avg_rho_p += rho_p;
+            // }
+            // avg_rho_g /= (double)oh_history.size();
+            // avg_rho_p /= (double)oh_history.size();
         }
+
+        cout << "OPT: ";
+        for(auto x : hints){
+            cout << x << ' ';
+        }
+        cout << endl;
+
+        sort(ohs.begin(), ohs.end());
+
+        cout << "OPT coverage for k = " << k << ": " << mR.compute_coverage_from_seeds(vector<int>(hints.begin(), hints.end())) << endl;
+        cout << "OH coverage for k = " << k << ": " << ohs[0] << " to " << ohs[ohs.size()/2] << " to " << ohs[ohs.size()-1] << endl;
+        cout << "Average rho_g for k = " << k << ": " << avg_rho_g << endl;
+        cout << "Average rho_p for k = " << k << ": " << avg_rho_p << endl;
+        fout << "OH coverage for k = " << k << ": " << ohs[0] << " to " << ohs[ohs.size()/2] << " to " << ohs[ohs.size()-1] << endl;
+        results_oh.push_back(ohs[ohs.size()/2]);
+        
     }
 
     fout.close();
