@@ -85,15 +85,29 @@ def has_opt(df):
     return df["opt"].notna().any()
 
 
+def reference(df):
+    """Denominator for bound tightness: OPT when known, else the best solution found
+    (max of plain greedy and the best random-greedy run). Since best_found <= OPT,
+    bound / best_found over-estimates bound / OPT, so it is a conservative proxy."""
+    if df["opt"].notna().all():
+        return df["opt"], "OPT"
+    return df[["greedy", "rg_max"]].max(axis=1), "best found"
+
+
 # --------------------------------------------------------------------- k sweep
 def plot_bound_tightness(df, x, xlabel, title, ax):
+    ref, ref_name = reference(df)
+    cols = {"dual": "dual_bound", "top_k": "top_k_bound", "total": "total_weight"}
+    df = df.assign(**{f"_{key}_ratio": df[c] / ref for key, c in cols.items()})
     for key, (suf, label, color) in BOUNDS.items():
-        band(ax, df, x, f"{suf}_over_opt", color, label)
-    ax.axhline(1, color=OPT_COLOR, linewidth=1, linestyle="--", label="OPT")
+        band(ax, df, x, f"_{key}_ratio", color, label)
+    ax.axhline(1, color=OPT_COLOR, linewidth=1, linestyle="--", label=ref_name)
     ax.set_xlabel(xlabel)
     if x == "k":
         ax.xaxis.set_major_locator(MaxNLocator(integer=True))
-    ax.set_ylabel("upper bound / OPT  (lower is tighter)")
+    ax.set_ylabel(f"upper bound / {ref_name}  (lower is tighter)")
+    if max(df[f"_{key}_ratio"].groupby(df[x]).mean().max() for key in cols) > 5:
+        ax.set_yscale("log")  # total weight can be orders of magnitude off for small k
     ax.set_title(title)
 
 
@@ -117,11 +131,11 @@ def k_sweep_figures(df, tag, out_dir):
     seeds = df["seed"].nunique()
     sub = f"G(n={n}, p={p:g}), {seeds} graph seed{'s' * (seeds > 1)}, mean ± 1 sd"
 
-    if has_opt(df):
-        fig, ax = plt.subplots(figsize=(6.4, 4.2))
-        plot_bound_tightness(df, "k", "cardinality k", f"Upper bounds relative to OPT\n{sub}", ax)
-        ax.legend()
-        save(fig, out_dir, f"{tag}_bound_tightness")
+    ref, ref_name = reference(df)
+    fig, ax = plt.subplots(figsize=(6.4, 4.2))
+    plot_bound_tightness(df, "k", "cardinality k", f"Upper bounds relative to {ref_name}\n{sub}", ax)
+    ax.legend()
+    save(fig, out_dir, f"{tag}_bound_tightness")
 
     fig, axes = plt.subplots(1, 2, figsize=(11.5, 4.2), sharey=True)
     for ax, alg in zip(axes, ALGS):
@@ -133,8 +147,8 @@ def k_sweep_figures(df, tag, out_dir):
 
     # per-run scatter: is the dual bound ever looser than top-k?
     fig, ax = plt.subplots(figsize=(4.8, 4.6))
-    xcol, ycol, unit = ("top_k_over_opt", "dual_over_opt", " / OPT") if has_opt(df) \
-        else ("top_k_bound", "dual_bound", "")
+    df = df.assign(_x=df["top_k_bound"] / ref, _y=df["dual_bound"] / ref)
+    xcol, ycol, unit = "_x", "_y", f" / {ref_name}"
     blues = matplotlib.colors.ListedColormap(plt.cm.Blues(np.linspace(0.3, 1.0, 256)))
     sc = ax.scatter(df[xcol], df[ycol], c=df["k"], cmap=blues, s=22,
                     edgecolors="#fcfcfb", linewidths=0.6)
@@ -151,30 +165,77 @@ def k_sweep_figures(df, tag, out_dir):
 
 def prefix_figure(pf, tag, out_dir, ks=None):
     """Which greedy prefix S_i attains min_i f(S_i)+penalty(S_i)+dual(S_i)?"""
-    ks = ks or [k for k in (3, 5, 8, 12, 16) if k in set(pf["k"])]
+    all_ks = sorted(pf["k"].unique())
+    ks = ks or [all_ks[int(round(q * (len(all_ks) - 1)))] for q in (0.1, 0.25, 0.45, 0.7, 0.9)]
+    ks = sorted(set(ks))
     norm = pf["opt"].notna().all()
-    y = pf["bound_S"] / pf["opt"] if norm else pf["bound_S"]
+    if norm:
+        y, ref_name = pf["bound_S"] / pf["opt"], "OPT"
+    else:  # f of the last prefix is the plain-greedy value
+        last = pf.groupby(["n", "p", "k", "seed"])["prefix"].transform("max") == pf["prefix"]
+        greedy = pf[last].set_index(["n", "p", "k", "seed"])["f_S"]
+        y = pf["bound_S"].values / greedy.reindex(pd.MultiIndex.from_frame(pf[["n", "p", "k", "seed"]])).values
+        ref_name = "greedy value"
     pf = pf.assign(y=y)
     fig, axes = plt.subplots(1, 2, figsize=(11.5, 4.2))
     shades = plt.cm.Blues(np.linspace(0.45, 0.95, len(ks)))
     for k, c in zip(ks, shades):
         g = pf[pf["k"] == k].groupby("prefix")["y"].mean()
         axes[0].plot(g.index, g.values, marker="o", color=c, label=f"k={k}")
-    axes[0].axhline(1, color=OPT_COLOR, linewidth=1, linestyle="--", label="OPT") if norm else None
+    axes[0].axhline(1, color=OPT_COLOR, linewidth=1, linestyle="--", label=ref_name)
     axes[0].set_xlabel("greedy prefix index i  (|S_i| = i)")
-    axes[0].set_ylabel("f(S_i) + penalty(S_i) + dual(S_i)" + (" / OPT" if norm else ""))
+    axes[0].set_ylabel(f"f(S_i) + penalty(S_i) + dual(S_i)  / {ref_name}")
     axes[0].set_title("Bound obtained from each greedy prefix (mean over seeds)")
     axes[0].legend(fontsize=8.5)
 
     best = pf.loc[pf.groupby(["n", "p", "k", "seed"])["bound_S"].idxmin()]
     counts = best.groupby("k")["prefix"].apply(lambda s: (s == 0).mean())
-    axes[1].bar(counts.index, 1 - counts.values, color=BOUNDS["dual"][2], width=0.7)
+    step = np.diff(all_ks).min() if len(all_ks) > 1 else 1
+    axes[1].bar(counts.index, 1 - counts.values, color=BOUNDS["dual"][2], width=0.7 * step)
     axes[1].set_ylim(0, 1)
     axes[1].set_xlabel("cardinality k")
     axes[1].xaxis.set_major_locator(MaxNLocator(integer=True))
     axes[1].set_ylabel("fraction of runs")
     axes[1].set_title("Runs where a non-empty prefix (i > 0) gives the min")
+    if (best["prefix"] == 0).all():
+        axes[1].text(0.5, 0.5, f"none: S_0 = {{}} gave the min in all {len(best)} runs",
+                     transform=axes[1].transAxes, ha="center", va="center", color="#52514e")
     save(fig, out_dir, f"{tag}_prefix")
+
+
+def k_sweep_overview(dfs, out_dir, name="k_sweep_overview"):
+    """Several k sweeps with different n on a common x = k / n axis."""
+    df = pd.concat(dfs, ignore_index=True)
+    ref, ref_name = reference(df)
+    df = df.assign(k_frac=df["k"] / df["n"], _dual=df["dual_bound"] / ref,
+                   _topk=df["top_k_bound"] / ref, _total=df["total_weight"] / ref)
+    ns = sorted(df["n"].unique())
+    shades = plt.cm.Blues(np.linspace(0.45, 0.95, len(ns)))
+    panels = [("rg_over_dual", "Random greedy / dual bound", "certified approximation ratio"),
+              ("_dual", f"Dual bound / {ref_name}", f"bound / {ref_name}"),
+              ("_topk", f"Top-k bound / {ref_name}", f"bound / {ref_name}"),
+              ("_total", f"Total edge weight / {ref_name}", f"bound / {ref_name}")]
+    fig, axes = plt.subplots(1, 4, figsize=(17, 4.2))
+    for ax, (col, title, ylabel) in zip(axes, panels):
+        for n, c in zip(ns, shades):
+            g = df[df["n"] == n].groupby("k_frac")[col].mean()
+            ax.plot(g.index, g.values, marker="o", color=c, label=f"n={n}")
+        ax.set_title(title)
+        ax.set_xlabel("k / n")
+        ax.set_ylabel(ylabel)
+    one_over_e_line(axes[0])
+    axes[0].set_ylim(0, 1.05)
+    hi = max(df[c].groupby([df["n"], df["k_frac"]]).mean().max() for c in ("_dual", "_topk"))
+    for ax in axes[1:3]:
+        ax.set_ylim(0.95, hi * 1.05)
+    for ax in axes[1:]:
+        ax.axhline(1, color=OPT_COLOR, linewidth=1, linestyle="--")
+    axes[3].set_yscale("log")
+    p = df["p"].iloc[0]
+    fig.suptitle(f"k sweeps across graph sizes (p={p:g}, mean over seeds)", fontsize=11)
+    fig.tight_layout()
+    legend_below(fig, axes[0], ncol=len(ns) + 1)
+    save(fig, out_dir, name)
 
 
 # --------------------------------------------------------------- density sweep
@@ -233,11 +294,13 @@ def size_figures(df, tag, out_dir):
 # --------------------------------------------------------------------- summary
 def summary(df, name):
     print(f"\n== {name}: {len(df)} runs ==")
+    ref, ref_name = reference(df)
+    cols = {"dual": "dual_bound", "top_k": "top_k_bound", "total": "total_weight"}
     rows = []
     for key, (suf, label, _) in BOUNDS.items():
         r = df[f"rg_over_{suf}"]
         rows.append({"bound": label,
-                     "mean bound/OPT": df[f"{suf}_over_opt"].mean() if has_opt(df) else np.nan,
+                     f"mean bound/{ref_name}": (df[cols[key]] / ref).mean(),
                      "min rg/bound": r.min(), "mean rg/bound": r.mean(),
                      "certifies >= 1/e": f"{(r >= INV_E).mean():.1%}"})
     print(pd.DataFrame(rows).to_string(index=False, float_format=lambda v: f"{v:.3f}"))
@@ -264,14 +327,18 @@ def main():
     def tag_of(path):
         return os.path.splitext(os.path.basename(path))[0]
 
+    k_dfs = []
     for f in find(args.k_csv, "k_sweep_*.csv"):
         df = pd.read_csv(f)
+        k_dfs.append(df)
         print(f"{f}:")
         k_sweep_figures(df, tag_of(f), args.out)
         pfx = f[:-4] + "_prefix.csv"
         if os.path.exists(pfx):
             prefix_figure(pd.read_csv(pfx), tag_of(f), args.out)
         summary(df, tag_of(f))
+    if len(k_dfs) > 1 and pd.concat(k_dfs)["n"].nunique() > 1:
+        k_sweep_overview(k_dfs, args.out)
     for f in find(args.density_csv, "density_sweep_*.csv"):
         df = pd.read_csv(f)
         print(f"{f}:")

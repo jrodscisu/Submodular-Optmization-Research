@@ -16,12 +16,12 @@ build() {
 # run_jobs CSV [PREFIX_CSV] < job_lines
 # Each job line on stdin is "n p k trials seed". Jobs run in parallel, each into its own
 # temp CSV; they are then merged in input order into CSV (and PREFIX_CSV if given).
-# The program's stdout of every job is collected in logs/<csv name>.log.
+# The program's stdout of every job is collected in <csv dir>/logs/<csv name>.log.
 run_jobs() {
     local csv="$1" prefix_csv="${2:-}"
     local tmp; tmp="$(mktemp -d)"
-    local log="logs/$(basename "${csv%.csv}").log"
-    mkdir -p "$(dirname "$csv")" logs
+    local log="$(dirname "$csv")/logs/$(basename "${csv%.csv}").log"
+    mkdir -p "$(dirname "$csv")/logs"
 
     local njobs
     njobs=$(awk 'NF' | tee "$tmp/jobs" | wc -l | tr -d ' ')
