@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+# k sweep for diverse recommendation on MovieLens 1M (repo copy in Coverage/data/ML/ml-1m),
+# for lambda = 0.75 and lambda = 1.0 (non-monotone range is lambda in (1/2, 1]).
+#   ml20_lambda*    20 movies sampled from the 200 most rated, 10 seeds, k = 1..20 (OPT by brute force)
+#   ml500_lambda*   500 movies sampled from the 1000 most rated, 3 seeds, k up to 250
+# Usage: ./run_k_sweep.sh [instance ...]     (default: all)    env: JOBS, PYTHON
+set -euo pipefail
+cd "$(dirname "$0")"
+source ../common/run_jobs.sh
+g++ -O2 -std=c++17 diverse_rec.cpp -o diverse_rec
+ML=../../../Coverage/data/ML/ml-1m/ratings.dat
+[ -f "$ML" ] || { echo "MovieLens ratings not found at $ML" >&2; exit 1; }
+
+want() { [ -z "$SELECTED" ] || [[ " ${SELECTED} " == *" $1 "* ]]; }
+SELECTED="$*"
+{
+    for lam in 0.75 1.0; do
+        if want "ml20_lambda$lam"; then
+            for s in $(seq 0 9); do
+                echo "ml20_lambda$lam --movielens $ML --top 200 --sample 20 --lambda $lam --ks 1:20 --trials 1000 --seed $s"
+            done
+        fi
+        if want "ml500_lambda$lam"; then
+            for s in 0 1 2; do
+                echo "ml500_lambda$lam --movielens $ML --top 1000 --sample 500 --lambda $lam --ks 1,10:250:10 --trials 200 --seed $s"
+            done
+        fi
+    done
+} | run_jobs ./diverse_rec results
+
+"${PYTHON:-python3}" ../common/plot_k_sweep.py --results results --out figures \
+    || echo "plotting skipped (needs pandas + matplotlib)" >&2

@@ -1,0 +1,5 @@
+# downloaded / generated datasets are not committed; data/download.sh recreates them
+*
+!.gitignore
+!*.sh
+!*.py

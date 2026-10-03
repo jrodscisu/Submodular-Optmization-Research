@@ -1,0 +1,10 @@
+# compiled binaries (rebuilt by the run scripts / common/build_all.sh)
+directed_cut/directed_cut
+revenue_max/revenue_max
+diverse_recommendation/diverse_rec
+log_determinant/log_det
+gaussian_mi/gaussian_mi
+hypergraph_cut/hypergraph_cut
+common/port_check
+# per-job stdout of the sweeps
+*/results/logs/
