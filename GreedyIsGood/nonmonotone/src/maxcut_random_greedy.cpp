@@ -4,9 +4,14 @@
 // f(S) = weight of edges crossing (S, V \ S).
 //
 // Build: g++ -O2 -std=c++17 maxcut_random_greedy.cpp -o maxcut
-// Run:   ./maxcut [n p k trials seed csv_path]
+// Run:   ./maxcut [n p k trials seed csv_path brute_max_n prefix_csv_path]
 //        Results are appended as one row to csv_path (default: maxcut_results.csv).
+//        OPT is brute-forced only when n <= brute_max_n (default 20); otherwise opt and
+//        every opt-ratio are written as nan.
+//        If prefix_csv_path is given, one row per greedy prefix S_i is appended there with
+//        the terms f(S_i) + penalty(S_i) + dual_upper_bound(S_i) that dual_wrapper minimizes.
 #include <algorithm>
+#include <chrono>
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
@@ -267,6 +272,10 @@ double dual_wrapper(const Matrix& W, int k, vector<vector<char>>& S_collection) 
     return opt;
 }
 
+static double ms_since(chrono::steady_clock::time_point t0) {
+    return chrono::duration<double, milli>(chrono::steady_clock::now() - t0).count();
+}
+
 int main(int argc, char** argv) {
     int n = argc > 1 ? atoi(argv[1]) : 20;
     double p = argc > 2 ? atof(argv[2]) : 0.3;
@@ -274,6 +283,8 @@ int main(int argc, char** argv) {
     int trials = argc > 4 ? atoi(argv[4]) : 2000;
     unsigned long long seed = argc > 5 ? strtoull(argv[5], nullptr, 10) : 0;
     const char* csv_path = argc > 6 ? argv[6] : "maxcut_results.csv";
+    int brute_max_n = argc > 7 ? atoi(argv[7]) : 20;
+    const char* prefix_csv_path = argc > 8 ? argv[8] : nullptr;
 
     mt19937_64 rng(seed);
     Matrix W = synthetic_graph(n, p, rng);
@@ -282,39 +293,91 @@ int main(int argc, char** argv) {
     for (int i = 0; i < n; i++) for (int j = i + 1; j < n; j++) edges += W[i][j] > 0, total_edge_weights += W[i][j];
     printf("G(n=%d, p=%.2f), edges=%d, k=%d\n", n, p, edges, k);
 
-    double opt = (n <= 20) ? brute_force(W, k) : 0.0;
-    auto [g, S_collection] = plain_greedy(W, k);
-    double ub = top_k_upper_bound(W, k);
-    double dual_bound = dual_wrapper(W, k, S_collection);
+    auto t0 = chrono::steady_clock::now();
+    bool has_opt = n <= brute_max_n;
+    double opt = has_opt ? brute_force(W, k) : NAN;
+    double time_opt_ms = has_opt ? ms_since(t0) : NAN;
 
-    double sum = 0, mn = 1e18, mx = -1e18;
+    t0 = chrono::steady_clock::now();
+    auto [g, S_collection] = plain_greedy(W, k);
+    double time_greedy_ms = ms_since(t0);
+
+    double ub = top_k_upper_bound(W, k);
+
+    t0 = chrono::steady_clock::now();
+    double dual_bound = dual_wrapper(W, k, S_collection);
+    double time_dual_ms = ms_since(t0);
+
+    // dual bound from S_0 = {} alone, i.e. without minimizing over the greedy chain
+    double dual_bound_S0 = dual_upper_bound(W, k, S_collection[0]);
+
+    t0 = chrono::steady_clock::now();
+    double sum = 0, sum_sq = 0, mn = 1e18, mx = -1e18;
     for (int t = 0; t < trials; t++) {
         double v = random_greedy(W, k, rng);
-        sum += v; mn = min(mn, v); mx = max(mx, v);
+        sum += v; sum_sq += v * v; mn = min(mn, v); mx = max(mx, v);
     }
+    double time_rg_ms = ms_since(t0) / trials;
     double mean = sum / trials;
+    double sd = sqrt(max(0.0, sum_sq / trials - mean * mean));
+
     printf("OPT (brute force)      : %.1f\n", opt);
     printf("Total sum of weights.  : %.1f  ratio=%.3f\n", total_edge_weights, total_edge_weights / opt);
-    printf("Top-k upper bound      : %.1f  ratio=%.3f\n", ub, ub / opt);    
+    printf("Top-k upper bound      : %.1f  ratio=%.3f\n", ub, ub / opt);
     printf("Dual upper bound       : %.1f  ratio=%.3f\n", dual_bound, dual_bound / opt);
-    
-    assert(dual_bound >= opt - 1e-6 * max(1.0, fabs(opt)));
+
+    if (has_opt) assert(dual_bound >= opt - 1e-6 * max(1.0, fabs(opt)));
 
     printf("Plain greedy           : %.1f  ratio=%.3f  dual_ratio=%.3f\n", g, g / opt, g / dual_bound);
     printf("Random greedy (%d runs): mean=%.1f  ratio=%.3f  dual_ratio=%.3f top_k_ratio=%.3f total_weight_ratio=%.3f  min=%.1f  max=%.1f\n",
            trials, mean, mean / opt, mean / dual_bound, mean / ub, mean /total_edge_weights, mn, mx);
-    printf("1/e guarantee          : %.1f  dual=%.3f (%s)\n", opt / M_E, dual_bound/ M_E, mean >= opt / M_E ? "OK" : "VIOLATED");
+    printf("1/e guarantee          : %.1f  dual=%.3f (%s)\n", opt / M_E, dual_bound/ M_E,
+           !has_opt ? "OPT unknown" : mean >= opt / M_E ? "OK" : "VIOLATED");
 
-    // append results to CSV, writing the header if the file is new/empty
+    // append results to CSV, writing the header if the file is new/empty.
+    // x_over_B = value(x) / B. For an upper bound B, rg_over_B is a certified
+    // (a-posteriori) approximation ratio that can be compared against 1/e.
     FILE* csv = fopen(csv_path, "a+");
     if (!csv) { perror(csv_path); return 1; }
     fseek(csv, 0, SEEK_END);
     if (ftell(csv) == 0)
-        fprintf(csv, "n,p,k,trials,seed,edges,opt,dual_bound,dual_ratio_opt,greedy,greedy_ratio,greedy_dual_ratio,"
-                     "rg_top_k_ratio,rg_total_weight_ratio,rg_mean,rg_ratio,rg_dual_ratio,rg_min,rg_max,one_over_e_bound,one_over_e_ok\n");
-    fprintf(csv, "%d,%.2f,%d,%d,%llu,%d,%.1f,%.1f,%.6f,%.1f,%.6f,%.6f,%.6f,%.6f,%.3f,%.6f,%.6f,%.1f,%.1f,%.3f,%d\n",
-            n, p, k, trials, seed, edges, opt, dual_bound, dual_bound / opt, mean, mean / opt, mean / dual_bound,
-            mean / ub, mean / total_edge_weights, mean, mean / opt, mean / dual_bound, mn, mx, opt / M_E, mean >= opt / M_E ? 1 : 0);
+        fprintf(csv, "n,p,k,trials,seed,edges,total_weight,opt,top_k_bound,dual_bound,dual_bound_S0,"
+                     "greedy,rg_mean,rg_std,rg_min,rg_max,"
+                     "dual_over_opt,dual_S0_over_opt,top_k_over_opt,total_over_opt,"
+                     "rg_over_opt,rg_over_dual,rg_over_top_k,rg_over_total,"
+                     "greedy_over_opt,greedy_over_dual,greedy_over_top_k,greedy_over_total,"
+                     "rg_ge_opt_over_e,rg_ge_dual_over_e,"
+                     "time_opt_ms,time_greedy_ms,time_dual_ms,time_rg_ms\n");
+    fprintf(csv, "%d,%.2f,%d,%d,%llu,%d,%.1f,%.1f,%.1f,%.4f,%.4f,"
+                 "%.1f,%.4f,%.4f,%.1f,%.1f,"
+                 "%.6f,%.6f,%.6f,%.6f,"
+                 "%.6f,%.6f,%.6f,%.6f,"
+                 "%.6f,%.6f,%.6f,%.6f,"
+                 "%d,%d,"
+                 "%.3f,%.3f,%.3f,%.4f\n",
+            n, p, k, trials, seed, edges, total_edge_weights, opt, ub, dual_bound, dual_bound_S0,
+            g, mean, sd, mn, mx,
+            dual_bound / opt, dual_bound_S0 / opt, ub / opt, total_edge_weights / opt,
+            mean / opt, mean / dual_bound, mean / ub, mean / total_edge_weights,
+            g / opt, g / dual_bound, g / ub, g / total_edge_weights,
+            has_opt ? (mean >= opt / M_E ? 1 : 0) : -1, mean >= dual_bound / M_E ? 1 : 0,
+            time_opt_ms, time_greedy_ms, time_dual_ms, time_rg_ms);
     fclose(csv);
 
+    // per-prefix breakdown of the quantity minimized in dual_wrapper
+    if (prefix_csv_path) {
+        FILE* pcsv = fopen(prefix_csv_path, "a+");
+        if (!pcsv) { perror(prefix_csv_path); return 1; }
+        fseek(pcsv, 0, SEEK_END);
+        if (ftell(pcsv) == 0)
+            fprintf(pcsv, "n,p,k,seed,opt,prefix,size,f_S,penalty_S,dual_S,bound_S\n");
+        for (size_t i = 0; i < S_collection.size(); i++) {
+            auto& S = S_collection[i];
+            int size = count(S.begin(), S.end(), 1);
+            double f = cut_value(W, S), pen = penalty_S(W, S), d = dual_upper_bound(W, k, S);
+            fprintf(pcsv, "%d,%.2f,%d,%llu,%.1f,%zu,%d,%.1f,%.4f,%.4f,%.4f\n",
+                    n, p, k, seed, opt, i, size, f, pen, d, f + pen + d);
+        }
+        fclose(pcsv);
+    }
 }
