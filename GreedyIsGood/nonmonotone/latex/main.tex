@@ -1,0 +1,20 @@
+% Demo document: all random-greedy certified-ratio figures in a two-column layout.
+% Regenerate the data/plots/figures with  python3 make_pgfplots.py  after new experiment runs.
+% Wide (figure*) versions of every figure are in figures/<problem>_wide.tex.
+\documentclass[twocolumn]{article}
+\usepackage[margin=0.75in]{geometry}
+\input{rgplots-preamble}
+
+\begin{document}
+\section*{Random greedy: certified approximation ratio vs.\ $k$}
+Each plot shows $\mathrm{RG}/B$ for the dual upper bound, the top-$k$ singleton bound and
+(where informative) the total-weight bound $B$, against the $1/e$ guarantee of random greedy.
+
+\input{figures/max_cut}
+\input{figures/directed_cut}
+\input{figures/revenue_max}
+\input{figures/diverse_rec}
+\input{figures/log_det}
+\input{figures/gaussian_mi}
+\input{figures/hypergraph_cut}
+\end{document}

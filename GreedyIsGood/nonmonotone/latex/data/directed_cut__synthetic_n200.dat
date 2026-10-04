@@ -1,0 +1,23 @@
+# random greedy certified ratio vs k; n=200, 5 seed(s); mean (and sd) over seeds; nan = not shown
+k dual dual_sd topk topk_sd total total_sd opt opt_sd
+1 1.00000 0.00000 1.00000 0.00000 nan nan 1.00000 0.00000
+5 0.97197 0.00928 0.96354 0.01070 nan nan nan nan
+10 0.94116 0.01660 0.93182 0.01878 nan nan nan nan
+15 0.91293 0.01763 0.90285 0.02014 nan nan nan nan
+20 0.88745 0.01532 0.87475 0.01900 nan nan nan nan
+25 0.86370 0.01320 0.85016 0.01659 nan nan nan nan
+30 0.84082 0.01158 0.82426 0.01501 nan nan nan nan
+35 0.81855 0.00965 0.79983 0.01274 nan nan nan nan
+40 0.79729 0.00851 0.77511 0.01179 nan nan nan nan
+45 0.77887 0.00718 0.75104 0.01033 nan nan nan nan
+50 0.76080 0.00521 0.72637 0.00869 nan nan nan nan
+55 0.74352 0.00513 0.70228 0.00860 nan nan nan nan
+60 0.72405 0.00393 0.67735 0.00715 nan nan nan nan
+65 0.70398 0.00490 0.65313 0.00753 nan nan nan nan
+70 0.68077 0.00516 0.62711 0.00686 nan nan nan nan
+75 0.65806 0.00554 0.60237 0.00654 nan nan nan nan
+80 0.63518 0.00501 0.57799 0.00538 nan nan nan nan
+85 0.61113 0.00520 0.55297 0.00516 nan nan nan nan
+90 0.58878 0.00547 0.52999 0.00521 nan nan nan nan
+95 0.56742 0.00504 0.50846 0.00457 nan nan nan nan
+100 0.54726 0.00473 0.48826 0.00386 nan nan nan nan
