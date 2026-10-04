@@ -1,0 +1,21 @@
+% Demo document: the *_baselines figures (existing series + the B2-B4 baselines), two-column layout.
+% Regenerate with  python3 make_pgfplots.py --baselines  after  ../run_all_baselines.sh.
+% Wide (figure*) versions: figures/<problem>_wide_baselines.tex.
+\documentclass[twocolumn]{article}
+\usepackage[margin=0.75in]{geometry}
+\input{rgplots-preamble}
+
+\begin{document}
+\section*{Random greedy: certified ratio vs.\ $k$, with the B2--B4 baselines}
+Each plot shows $\mathrm{RG}/B$ for every upper bound $B$: the dual bound, top-$k$ singletons,
+total weight, the LP over the dual's base sets (B2), the pruned double-greedy bound $\gamma_1$
+(B3) and the modular bounds $\mu_2,\mu_3$ (B4), against the $1/e$ guarantee of random greedy.
+
+\input{figures/max_cut_baselines}
+\input{figures/directed_cut_baselines}
+\input{figures/revenue_max_baselines}
+\input{figures/diverse_rec_baselines}
+\input{figures/log_det_baselines}
+\input{figures/gaussian_mi_baselines}
+\input{figures/hypergraph_cut_baselines}
+\end{document}

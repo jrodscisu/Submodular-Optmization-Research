@@ -11,50 +11,10 @@
 #include <string>
 
 #include "experiment.hpp"
+#include "maxcut_problem.hpp"
 
 using namespace std;
-using Matrix = vector<vector<double>>;
-
-// identical to src/maxcut_random_greedy.cpp
-Matrix synthetic_graph(int n, double p, mt19937_64& rng) {
-    Matrix W(n, vector<double>(n, 0.0));
-    uniform_real_distribution<double> U(0, 1);
-    uniform_int_distribution<int> wt(1, 9);
-    for (int i = 0; i < n; i++)
-        for (int j = i + 1; j < n; j++)
-            if (U(rng) < p) W[i][j] = W[j][i] = wt(rng);
-    return W;
-}
-
-struct MaxCut {
-    Matrix W;
-    int n() const { return W.size(); }
-    double eval(const vector<char>& in_S) const {
-        double c = 0;
-        for (int i = 0; i < n(); i++)
-            if (in_S[i])
-                for (int j = 0; j < n(); j++)
-                    if (!in_S[j]) c += W[i][j];
-        return c;
-    }
-    struct State {
-        const MaxCut* P;
-        vector<double> deg, w_to_S;
-        vector<char> in_S;
-        explicit State(const MaxCut& p) : P(&p), deg(p.n()), w_to_S(p.n(), 0.0), in_S(p.n(), 0) {
-            for (int i = 0; i < p.n(); i++) deg[i] = accumulate(p.W[i].begin(), p.W[i].end(), 0.0);
-        }
-        double gain(int v) const { return deg[v] - 2 * w_to_S[v]; }
-        void add(int v) {
-            in_S[v] = 1;
-            for (int u = 0; u < P->n(); u++) w_to_S[u] += P->W[v][u];
-        }
-        void remove(int v) {
-            in_S[v] = 0;
-            for (int u = 0; u < P->n(); u++) w_to_S[u] -= P->W[v][u];
-        }
-    };
-};
+using namespace dual;
 
 int main(int argc, char** argv) {
     const char* path = argc > 1 ? argv[1] : "../src/results/k_sweep_n20_p0.3.csv";
@@ -76,7 +36,7 @@ int main(int argc, char** argv) {
         double p = stod(f[col("p")]);
         unsigned long long seed = stoull(f[col("seed")]);
         mt19937_64 rng(seed);
-        MaxCut P{synthetic_graph(n, p, rng)};
+        MaxCut P{dual::synthetic_graph(n, p, rng)};
 
         auto [g, chain] = dual::plain_greedy(P, k);
         double dual_direct = dual::dual_wrapper(P, k, chain);

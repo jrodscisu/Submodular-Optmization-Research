@@ -218,7 +218,7 @@ def main():
         out = args.out if len(args.results) == 1 else os.path.join(os.path.dirname(os.path.abspath(res)), "figures")
         os.makedirs(out, exist_ok=True)
         for f in sorted(glob.glob(os.path.join(res, "*.csv"))):
-            if f.endswith("_prefix.csv"):
+            if f.endswith("_prefix.csv") or f.endswith("_baselines.csv"):
                 continue
             df, ref_is_opt = load(f)
             if df.empty:

@@ -12,4 +12,5 @@ g++ $FLAGS log_determinant/log_det.cpp -o log_determinant/log_det
 g++ $FLAGS gaussian_mi/gaussian_mi.cpp -o gaussian_mi/gaussian_mi
 g++ $FLAGS hypergraph_cut/hypergraph_cut.cpp -o hypergraph_cut/hypergraph_cut
 g++ $FLAGS common/port_check.cpp -o common/port_check
+g++ $FLAGS src/maxcut_baselines.cpp -o src/maxcut_baselines
 echo "built all binaries"

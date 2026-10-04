@@ -20,6 +20,7 @@
 #include <stdexcept>
 #include <string>
 
+#include "baselines.hpp"
 #include "dual_core.hpp"
 
 namespace dual {
@@ -74,6 +75,8 @@ struct SweepConfig {
     int chain_stride = 1;
     bool check_direct = false;
     bool check_oracle = false;
+    bool baselines = false;     // B2-B4 columns (common/baselines.hpp)
+    std::string lp_export;      // directory for the B2 LP coefficients
     double total_bound = NAN;   // problem-specific "sum of all weights" bound (nan if none)
 };
 
@@ -91,6 +94,8 @@ inline SweepConfig sweep_config(const Args& a, int n, const std::string& problem
     c.chain_stride = std::max<long long>(1, a.integer("chain-stride", 1));
     c.check_direct = a.has("check-direct");
     c.check_oracle = a.has("check-oracle");
+    c.baselines = a.has("baselines");
+    c.lp_export = a.str("lp-export", "");
     c.total_bound = total_bound;
     return c;
 }
@@ -198,10 +203,102 @@ void run_k_sweep(const P& prob, const SweepConfig& cfg) {
         time_opt = ms_since(t0);
     }
 
-    FILE* csv = open_csv(cfg.csv,
+    // ---- baselines B2-B4 (only with --baselines); NM-Dual above is unchanged
+    struct {
+        double f_empty = NAN, f_V = NAN, gamma1 = NAN, gamma1_np = NAN, fixed_mu2 = INFINITY, fixed_mu3 = INFINITY;
+        double opt_unc = NAN, lat_opt_unc = NAN, t_gamma = 0, t_mu = 0, t_lp = 0;
+        int A_size = 0, B_size = 0, rounds = 0;
+        vector<double> mu2, mu3, lat_best;
+    } bl;
+    auto uses_prefix = [&](int i, int k) {
+        int last = std::min(k, t);
+        return i <= last && need[i] && (i % cfg.chain_stride == 0 || i == last);
+    };
+    if (cfg.baselines) {
+        vector<char> none(n, 0), all(n, 1);
+        bl.f_empty = check_finite(prob.eval(none), "f(empty)", -1);
+        bl.f_V = check_finite(prob.eval(all), "f(V)", -1);
+
+        auto t0 = clock::now();
+        Lattice L = iterative_prune(prob);
+        vector<char> SD = double_greedy(prob, L.A, L.B), SD0 = double_greedy(prob, none, all);
+        bl.gamma1 = 3 * prob.eval(SD) - prob.eval(L.A) - prob.eval(L.B);
+        bl.gamma1_np = 3 * prob.eval(SD0) - bl.f_empty - bl.f_V;
+        bl.t_gamma = ms_since(t0);
+        bl.rounds = L.rounds;
+        for (int e = 0; e < n; e++) bl.A_size += L.A[e], bl.B_size += L.B[e];
+
+        t0 = clock::now();
+        MuContext ctx = mu_context(prob, L);
+        vector<vector<char>> fixed{L.A, L.B, SD};
+        std::mt19937_64 lat_rng(20261004ULL);  // fixed seed for the 5 random lattice sets
+        for (int r = 0; r < 5; r++) {
+            vector<char> X = L.A;
+            for (int e = 0; e < n; e++) if (L.B[e] && !L.A[e]) X[e] = lat_rng() & 1;
+            fixed.push_back(X);
+        }
+        for (auto& X : fixed) {
+            auto [m2, m3] = mu_bounds(prob, ctx, X);
+            bl.fixed_mu2 = std::min(bl.fixed_mu2, m2), bl.fixed_mu3 = std::min(bl.fixed_mu3, m3);
+        }
+        bl.mu2.assign(chain.size(), NAN), bl.mu3.assign(chain.size(), NAN);
+        for (int i = 0; i <= t; i++)
+            if (need[i]) std::tie(bl.mu2[i], bl.mu3[i]) = mu_bounds(prob, ctx, project(chain[i], L.A, L.B));
+        bl.t_mu = ms_since(t0);
+
+        // B2: LP rows for every base set NM-Dual uses, and which rows each k uses
+        if (!cfg.lp_export.empty()) {
+            t0 = clock::now();
+            auto stV = state_of(prob, all);
+            vector<double> fVm(n);
+            for (int a = 0; a < n; a++) fVm[a] = check_finite(stV.gain(a), "f(a|V-a)", a);
+            std::string path = cfg.lp_export + "/" + cfg.instance + "__seed" + std::to_string(cfg.seed) + ".lp.txt";
+            FILE* lp = fopen(path.c_str(), "w");
+            if (!lp) { perror(path.c_str()); exit(1); }
+            fprintf(lp, "# B2 LP rows: P <prefix> <const> <coef_0..coef_n-1>;  K <k> <prefixes used>\nn %d\n", n);
+            vector<double> coef;
+            double cst;
+            for (int i = 0; i <= t; i++) {
+                if (!need[i]) continue;
+                lp_row(prob, chain[i], fVm, cst, coef);
+                fprintf(lp, "P %d %.17g", i, cst);
+                for (double c : coef) fprintf(lp, " %.17g", c);
+                fputc('\n', lp);
+            }
+            for (int k : cfg.ks) {
+                fprintf(lp, "K %d", k);
+                for (int i = 0; i <= t; i++) if (uses_prefix(i, k)) fprintf(lp, " %d", i);
+                fputc('\n', lp);
+            }
+            fclose(lp);
+            bl.t_lp = ms_since(t0);
+        }
+
+        // lattice contains an unconstrained optimum? (only when every subset was enumerated)
+        int free_ = bl.B_size - bl.A_size;
+        if (kb == n && free_ <= 24) {
+            bl.opt_unc = -INFINITY;
+            for (double b : best_by_size) bl.opt_unc = std::max(bl.opt_unc, b);
+            bl.lat_best = lattice_best_by_size(prob, L.A, L.B);
+            bl.lat_opt_unc = -INFINITY;
+            for (double b : bl.lat_best) bl.lat_opt_unc = std::max(bl.lat_opt_unc, b);
+        }
+        printf("  baselines: |A*|=%d |B*|=%d (%d prune rounds) gamma1=%.4f gamma1_noprune=%.4f "
+               "opt_unc=%.4f lattice_opt_unc=%.4f  (gamma %.0f ms, mu %.0f ms, lp export %.0f ms)\n",
+               bl.A_size, bl.B_size, bl.rounds, bl.gamma1, bl.gamma1_np, bl.opt_unc, bl.lat_opt_unc,
+               bl.t_gamma, bl.t_mu, bl.t_lp);
+        fflush(stdout);
+    }
+
+    std::string header =
         "problem,instance,n,k,trials,seed,chain_stride,chain_len,opt,top_k_bound,total_bound,dual_bound,"
         "dual_bound_S0,dual_best_prefix,greedy,rg_mean,rg_std,rg_min,rg_max,best_found,dual_valid,"
-        "time_dual_ms,time_rg_ms,time_opt_ms\n");
+        "time_dual_ms,time_rg_ms,time_opt_ms";
+    if (cfg.baselines)
+        header += ",lp_bound,gamma1_bound,gamma1_noprune,mu2_bound,mu3_bound,lattice_A_size,lattice_B_size,"
+                  "prune_rounds,f_empty,f_V,opt_unconstrained,lattice_opt_unconstrained,lattice_opt_k,"
+                  "time_lp_export_ms,time_lp_ms,time_gamma1_ms,time_mu_ms";
+    FILE* csv = open_csv(cfg.csv, (header + "\n").c_str());
     FILE* pcsv = cfg.prefix_csv.empty() ? nullptr
         : open_csv(cfg.prefix_csv, "problem,instance,seed,k,prefix,size,f_S,penalty_S,dual_S,bound_S\n");
 
@@ -263,10 +360,32 @@ void run_k_sweep(const P& prob, const SweepConfig& cfg) {
         fflush(stdout);
 
         fprintf(csv, "%s,%s,%d,%d,%d,%llu,%d,%d,%.10g,%.10g,%.10g,%.10g,%.10g,%d,%.10g,%.10g,%.10g,%.10g,%.10g,"
-                     "%.10g,%d,%.3f,%.4f,%.3f\n",
+                     "%.10g,%d,%.3f,%.4f,%.3f",
                 cfg.problem.c_str(), cfg.instance.c_str(), n, k, cfg.trials, cfg.seed, cfg.chain_stride, last + 1,
                 opt, topk, cfg.total_bound, dual_bound, dual_S0, best_prefix, greedy, mean, sd, mn, mx, best_found,
                 dual_valid, time_dual, time_rg, time_opt);
+        if (cfg.baselines) {
+            double mu2 = bl.fixed_mu2, mu3 = bl.fixed_mu3, lat_k = NAN;
+            for (int i = 0; i <= t; i++)
+                if (uses_prefix(i, k)) mu2 = std::min(mu2, bl.mu2[i]), mu3 = std::min(mu3, bl.mu3[i]);
+            if (!bl.lat_best.empty()) {
+                lat_k = -INFINITY;
+                for (int s = 0; s <= k; s++) lat_k = std::max(lat_k, bl.lat_best[s]);
+            }
+            if (!std::isnan(opt)) {
+                double tolb = 1e-6 * std::max(1.0, std::fabs(opt));
+                const char* names[] = {"gamma1_bound", "gamma1_noprune", "mu2_bound", "mu3_bound"};
+                double vals[] = {bl.gamma1, bl.gamma1_np, mu2, mu3};
+                for (int j = 0; j < 4; j++)
+                    if (!(vals[j] >= opt - tolb))
+                        fprintf(stderr, "BASELINE VIOLATION [%s/%s seed %llu] k=%d: %s=%.10g < OPT=%.10g\n",
+                                cfg.problem.c_str(), cfg.instance.c_str(), cfg.seed, k, names[j], vals[j], opt);
+            }
+            fprintf(csv, ",nan,%.10g,%.10g,%.10g,%.10g,%d,%d,%d,%.10g,%.10g,%.10g,%.10g,%.10g,%.3f,nan,%.3f,%.3f",
+                    bl.gamma1, bl.gamma1_np, mu2, mu3, bl.A_size, bl.B_size, bl.rounds, bl.f_empty, bl.f_V,
+                    bl.opt_unc, bl.lat_opt_unc, lat_k, bl.t_lp, bl.t_gamma, bl.t_mu);
+        }
+        fputc('\n', csv);
         fflush(csv);
     }
     fclose(csv);

@@ -6,6 +6,8 @@
 #   wine_n100_alpha*      UCI wine-quality-red, 100 sampled wines, 5 seeds, k = 1..50
 #   wine_n300_alpha*      300 sampled wines, 2 seeds, k up to 100, dual over every 5th prefix
 # Usage: ./run_k_sweep.sh [instance ...]     (default: all)    env: JOBS, PYTHON
+#        BASELINES=1 ./run_k_sweep.sh  reruns the same jobs with the B2-B4 baselines
+#        (results/<instance>_baselines.csv; needs numpy + scipy)
 set -euo pipefail
 cd "$(dirname "$0")"
 source ../common/run_jobs.sh
@@ -31,5 +33,9 @@ SELECTED="$*"
     done
 } | run_jobs ./log_det results
 
-"${PYTHON:-python3}" ../common/plot_k_sweep.py --results results --out figures \
-    || echo "plotting skipped (needs pandas + matplotlib)" >&2
+if [ "${BASELINES:-0}" = 1 ]; then  # solve the B2 LPs and run the validity checks
+    "${PYTHON:-python3}" ../common/baselines_lp.py results
+else
+    "${PYTHON:-python3}" ../common/plot_k_sweep.py --results results --out figures \
+        || echo "plotting skipped (needs pandas + matplotlib)" >&2
+fi

@@ -9,6 +9,8 @@
 # RESULTS_DIR/logs/LABEL.log. Existing files for a LABEL are replaced.
 #
 # Env: JOBS (parallel processes, default = #CPUs)
+#      BASELINES=1  also compute the B2-B4 baselines (--baselines); results go to
+#                   RESULTS_DIR/LABEL_baselines.csv and the LP rows to RESULTS_DIR/lp_export/
 
 JOBS="${JOBS:-$(sysctl -n hw.ncpu 2>/dev/null || nproc)}"
 
@@ -17,6 +19,11 @@ run_jobs() {
     local tmp; tmp="$(mktemp -d)"
     mkdir -p "$res/logs"
     awk 'NF { print NR, $0 }' > "$tmp/jobs"
+    if [ "${BASELINES:-0}" = 1 ]; then  # B2-B4 baselines: same jobs, results in LABEL_baselines.csv
+        mkdir -p "$res/lp_export"
+        awk -v d="$res/lp_export" '{ $2 = $2 "_baselines"; print $0, "--baselines --lp-export", d }' \
+            "$tmp/jobs" > "$tmp/jobs.bl" && mv "$tmp/jobs.bl" "$tmp/jobs"
+    fi
     echo "Running $(wc -l < "$tmp/jobs" | tr -d ' ') jobs of $bin with $JOBS parallel processes"
 
     local status=0

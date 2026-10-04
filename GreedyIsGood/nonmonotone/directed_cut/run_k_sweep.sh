@@ -5,6 +5,8 @@
 #   email_eu_core   SNAP email-Eu-core (n = 1005), k up to 500
 #   wiki_vote       SNAP wiki-Vote (n = 7115), k up to 200, dual over every 10th greedy prefix
 # Usage: ./run_k_sweep.sh [instance ...]     (default: all)    env: JOBS, PYTHON
+#        BASELINES=1 ./run_k_sweep.sh  reruns the same jobs with the B2-B4 baselines
+#        (results/<instance>_baselines.csv; needs numpy + scipy)
 set -euo pipefail
 cd "$(dirname "$0")"
 source ../common/run_jobs.sh
@@ -28,5 +30,9 @@ SELECTED="$*"
     fi
 } | run_jobs ./directed_cut results
 
-"${PYTHON:-python3}" ../common/plot_k_sweep.py --results results --out figures \
-    || echo "plotting skipped (needs pandas + matplotlib)" >&2
+if [ "${BASELINES:-0}" = 1 ]; then  # solve the B2 LPs and run the validity checks
+    "${PYTHON:-python3}" ../common/baselines_lp.py results
+else
+    "${PYTHON:-python3}" ../common/plot_k_sweep.py --results results --out figures \
+        || echo "plotting skipped (needs pandas + matplotlib)" >&2
+fi
