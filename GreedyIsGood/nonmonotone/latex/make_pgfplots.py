@@ -7,8 +7,8 @@ For every instance of every problem (plus the original max-cut k sweep in src/re
   figures/<problem>.tex            a single-column figure: shared legend + all instances, 2 per row
   figures/<problem>_wide.tex       the same as a two-column figure* (4 per row)
 RG is the mean value of random greedy over its trials, averaged over seeds. The total-weight
-curve is kept only at the k where the total bound is within --total-max-ratio of the dual bound
-(the same rule as common/plot_k_sweep.py); RG/OPT only where OPT was brute-forced for every seed.
+curve is drawn at every k (--total-max-ratio R keeps it only where the total bound is within R
+times the dual bound); RG/OPT only where OPT was brute-forced for every seed.
 
 Standard library only. Run from anywhere:  python3 latex/make_pgfplots.py
 Then \\input{rgplots-preamble.tex} in the preamble and \\input{figures/<problem>.tex} in the body
@@ -163,14 +163,14 @@ def legend_tex(series_present, columns):
     return "\n".join(lines)
 
 
-def caption(title, detail, metas, any_total, any_opt):
+def caption(title, detail, metas, any_total, any_opt, max_ratio):
     strides = sorted({m["stride"] for m in metas if m["stride"] > 1})
     parts = [f"{title}: certified approximation ratio of random greedy (RG, mean over trials) "
              f"with respect to each upper bound, as a function of the cardinality $k$. {detail}"]
     if any_opt:
         parts.append("RG/OPT uses the exact optimum (brute force) where it was computable.")
-    if any_total:
-        parts.append("The total-weight bound is shown only where it is within $1.5\\times$ the dual bound.")
+    if any_total and math.isfinite(max_ratio):
+        parts.append(f"The total-weight bound is shown only where it is within ${max_ratio:g}\\times$ the dual bound.")
     if strides:
         every = " or ".join(f"{s}th" for s in strides)
         parts.append(f"On the largest instances the dual bound is minimized over every {every} greedy prefix only.")
@@ -178,7 +178,7 @@ def caption(title, detail, metas, any_total, any_opt):
     return " ".join(parts)
 
 
-def figure_tex(key, title, detail, items, wide):
+def figure_tex(key, title, detail, items, wide, max_ratio):
     per_row = 4 if wide else 2
     width = "0.245\\textwidth" if wide else "0.49\\columnwidth"
     env = "figure*" if wide else "figure"
@@ -190,7 +190,7 @@ def figure_tex(key, title, detail, items, wide):
     for i, (stem, _, _) in enumerate(items):
         sep = "\\\\" if (i + 1) % per_row == 0 and i + 1 < len(items) else ("\\hfill" if i + 1 < len(items) else "")
         out.append(f"\\input{{\\rgroot/plots/{key}__{stem}.tex}}{sep}")
-    out.append(f"\\caption{{{caption(title, detail, metas, 'total' in series, 'opt' in series)}}}")
+    out.append(f"\\caption{{{caption(title, detail, metas, 'total' in series, 'opt' in series, max_ratio)}}}")
     out.append(f"\\label{{fig:rg-{key}{'-wide' if wide else ''}}}")
     out.append(f"\\end{{{env}}}")
     return "\n".join(out) + "\n"
@@ -198,7 +198,8 @@ def figure_tex(key, title, detail, items, wide):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--total-max-ratio", type=float, default=1.5)
+    ap.add_argument("--total-max-ratio", type=float, default=math.inf,
+                    help="draw RG/total only where total <= R * dual (default: everywhere)")
     args = ap.parse_args()
     for d in ("data", "plots", "figures"):
         os.makedirs(os.path.join(HERE, d), exist_ok=True)
@@ -224,7 +225,7 @@ def main():
             items.append((stem, present, meta))
         for wide in (False, True):
             with open(os.path.join(HERE, "figures", f"{key}{'_wide' if wide else ''}.tex"), "w") as f:
-                f.write(figure_tex(key, title, detail, items, wide))
+                f.write(figure_tex(key, title, detail, items, wide, args.total_max_ratio))
         print(f"{title}: {len(items)} plots")
 
 

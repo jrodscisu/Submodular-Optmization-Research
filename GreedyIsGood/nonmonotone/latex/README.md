@@ -1,7 +1,7 @@
 # LaTeX figures: random greedy certified ratio vs k (pgfplots)
 
 One plot per problem and dataset of RG / B for every upper bound B (dual, top-k singletons, total
-weight where within 1.5x of the dual, and OPT where brute-forced), with the 1/e line; RG is random
+weight, and OPT where brute-forced), with the 1/e line; RG is random
 greedy's mean value. `main.pdf` is the compiled demo (two-column article).
 
 ```
@@ -27,5 +27,5 @@ To place single plots yourself: `\setlength{\rgplotwidth}{0.49\columnwidth}` and
 Problems: `max_cut` (the original n = 20 sweep from `src/`), `directed_cut`, `revenue_max`,
 `diverse_rec`, `log_det`, `gaussian_mi`, `hypergraph_cut`.
 
-After new experiment runs: `python3 latex/make_pgfplots.py` (`--total-max-ratio` changes the
-1.5x rule for the total-weight curve).
+After new experiment runs: `python3 latex/make_pgfplots.py` (`--total-max-ratio R` would hide
+the total-weight curve wherever the total bound exceeds R times the dual bound; default: never).
