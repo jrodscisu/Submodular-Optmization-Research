@@ -19,8 +19,9 @@ PROBLEMS = [("max_cut", "src"), ("directed_cut", "directed_cut"), ("revenue_max"
             ("gaussian_mi", "gaussian_mi"), ("hypergraph_cut", "hypergraph_cut")]
 BOUNDS = {"dual_bound": "NM-Dual", "top_k_bound": "Top-k", "total": "Total", "lp_bound": "LP (B2)",
           "gamma1_bound": "γ1 (B3)", "gamma1_noprune": "γ1 no-prune", "mu2_bound": "μ2 (B4)",
-          "mu3_bound": "μ3 (B4)"}
-NEW = ["lp_bound", "gamma1_bound", "gamma1_noprune", "mu2_bound", "mu3_bound"]
+          "mu3_bound": "μ3 (B4)", "marginal_bound": "Marginal"}
+NEW = ["lp_bound", "gamma1_bound", "gamma1_noprune", "mu2_bound", "mu3_bound", "marginal_bound"]
+ORDERINGS = [("dual_bound", "marginal_bound"), ("marginal_bound", "top_k_bound"), ("lp_bound", "marginal_bound")]
 SAME_COLS = ["opt", "top_k_bound", "total_bound", "dual_bound", "dual_bound_S0", "greedy", "rg_mean",
              "rg_std", "rg_min", "rg_max", "best_found"]
 
@@ -89,9 +90,11 @@ def main():
     S.append("## Validity checks\n")
     rows = []
     for p, insts in data.items():
-        n_rows = n_opt = viol = lat_checked = lat_bad = 0
+        n_rows = n_opt = viol = lat_checked = lat_bad = order_bad = 0
         for label, df, _ in insts:
             n_rows += len(df)
+            for lo, hi in ORDERINGS:
+                order_bad += int((df[lo] > df[hi] + 1e-6 * df[hi].abs().clip(lower=1)).sum())
             w = df[df["opt"].notna()]
             n_opt += len(w)
             tol = 1e-6 * w["opt"].abs().clip(lower=1)
@@ -103,7 +106,8 @@ def main():
             lat_bad += int((lc["lattice_opt_unconstrained"] < lc["opt_unconstrained"] - ltol).sum())
             lat_bad += int((df["lattice_A_size"] > df["lattice_B_size"]).sum())
         rows.append({"problem": p, "rows": n_rows, "rows with OPT": n_opt,
-                     "bound checks (5 per row)": 5 * n_opt, "violations": viol,
+                     f"bound checks ({len(NEW)} per row)": len(NEW) * n_opt, "violations": viol,
+                     "ordering checks (3 per row)": 3 * n_rows, "ordering violations": order_bad,
                      "lattice checks (instances)": lat_checked, "lattice violations": lat_bad})
     S.append(md(pd.DataFrame(rows), "{:.0f}") + "\n")
 
@@ -158,6 +162,31 @@ def main():
             rows.append(r)
     S.append(md(pd.DataFrame(rows)) + "\n")
 
+    # ---- Marginal vs NM-Dual: what the caps of high_cap_U add
+    S.append("## Marginal vs NM-Dual: what the caps add\n")
+    S.append("Marginal = NM-Dual with the caps of `high_cap_U` removed (same base sets, same penalty), so "
+             "NM-Dual <= Marginal <= top-k on every row. `ref` is OPT where it is known for every k, else "
+             "the best solution found. *Share from base sets* = (top-k - Marginal) / (top-k - NM-Dual), "
+             "averaged over rows where NM-Dual < top-k: the part of NM-Dual's improvement over top-k that "
+             "minimizing simple marginals over the greedy prefixes already gives; the rest is due to the caps.\n")
+    rows = []
+    for p, insts in data.items():
+        for label, df, _ in insts:
+            ref = df["opt"] if df["opt"].notna().all() else df["best_found"]
+            gain = df["top_k_bound"] - df["dual_bound"]
+            w = df[gain > 1e-9 * df["top_k_bound"].abs().clip(lower=1)]
+            share = ((w["top_k_bound"] - w["marginal_bound"]) / gain[w.index]).mean() if len(w) else math.nan
+            eq = (df["marginal_bound"] - df["dual_bound"]).abs() <= 1e-7 * df["dual_bound"].abs().clip(lower=1)
+            rows.append({"problem": p, "instance": label, "n": int(df["n"].iloc[0]),
+                         "ref": "OPT" if df["opt"].notna().all() else "best",
+                         "Top-k/ref": float((df["top_k_bound"] / ref).mean()),
+                         "Marginal/ref": float((df["marginal_bound"] / ref).mean()),
+                         "NM-Dual/ref": float((df["dual_bound"] / ref).mean()),
+                         "max Marginal/NM-Dual": float((df["marginal_bound"] / df["dual_bound"]).max()),
+                         "rows Marginal = NM-Dual": f"{eq.mean():.0%}",
+                         "share from base sets": share})
+    S.append(md(pd.DataFrame(rows)) + "\n")
+
     # ---- runtime
     S.append("## Runtime per bound (ms, mean per instance and seed; LP = export + solve per k)\n")
     rows = []
@@ -165,7 +194,7 @@ def main():
         for label, df, _ in insts:
             per_seed = df.groupby("seed").agg(dual=("time_dual_ms", "max"), lp_export=("time_lp_export_ms", "first"),
                                               lp_solve=("time_lp_ms", "sum"), gamma1=("time_gamma1_ms", "first"),
-                                              mu=("time_mu_ms", "first"))
+                                              mu=("time_mu_ms", "first"), marginal=("time_marginal_ms", "first"))
             r = {"problem": p, "instance": label, "n": int(df["n"].iloc[0])}
             r.update({c: float(v) for c, v in per_seed.mean().items()})
             r["LP solve per k"] = float(df["time_lp_ms"].mean())
@@ -173,7 +202,8 @@ def main():
     S.append(md(pd.DataFrame(rows), "{:.1f}") + "\n")
     S.append("`dual` = NM-Dual for the largest k (all base sets), `lp_export` = computing the LP rows for all "
              "base sets, `lp_solve` = HiGHS over all k, `gamma1` = Iterative Prune + both double greedies, "
-             "`mu` = μ2/μ3 for all candidates.\n")
+             "`mu` = μ2/μ3 for all candidates, `marginal` = the marginals of every base set (Pen(S) is shared "
+             "with NM-Dual).\n")
 
     # ---- lattice
     S.append("## Iterative Prune lattice sizes\n")

@@ -12,7 +12,8 @@ times the dual bound); RG/OPT only where OPT was brute-forced for every seed.
 
 With --baselines it instead reads the *_baselines.csv results (common/baselines_lp.py) and writes
 data/plots/figures with a _baselines suffix (the original files are not touched), adding the
-series RG/LP (B2), RG/gamma1 (B3), RG/mu2 and RG/mu3 (B4), each with its own color and marker.
+series RG/LP (B2), RG/gamma1 (B3), RG/mu2 and RG/mu3 (B4) and RG/Marginal (min over the dual's
+base sets of f(S) + Pen(S) + top-k positive marginals), each with its own color and marker.
 
 Standard library only. Run from anywhere:  python3 latex/make_pgfplots.py [--baselines]
 Then \\input{rgplots-preamble.tex} in the preamble and \\input{figures/<problem>.tex} in the body
@@ -77,8 +78,10 @@ SERIES = [("dual", "rgdual", "RG/dual"), ("topk", "rgtopk", "RG/top-$k$"),
           ("total", "rgtotal", "RG/total"), ("opt", "rgopt", "RG/OPT")]
 # B2-B4 baselines (--baselines): csv column, style, legend label
 NEW_SERIES = [("lp", "rglp", "RG/LP (B2)"), ("gamma1", "rggamma", "RG/$\\gamma_1$ (B3)"),
-              ("mu2", "rgmutwo", "RG/$\\mu_2$ (B4)"), ("mu3", "rgmuthree", "RG/$\\mu_3$ (B4)")]
-NEW_COLS = {"lp": "lp_bound", "gamma1": "gamma1_bound", "mu2": "mu2_bound", "mu3": "mu3_bound"}
+              ("mu2", "rgmutwo", "RG/$\\mu_2$ (B4)"), ("mu3", "rgmuthree", "RG/$\\mu_3$ (B4)"),
+              ("marg", "rgmarg", "RG/Marginal")]
+NEW_COLS = {"lp": "lp_bound", "gamma1": "gamma1_bound", "mu2": "mu2_bound", "mu3": "mu3_bound",
+            "marg": "marginal_bound"}
 
 
 def num(x):
@@ -195,7 +198,10 @@ def caption(title, detail, metas, any_total, any_opt, max_ratio, baselines=False
     if baselines:
         parts.append("Additional baselines: the LP over the dual's base sets (B2), the pruned double-greedy "
                      "bound $\\gamma_1$ (B3) and the modular bounds $\\mu_2$, $\\mu_3$ on the pruned lattice "
-                     "(B4); B3 and B4 bound the unconstrained optimum.")
+                     "(B4); B3 and B4 bound the unconstrained optimum. Marginal is "
+                     "$\\min_S f(S)+\\mathrm{Pen}(S)+\\sum_{a\\in T_k(S)}[f(a\\mid S)]^+$ ($T_k(S)$: the $k$ largest "
+                     "marginals) over the same base sets, "
+                     "i.e.\\ the dual bound without its caps.")
     parts.append("Curves are means over graph/sample seeds.")
     return " ".join(parts)
 

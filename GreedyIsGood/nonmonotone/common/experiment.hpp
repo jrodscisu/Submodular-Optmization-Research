@@ -209,6 +209,8 @@ void run_k_sweep(const P& prob, const SweepConfig& cfg) {
         double opt_unc = NAN, lat_opt_unc = NAN, t_gamma = 0, t_mu = 0, t_lp = 0;
         int A_size = 0, B_size = 0, rounds = 0;
         vector<double> mu2, mu3, lat_best;
+        vector<vector<double>> marg_top;  // marg_top[i][j] = sum of the j largest [f(a | S_i)]^+, a not in S_i
+        double t_marg = 0;
     } bl;
     auto uses_prefix = [&](int i, int k) {
         int last = std::min(k, t);
@@ -245,6 +247,26 @@ void run_k_sweep(const P& prob, const SweepConfig& cfg) {
         for (int i = 0; i <= t; i++)
             if (need[i]) std::tie(bl.mu2[i], bl.mu3[i]) = mu_bounds(prob, ctx, project(chain[i], L.A, L.B));
         bl.t_mu = ms_since(t0);
+
+        // Marginal bound: min_S f(S) + Pen(S) + sum of the top-k [f(a | S)]^+ over the dual's base sets
+        // (= NM-Dual without the high_cap_U caps); Pen(S) = penalty_S, already computed in pen[i]
+        t0 = clock::now();
+        bl.marg_top.assign(chain.size(), {});
+        for (int i = 0; i <= t; i++) {
+            if (!need[i]) continue;
+            auto st = state_of(prob, chain[i]);
+            vector<double> g;
+            for (int a = 0; a < n; a++)
+                if (!chain[i][a]) {
+                    double v = check_finite(st.gain(a), "marginal f(a|S)", a);
+                    if (v > 0) g.push_back(v);
+                }
+            std::sort(g.begin(), g.end(), std::greater<double>());
+            vector<double>& top = bl.marg_top[i];
+            top.assign(kmax + 1, 0.0);
+            for (int j = 1; j <= kmax; j++) top[j] = top[j - 1] + (j <= (int)g.size() ? g[j - 1] : 0.0);
+        }
+        bl.t_marg = ms_since(t0);
 
         // B2: LP rows for every base set NM-Dual uses, and which rows each k uses
         if (!cfg.lp_export.empty()) {
@@ -297,7 +319,7 @@ void run_k_sweep(const P& prob, const SweepConfig& cfg) {
     if (cfg.baselines)
         header += ",lp_bound,gamma1_bound,gamma1_noprune,mu2_bound,mu3_bound,lattice_A_size,lattice_B_size,"
                   "prune_rounds,f_empty,f_V,opt_unconstrained,lattice_opt_unconstrained,lattice_opt_k,"
-                  "time_lp_export_ms,time_lp_ms,time_gamma1_ms,time_mu_ms";
+                  "time_lp_export_ms,time_lp_ms,time_gamma1_ms,time_mu_ms,marginal_bound,time_marginal_ms";
     FILE* csv = open_csv(cfg.csv, (header + "\n").c_str());
     FILE* pcsv = cfg.prefix_csv.empty() ? nullptr
         : open_csv(cfg.prefix_csv, "problem,instance,seed,k,prefix,size,f_S,penalty_S,dual_S,bound_S\n");
@@ -365,18 +387,26 @@ void run_k_sweep(const P& prob, const SweepConfig& cfg) {
                 opt, topk, cfg.total_bound, dual_bound, dual_S0, best_prefix, greedy, mean, sd, mn, mx, best_found,
                 dual_valid, time_dual, time_rg, time_opt);
         if (cfg.baselines) {
-            double mu2 = bl.fixed_mu2, mu3 = bl.fixed_mu3, lat_k = NAN;
+            double mu2 = bl.fixed_mu2, mu3 = bl.fixed_mu3, lat_k = NAN, marg = INFINITY;
             for (int i = 0; i <= t; i++)
-                if (uses_prefix(i, k)) mu2 = std::min(mu2, bl.mu2[i]), mu3 = std::min(mu3, bl.mu3[i]);
+                if (uses_prefix(i, k)) {
+                    mu2 = std::min(mu2, bl.mu2[i]), mu3 = std::min(mu3, bl.mu3[i]);
+                    marg = std::min(marg, f_chain[i] + pen[i] + bl.marg_top[i][k]);
+                }
+            // theorems: NM-Dual <= Marginal (caps only lower each term) and Marginal <= top-k (S_0 = {})
+            double tolm = 1e-7 * std::max(1.0, std::fabs(marg));
+            if (!(dual_bound <= marg + tolm) || !(marg <= topk + tolm + 1e-7 * std::fabs(bl.f_empty)))
+                fprintf(stderr, "ORDER VIOLATION [%s/%s seed %llu] k=%d: dual=%.10g marginal=%.10g top_k=%.10g\n",
+                        cfg.problem.c_str(), cfg.instance.c_str(), cfg.seed, k, dual_bound, marg, topk);
             if (!bl.lat_best.empty()) {
                 lat_k = -INFINITY;
                 for (int s = 0; s <= k; s++) lat_k = std::max(lat_k, bl.lat_best[s]);
             }
             if (!std::isnan(opt)) {
                 double tolb = 1e-6 * std::max(1.0, std::fabs(opt));
-                const char* names[] = {"gamma1_bound", "gamma1_noprune", "mu2_bound", "mu3_bound"};
-                double vals[] = {bl.gamma1, bl.gamma1_np, mu2, mu3};
-                for (int j = 0; j < 4; j++)
+                const char* names[] = {"gamma1_bound", "gamma1_noprune", "mu2_bound", "mu3_bound", "marginal_bound"};
+                double vals[] = {bl.gamma1, bl.gamma1_np, mu2, mu3, marg};
+                for (int j = 0; j < 5; j++)
                     if (!(vals[j] >= opt - tolb))
                         fprintf(stderr, "BASELINE VIOLATION [%s/%s seed %llu] k=%d: %s=%.10g < OPT=%.10g\n",
                                 cfg.problem.c_str(), cfg.instance.c_str(), cfg.seed, k, names[j], vals[j], opt);
@@ -384,6 +414,7 @@ void run_k_sweep(const P& prob, const SweepConfig& cfg) {
             fprintf(csv, ",nan,%.10g,%.10g,%.10g,%.10g,%d,%d,%d,%.10g,%.10g,%.10g,%.10g,%.10g,%.3f,nan,%.3f,%.3f",
                     bl.gamma1, bl.gamma1_np, mu2, mu3, bl.A_size, bl.B_size, bl.rounds, bl.f_empty, bl.f_V,
                     bl.opt_unc, bl.lat_opt_unc, lat_k, bl.t_lp, bl.t_gamma, bl.t_mu);
+            fprintf(csv, ",%.10g,%.3f", marg, bl.t_marg);
         }
         fputc('\n', csv);
         fflush(csv);

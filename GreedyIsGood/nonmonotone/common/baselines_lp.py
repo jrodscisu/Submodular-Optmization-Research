@@ -6,8 +6,10 @@ For each <results>/<label>_baselines.csv (written by a problem binary with --bas
                 sum x <= k,  0 <= x <= 1      with scipy.optimize.linprog(method="highs");
     fill lp_bound and time_lp_ms.
   * checks (mandatory), on every row with OPT: each of lp_bound, gamma1_bound, gamma1_noprune,
-    mu2_bound, mu3_bound >= OPT_k - 1e-6 max(1, |OPT_k|); lattice sizes |A*| <= |B*|; and where the
-    unconstrained optimum was enumerated, the lattice [A*, B*] contains a set attaining it.
+    mu2_bound, mu3_bound, marginal_bound >= OPT_k - 1e-6 max(1, |OPT_k|); on every row the proven
+    orderings dual <= marginal <= top-k and lp <= marginal (relative tolerance 1e-6); lattice sizes
+    |A*| <= |B*|; and where the unconstrained optimum was enumerated, the lattice [A*, B*] contains
+    a set attaining it.
     Any failure stops the script with the problem, instance, seed, k and all values.
 
   --maxcut-merge ORIGINAL.csv GENERIC.csv OUT.csv merges the max-cut baselines computed with the
@@ -30,7 +32,9 @@ import time
 import numpy as np
 from scipy.optimize import linprog
 
-NEW_BOUNDS = ["lp_bound", "gamma1_bound", "gamma1_noprune", "mu2_bound", "mu3_bound"]
+NEW_BOUNDS = ["lp_bound", "gamma1_bound", "gamma1_noprune", "mu2_bound", "mu3_bound", "marginal_bound"]
+# proven orderings (Marginal = NM-Dual without the caps; its S = {} term is top-k; LP <= Marginal)
+ORDERINGS = [("dual_bound", "marginal_bound"), ("marginal_bound", "top_k_bound"), ("lp_bound", "marginal_bound")]
 
 
 def num(x):
@@ -107,6 +111,10 @@ def check(recs, where):
         ou, lu = num(r["opt_unconstrained"]), num(r["lattice_opt_unconstrained"])
         if not math.isnan(ou) and not (lu >= ou - 1e-6 * max(1, abs(ou))):
             failures.append(f"{tag}: lattice optimum {lu} < unconstrained optimum {ou}")
+        for lo, hi in ORDERINGS:
+            a, b = num(r[lo]), num(r[hi])
+            if not (a <= b + 1e-6 * max(1.0, abs(b))):
+                failures.append(f"{tag}: ordering {lo}={a} > {hi}={b}")
         if math.isnan(opt):
             if len(failures) > n_before:
                 bad_rows.append(r)
