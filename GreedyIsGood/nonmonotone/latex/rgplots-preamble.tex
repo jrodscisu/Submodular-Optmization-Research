@@ -16,6 +16,9 @@
 \definecolor{rgMuTwoColor}{HTML}{E87BA4}
 \definecolor{rgMuThreeColor}{HTML}{E34948}
 \definecolor{rgMargColor}{HTML}{008300}
+% B5 hybrid LP and min(NM-Dual, B5) (the *_hybrid figures)
+\definecolor{rgHybridColor}{HTML}{8C564B}
+\definecolor{rgBestColor}{HTML}{0E8C8C}
 
 \newlength{\rgplotwidth}
 \setlength{\rgplotwidth}{0.49\columnwidth}
@@ -47,6 +50,8 @@
     rgmutwo/.style={rgbaseline, rgMuTwoColor, mark=diamond*},
     rgmuthree/.style={rgbaseline, rgMuThreeColor, mark=*},
     rgmarg/.style={rgbaseline, rgMargColor, mark=star, mark size=2pt},
+    rghybrid/.style={rgbaseline, rgHybridColor, mark=pentagon*},
+    rgbest/.style={rgbaseline, rgBestColor, mark=otimes*, line width=0.9pt},
     rglegendaxis/.style={
         hide axis, xmin=0, xmax=1, ymin=0, ymax=1, scale only axis, width=1pt, height=1pt,
         legend style={draw=none, font=\scriptsize, column sep=0.6em,

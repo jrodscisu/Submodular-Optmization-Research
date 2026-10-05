@@ -14,6 +14,8 @@
 // B3/B4 bound the unconstrained optimum (valid for OPT_k). Oracle values are checked for
 // NaN/inf and reported, never replaced.
 #pragma once
+#include <algorithm>
+#include <cfloat>
 #include <chrono>
 #include <cmath>
 #include <cstdio>
@@ -21,6 +23,8 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
+
+#include "dual_core.hpp"
 
 namespace dual {
 
@@ -163,6 +167,93 @@ void lp_row(const P& prob, const vector<char>& S, const vector<double>& f_a_Vmin
         if (S[a]) cst -= f_a_Vminus[a], coef[a] = f_a_Vminus[a];
         else coef[a] = check_finite(st.gain(a), "LP f(a|S)", a);
     }
+}
+
+// ---- B5 hybrid LP support -------------------------------------------------------------------
+// The ordering, marginals and caps NM-Dual uses for base set S: the same code path as the
+// prelude of dual_dp_rows (dual_core.hpp) and the same high_cap_U, so the values are identical
+// (the driver checks this by rebuilding NM-Dual's DP rows from them).
+struct CapData {
+    vector<int> order;  // V \ S by nonincreasing f(a | S)
+    vector<double> g;   // f(order[j] | S)
+    vector<double> U;   // U_tilde, j = 0..m-1
+};
+
+template <class P>
+CapData nm_dual_caps(const P& prob, const vector<char>& S) {
+    int n = prob.n();
+    typename P::State st(prob);
+    for (int v = 0; v < n; v++)
+        if (S[v] == 1) st.add(v);
+    vector<double> single(n, 0.0);
+    vector<int> order;
+    for (int i = 0; i < n; i++)
+        if (!S[i]) {
+            order.push_back(i);
+            single[i] = st.gain(i);
+        }
+    std::sort(order.begin(), order.end(), [&single](int a, int b) { return single[a] > single[b]; });
+    CapData c;
+    if (order.empty()) return c;
+    c.U = high_cap_U(st, order);
+    c.order = order;
+    for (int a : order) c.g.push_back(check_finite(single[a], "caps f(a|S)", a));
+    for (double u : c.U) check_finite(u, "cap U", -1);
+    return c;
+}
+
+// the DP of dual_upper_bound evaluated from CapData (verifies that the caps are NM-Dual's)
+inline vector<double> dp_rows_from_caps(const CapData& c, int kmax) {
+    int m = c.order.size();
+    vector<double> rows(kmax + 1, 0.0);
+    if (m == 0) return rows;
+    vector<double> prev(m + 1, 0.0), cur(m + 1);
+    for (int j = 1; j <= kmax; j++) {
+        cur[0] = -DBL_MAX;
+        for (int i = 1; i <= m; i++) cur[i] = std::max(cur[i - 1], std::min(prev[i - 1] + c.g[i - 1], c.U[i - 1]));
+        rows[j] = cur[m];
+        std::swap(prev, cur);
+    }
+    return rows;
+}
+
+// exhaustive search: for each size s <= kb, the best value and one set attaining it
+template <class P>
+std::pair<vector<double>, vector<vector<int>>> brute_force_argmax_by_size(const P& prob, int kb) {
+    typename P::State st(prob);
+    vector<double> best(kb + 1, -DBL_MAX);
+    vector<vector<int>> arg(kb + 1);
+    vector<int> cur_set;
+    auto rec = [&](auto&& self, int start, int depth, double cur) -> void {
+        if (cur > best[depth]) best[depth] = cur, arg[depth] = cur_set;
+        if (depth == kb) return;
+        for (int v = start; v < prob.n(); v++) {
+            double g = st.gain(v);
+            st.add(v);
+            cur_set.push_back(v);
+            self(self, v + 1, depth + 1, cur + g);
+            cur_set.pop_back();
+            st.remove(v);
+        }
+    };
+    rec(rec, 0, 0, prob.eval(st.in_S));
+    return {best, arg};
+}
+
+// certificate P^S_i = f_S(elements of O \ S among the first i positions of the S-ordering)
+template <class P>
+vector<double> certificate_P(const P& prob, const vector<char>& S, const CapData& c, const vector<char>& O) {
+    auto st = state_of(prob, S);
+    vector<double> Pv;
+    double acc = 0;
+    for (int a : c.order) {
+        if (O[a]) {
+            acc += check_finite(st.gain(a), "certificate gain", a);
+            st.add(a);
+        }
+        Pv.push_back(acc);
+    }
+    return Pv;
 }
 
 }  // namespace dual

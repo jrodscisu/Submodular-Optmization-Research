@@ -162,6 +162,12 @@ void run_k_sweep(const P& prob, const SweepConfig& cfg) {
            cfg.instance.c_str(), n, cfg.ks.front(), kmax, cfg.ks.size(), cfg.seed, cfg.chain_stride);
     fflush(stdout);
 
+    if (getenv("GREEDY_LENGTH_ONLY")) {  // Phase-3 estimate: length of the unbudgeted greedy chain
+        auto [gv, ch] = plain_greedy(prob, n);
+        if (ch.size() >= 2 && ch.back() == ch[ch.size() - 2]) ch.pop_back();
+        printf("GREEDY_LENGTH %d\n", (int)ch.size() - 1);
+        return;
+    }
     if (cfg.check_oracle) check_oracle(prob, cfg.seed);
     vector<double> single = singleton_gains(prob);
 
@@ -210,7 +216,7 @@ void run_k_sweep(const P& prob, const SweepConfig& cfg) {
         int A_size = 0, B_size = 0, rounds = 0;
         vector<double> mu2, mu3, lat_best;
         vector<vector<double>> marg_top;  // marg_top[i][j] = sum of the j largest [f(a | S_i)]^+, a not in S_i
-        double t_marg = 0;
+        double t_marg = 0, t_hybrid = 0;
     } bl;
     auto uses_prefix = [&](int i, int k) {
         int last = std::min(k, t);
@@ -294,6 +300,66 @@ void run_k_sweep(const P& prob, const SweepConfig& cfg) {
             }
             fclose(lp);
             bl.t_lp = ms_since(t0);
+
+            // B5 hybrid LP data: for every base set NM-Dual's ordering, marginals and caps (recomputed
+            // with the same code and checked against NM-Dual's DP rows); where brute force ran, an
+            // optimal set per k and the certificate vectors P of the validity proof (check 3)
+            t0 = clock::now();
+            std::string hpath = cfg.lp_export + "/" + cfg.instance + "__seed" + std::to_string(cfg.seed) + ".hybrid.txt";
+            FILE* hy = fopen(hpath.c_str(), "w");
+            if (!hy) { perror(hpath.c_str()); exit(1); }
+            fprintf(hy, "# B5 hybrid LP data. V: f(a|V-a); per base set: H <prefix> <f(S)> <m>, M <members>, "
+                        "O <order>, G <f(a|S) in order>, U <caps>; K <k> <prefixes>; Q <k> <f(O)> <O>; "
+                        "C <k> <prefix> <P_1..P_m>\nn %d\nV", n);
+            for (double v : fVm) fprintf(hy, " %.17g", v);
+            fputc('\n', hy);
+            vector<CapData> caps(chain.size());
+            for (int i = 0; i <= t; i++) {
+                if (!need[i]) continue;
+                caps[i] = nm_dual_caps(prob, chain[i]);
+                vector<double> chk = dp_rows_from_caps(caps[i], kmax);
+                for (int j = 0; j <= kmax; j++)
+                    if (!(chk[j] == rows[i][j])) {
+                        fprintf(stderr, "CAPS MISMATCH [%s/%s seed %llu] prefix %d row %d: %.17g vs NM-Dual %.17g\n",
+                                cfg.problem.c_str(), cfg.instance.c_str(), cfg.seed, i, j, chk[j], rows[i][j]);
+                        exit(4);
+                    }
+                fprintf(hy, "H %d %.17g %d\nM", i, f_chain[i], (int)caps[i].order.size());
+                for (int a = 0; a < n; a++) if (chain[i][a]) fprintf(hy, " %d", a);
+                fprintf(hy, "\nO");
+                for (int a : caps[i].order) fprintf(hy, " %d", a);
+                fprintf(hy, "\nG");
+                for (double v : caps[i].g) fprintf(hy, " %.17g", v);
+                fprintf(hy, "\nU");
+                for (double v : caps[i].U) fprintf(hy, " %.17g", v);
+                fputc('\n', hy);
+            }
+            for (int k : cfg.ks) {
+                fprintf(hy, "K %d", k);
+                for (int i = 0; i <= t; i++) if (uses_prefix(i, k)) fprintf(hy, " %d", i);
+                fputc('\n', hy);
+            }
+            if (kb >= cfg.ks.front()) {
+                auto [bv, bs] = brute_force_argmax_by_size(prob, kb);
+                for (int k : cfg.ks) {
+                    if (k > kb) break;
+                    int sb = 0;
+                    for (int s = 1; s <= k; s++) if (bv[s] > bv[sb]) sb = s;
+                    vector<char> O(n, 0);
+                    for (int a : bs[sb]) O[a] = 1;
+                    fprintf(hy, "Q %d %.17g", k, bv[sb]);
+                    for (int a : bs[sb]) fprintf(hy, " %d", a);
+                    fputc('\n', hy);
+                    for (int i = 0; i <= t; i++) {
+                        if (!uses_prefix(i, k)) continue;
+                        fprintf(hy, "C %d %d", k, i);
+                        for (double v : certificate_P(prob, chain[i], caps[i], O)) fprintf(hy, " %.17g", v);
+                        fputc('\n', hy);
+                    }
+                }
+            }
+            fclose(hy);
+            bl.t_hybrid = ms_since(t0);
         }
 
         // lattice contains an unconstrained optimum? (only when every subset was enumerated)
@@ -319,7 +385,8 @@ void run_k_sweep(const P& prob, const SweepConfig& cfg) {
     if (cfg.baselines)
         header += ",lp_bound,gamma1_bound,gamma1_noprune,mu2_bound,mu3_bound,lattice_A_size,lattice_B_size,"
                   "prune_rounds,f_empty,f_V,opt_unconstrained,lattice_opt_unconstrained,lattice_opt_k,"
-                  "time_lp_export_ms,time_lp_ms,time_gamma1_ms,time_mu_ms,marginal_bound,time_marginal_ms";
+                  "time_lp_export_ms,time_lp_ms,time_gamma1_ms,time_mu_ms,marginal_bound,time_marginal_ms,"
+                  "time_hybrid_export_ms";
     FILE* csv = open_csv(cfg.csv, (header + "\n").c_str());
     FILE* pcsv = cfg.prefix_csv.empty() ? nullptr
         : open_csv(cfg.prefix_csv, "problem,instance,seed,k,prefix,size,f_S,penalty_S,dual_S,bound_S\n");
@@ -414,7 +481,7 @@ void run_k_sweep(const P& prob, const SweepConfig& cfg) {
             fprintf(csv, ",nan,%.10g,%.10g,%.10g,%.10g,%d,%d,%d,%.10g,%.10g,%.10g,%.10g,%.10g,%.3f,nan,%.3f,%.3f",
                     bl.gamma1, bl.gamma1_np, mu2, mu3, bl.A_size, bl.B_size, bl.rounds, bl.f_empty, bl.f_V,
                     bl.opt_unc, bl.lat_opt_unc, lat_k, bl.t_lp, bl.t_gamma, bl.t_mu);
-            fprintf(csv, ",%.10g,%.3f", marg, bl.t_marg);
+            fprintf(csv, ",%.10g,%.3f,%.3f", marg, bl.t_marg, bl.t_hybrid);
         }
         fputc('\n', csv);
         fflush(csv);

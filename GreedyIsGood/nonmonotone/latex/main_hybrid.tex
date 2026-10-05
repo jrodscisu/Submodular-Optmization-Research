@@ -1,0 +1,21 @@
+% Demo document: the *_hybrid figures (the _baselines series + Hybrid (B5) and min(NM-Dual, B5)).
+% Regenerate with  python3 make_pgfplots.py --hybrid  after  ../run_all_baselines.sh.
+% Wide (figure*) versions: figures/<problem>_wide_hybrid.tex.
+\documentclass[twocolumn]{article}
+\usepackage[margin=0.75in]{geometry}
+\input{rgplots-preamble}
+
+\begin{document}
+\section*{Random greedy: certified ratio vs.\ $k$, with the hybrid LP}
+Each plot shows $\mathrm{RG}/B$ for every upper bound $B$ of the baseline figures plus the hybrid
+LP (B5 = B2 with the dual's prefix caps) and $\min(\mathrm{dual}, \mathrm{B5})$, against the $1/e$
+guarantee of random greedy.
+
+\input{figures/max_cut_hybrid}
+\input{figures/directed_cut_hybrid}
+\input{figures/revenue_max_hybrid}
+\input{figures/diverse_rec_hybrid}
+\input{figures/log_det_hybrid}
+\input{figures/gaussian_mi_hybrid}
+\input{figures/hypergraph_cut_hybrid}
+\end{document}

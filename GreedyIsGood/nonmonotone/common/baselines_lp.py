@@ -160,9 +160,9 @@ def maxcut_merge(orig, generic, out):
             m[c] = gr[c]
         merged.append(m)
     with open(out, "w", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=ofields + extra)
+        w = csv.DictWriter(f, fieldnames=ofields + ["instance"] + extra)
         w.writeheader()
-        w.writerows({k: v for k, v in m.items() if k in ofields + extra} for m in merged)
+        w.writerows({k: v for k, v in m.items() if k in ofields + ["instance"] + extra} for m in merged)
     print(f"merged {len(merged)} max-cut rows -> {out} (OPT/top-k/greedy/dual agree with the original run)")
     return merged
 

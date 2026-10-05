@@ -162,6 +162,21 @@ def main():
             rows.append(r)
     S.append(md(pd.DataFrame(rows)) + "\n")
 
+    # ---- where the LP (B2) is tighter than NM-Dual, per instance
+    S.append("## LP (B2) vs NM-Dual crossover per instance\n")
+    S.append("Means over seeds per k. *First k* is the smallest k with mean B2 < mean NM-Dual; *k values* lists "
+             "every k where that holds (it need not be a contiguous tail).\n")
+    rows = []
+    for p, insts in data.items():
+        for label, df, _ in insts:
+            g = df.groupby("k")[["dual_bound", "lp_bound"]].mean()
+            ks = [int(k) for k in g.index[g["lp_bound"] < g["dual_bound"] * (1 - 1e-9)]]
+            n = int(df["n"].iloc[0])
+            rows.append({"problem": p, "instance": label, "n": n, "k grid": f"{g.index.min()}–{g.index.max()}",
+                         "first k": ks[0] if ks else "never", "first k / n": ks[0] / n if ks else math.nan,
+                         "#k with B2 < NM-Dual": f"{len(ks)}/{len(g)}", "k values": compress(ks)})
+    S.append(md(pd.DataFrame(rows)) + "\n")
+
     # ---- Marginal vs NM-Dual: what the caps of high_cap_U add
     S.append("## Marginal vs NM-Dual: what the caps add\n")
     S.append("Marginal = NM-Dual with the caps of `high_cap_U` removed (same base sets, same penalty), so "

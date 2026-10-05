@@ -15,3 +15,4 @@ done | BASELINES=1 run_jobs ./maxcut_baselines results
 
 "${PYTHON:-python3}" ../common/baselines_lp.py --maxcut-merge results/k_sweep_n20_p0.3.csv \
     results/maxcut_generic_baselines.csv results/k_sweep_n20_p0.3_baselines.csv
+"${PYTHON:-python3}" ../common/hybrid_lp.py results         # B5 hybrid LP, checks, _mono columns

@@ -28,6 +28,7 @@ SELECTED="$*"
 
 if [ "${BASELINES:-0}" = 1 ]; then  # solve the B2 LPs and run the validity checks
     "${PYTHON:-python3}" ../common/baselines_lp.py results
+    "${PYTHON:-python3}" ../common/hybrid_lp.py results     # B5 hybrid LP, checks, _mono columns
 else
     "${PYTHON:-python3}" ../common/plot_k_sweep.py --results results --out figures \
         || echo "plotting skipped (needs pandas + matplotlib)" >&2
