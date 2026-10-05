@@ -1,0 +1,15 @@
+% Demo document: the violations-study figures (two-column layout).
+% Regenerate with  python3 make_violation_plots.py  after  ../run_all_violations.sh.
+\documentclass[twocolumn]{article}
+\usepackage[margin=0.75in]{geometry}
+\input{rgplots-preamble}
+
+\begin{document}
+\section*{Monotone upper bounds on non-monotone instances}
+Violation rates of published monotone upper bounds (M1--M3) and of two ablations of the dual
+bound (A1, A2) on the experiment instances; the controls never violate.
+
+\input{figures/violations_by_k}
+\input{figures/violations_lambda}
+\input{figures/violations_by_k_wide}
+\end{document}

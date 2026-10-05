@@ -76,6 +76,8 @@ struct SweepConfig {
     bool check_direct = false;
     bool check_oracle = false;
     bool baselines = false;     // B2-B4 columns (common/baselines.hpp)
+    bool monotone = false;      // M1/M2/A2 columns of the violations study
+    bool monotone_only = false; // only the monotone methods (no NM-Dual, brute force or random greedy)
     std::string lp_export;      // directory for the B2 LP coefficients
     double total_bound = NAN;   // problem-specific "sum of all weights" bound (nan if none)
 };
@@ -95,6 +97,8 @@ inline SweepConfig sweep_config(const Args& a, int n, const std::string& problem
     c.check_direct = a.has("check-direct");
     c.check_oracle = a.has("check-oracle");
     c.baselines = a.has("baselines");
+    c.monotone = a.has("monotone");
+    c.monotone_only = a.has("monotone-only");
     c.lp_export = a.str("lp-export", "");
     c.total_bound = total_bound;
     return c;
@@ -172,7 +176,8 @@ void run_k_sweep(const P& prob, const SweepConfig& cfg) {
     vector<double> single = singleton_gains(prob);
 
     // plain greedy chain for the largest budget; prefixes are shared by every k
-    auto [g_final, chain] = plain_greedy(prob, kmax);
+    auto greedy_run = plain_greedy(prob, kmax);
+    auto& chain = greedy_run.second;
     if (chain.size() >= 2 && chain.back() == chain[chain.size() - 2]) chain.pop_back();
     int t = chain.size() - 1;  // greedy stops after t additions
     vector<double> f_chain(chain.size());
@@ -186,6 +191,78 @@ void run_k_sweep(const P& prob, const SweepConfig& cfg) {
     vector<double> pen(chain.size(), NAN), cost(chain.size(), 0.0);
     vector<vector<double>> rows(chain.size());
     double time_prefix_total = 0;
+
+    // ---- published monotone methods (violations study; --monotone / --monotone-only). New code
+    // path only: M1 (BQS Dual), M2 (Marginal without penalty), A2 (our DP, raw caps f_S(A_i), with
+    // penalty) over exactly the base sets NM-Dual uses at each k; f_S(A_i) is exported for M3.
+    auto uses_k = [&](int i, int k) {
+        int last = std::min(k, t);
+        return i <= last && need[i] && (i % cfg.chain_stride == 0 || i == last);
+    };
+    struct {
+        vector<MonoPrefix> pre;
+        double min_h = NAN, t_mono = 0;
+        int flag = -1;  // 1 iff f(a | V - a) >= 0 for every a (f monotone)
+    } mo;
+    auto compute_mono = [&]() {
+        auto t0 = clock::now();
+        vector<char> all(n, 1);
+        auto stV = state_of(prob, all);
+        double mh = INFINITY, scale = 1.0;
+        for (int a = 0; a < n; a++) {
+            double h = check_finite(stV.gain(a), "f(a|V-a)", a);
+            mh = std::min(mh, h), scale = std::max(scale, std::fabs(h));
+        }
+        mo.min_h = mh;
+        mo.flag = mh >= -1e-9 * scale;
+        mo.pre.assign(chain.size(), {});
+        for (int i = 0; i <= t; i++)
+            if (need[i]) mo.pre[i] = monotone_prefix(prob, chain[i], kmax);
+        if (!cfg.lp_export.empty()) {  // O <prefix> <order>, F <prefix> <f_S(A_1..A_m)>
+            std::string path = cfg.lp_export + "/" + cfg.instance + "__seed" + std::to_string(cfg.seed) + ".mono.txt";
+            FILE* f = fopen(path.c_str(), "w");
+            if (!f) { perror(path.c_str()); exit(1); }
+            fprintf(f, "# monotone prefix caps for M3: O <prefix> <order>; F <prefix> <f_S(A_i), i=1..m>\nn %d\n", n);
+            for (int i = 0; i <= t; i++) {
+                if (!need[i]) continue;
+                fprintf(f, "O %d", i);
+                for (int a : mo.pre[i].order) fprintf(f, " %d", a);
+                fprintf(f, "\nF %d", i);
+                for (double v : mo.pre[i].F) fprintf(f, " %.17g", v);
+                fputc('\n', f);
+            }
+            fclose(f);
+        }
+        mo.t_mono = ms_since(t0);
+    };
+    auto mono_bounds = [&](int k, double& m1, double& m2, double& a2) {
+        m1 = m2 = a2 = INFINITY;
+        for (int i = 0; i <= t; i++) {
+            if (!uses_k(i, k)) continue;
+            const MonoPrefix& p = mo.pre[i];
+            m1 = std::min(m1, f_chain[i] + p.V[k]);
+            m2 = std::min(m2, f_chain[i] + p.m2top[k]);
+            a2 = std::min(a2, f_chain[i] + pen[i] + dual_from_rows(p.a2rows, k));
+        }
+    };
+    if (cfg.monotone_only) {  // no NM-Dual, no brute force, no random greedy
+        for (int i = 0; i <= t; i++)
+            if (need[i]) pen[i] = penalty_S(prob, chain[i]);
+        compute_mono();
+        FILE* csv = open_csv(cfg.csv, "problem,instance,n,k,seed,chain_stride,chain_len,greedy,m1_bound,m2_bound,"
+                                      "a2_bound,monotone_flag,min_f_a_V_minus_a,time_monotone_ms\n");
+        for (int k : cfg.ks) {
+            double m1, m2, a2;
+            mono_bounds(k, m1, m2, a2);
+            int last = std::min(k, t);
+            fprintf(csv, "%s,%s,%d,%d,%llu,%d,%d,%.10g,%.10g,%.10g,%.10g,%d,%.10g,%.3f\n", cfg.problem.c_str(),
+                    cfg.instance.c_str(), n, k, cfg.seed, cfg.chain_stride, last + 1, f_chain[last], m1, m2, a2,
+                    mo.flag, mo.min_h, mo.t_mono);
+        }
+        fclose(csv);
+        printf("  monotone methods: flag=%d min f(a|V-a)=%.6g (%.0f ms)\n", mo.flag, mo.min_h, mo.t_mono);
+        return;
+    }
     for (int i = 0; i <= t; i++) {
         if (!need[i]) continue;
         auto t0 = clock::now();
@@ -387,6 +464,10 @@ void run_k_sweep(const P& prob, const SweepConfig& cfg) {
                   "prune_rounds,f_empty,f_V,opt_unconstrained,lattice_opt_unconstrained,lattice_opt_k,"
                   "time_lp_export_ms,time_lp_ms,time_gamma1_ms,time_mu_ms,marginal_bound,time_marginal_ms,"
                   "time_hybrid_export_ms";
+    if (cfg.monotone) {
+        compute_mono();
+        header += ",m1_bound,m2_bound,a2_bound,monotone_flag,min_f_a_V_minus_a,time_monotone_ms";
+    }
     FILE* csv = open_csv(cfg.csv, (header + "\n").c_str());
     FILE* pcsv = cfg.prefix_csv.empty() ? nullptr
         : open_csv(cfg.prefix_csv, "problem,instance,seed,k,prefix,size,f_S,penalty_S,dual_S,bound_S\n");
@@ -482,6 +563,11 @@ void run_k_sweep(const P& prob, const SweepConfig& cfg) {
                     bl.gamma1, bl.gamma1_np, mu2, mu3, bl.A_size, bl.B_size, bl.rounds, bl.f_empty, bl.f_V,
                     bl.opt_unc, bl.lat_opt_unc, lat_k, bl.t_lp, bl.t_gamma, bl.t_mu);
             fprintf(csv, ",%.10g,%.3f,%.3f", marg, bl.t_marg, bl.t_hybrid);
+        }
+        if (cfg.monotone) {
+            double m1, m2, a2;
+            mono_bounds(k, m1, m2, a2);
+            fprintf(csv, ",%.10g,%.10g,%.10g,%d,%.10g,%.3f", m1, m2, a2, mo.flag, mo.min_h, mo.t_mono);
         }
         fputc('\n', csv);
         fflush(csv);

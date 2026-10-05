@@ -19,10 +19,17 @@ run_jobs() {
     local tmp; tmp="$(mktemp -d)"
     mkdir -p "$res/logs"
     awk 'NF { print NR, $0 }' > "$tmp/jobs"
-    if [ "${BASELINES:-0}" = 1 ]; then  # B2-B4 baselines: same jobs, results in LABEL_baselines.csv
+    if [ "${VIOLATIONS:-0}" = 1 ]; then  # monotone methods only (no NM-Dual): LABEL_monoraw.csv
+        mkdir -p "$res/lp_export"
+        awk -v d="$res/lp_export" '{ $2 = $2 "_monoraw"; print $0, "--monotone-only --lp-export", d }' \
+            "$tmp/jobs" > "$tmp/jobs.bl" && mv "$tmp/jobs.bl" "$tmp/jobs"
+    elif [ "${BASELINES:-0}" = 1 ]; then  # B2-B4 baselines: same jobs, results in LABEL_baselines.csv
         mkdir -p "$res/lp_export"
         awk -v d="$res/lp_export" '{ $2 = $2 "_baselines"; print $0, "--baselines --lp-export", d }' \
             "$tmp/jobs" > "$tmp/jobs.bl" && mv "$tmp/jobs.bl" "$tmp/jobs"
+    fi
+    if [ -n "${EXTRA_ARGS:-}" ]; then  # extra arguments for every job (e.g. --monotone)
+        awk -v e="$EXTRA_ARGS" '{ print $0, e }' "$tmp/jobs" > "$tmp/jobs.bl" && mv "$tmp/jobs.bl" "$tmp/jobs"
     fi
     echo "Running $(wc -l < "$tmp/jobs" | tr -d ' ') jobs of $bin with $JOBS parallel processes"
 
@@ -48,10 +55,10 @@ run_jobs() {
             cat "$f.log" >> "$log" 2>/dev/null || true
             [ -f "$f.csv" ] || continue
             if [ $first = 1 ]; then
-                cat "$f.csv" >> "$out"; cat "${f}_prefix.csv" >> "$pout"
+                cat "$f.csv" >> "$out"; if [ -f "${f}_prefix.csv" ]; then cat "${f}_prefix.csv" >> "$pout"; fi
                 first=0
             else
-                tail -n +2 "$f.csv" >> "$out"; tail -n +2 "${f}_prefix.csv" >> "$pout"
+                tail -n +2 "$f.csv" >> "$out"; if [ -f "${f}_prefix.csv" ]; then tail -n +2 "${f}_prefix.csv" >> "$pout"; fi
             fi
         done
         echo "  -> $out ($(($(wc -l < "$out") - 1)) rows)"

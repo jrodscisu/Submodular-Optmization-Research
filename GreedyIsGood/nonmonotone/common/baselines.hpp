@@ -256,4 +256,54 @@ vector<double> certificate_P(const P& prob, const vector<char>& S, const CapData
     return Pv;
 }
 
+// ---- published MONOTONE methods run unchanged (violations study) ---------------------------
+// For base set S, with V \ S ordered as NM-Dual orders it (nonincreasing f(a | S), same code
+// path as nm_dual_caps / dual_dp_rows) and A_i = {a_1..a_i}:
+//   F_i      = f_S(A_i)                                  (monotone prefix cap)
+//   V_j      : BQS Dual recursion  v_j = max(0, max_i min(f(a_i|S), F_i - V_{j-1})), V_j = V_{j-1}+v_j
+//   m2top_j  = sum of the j largest [f(a|S)]^+          (BQS "Marginal" / Tang et al. Lambda^0)
+//   a2rows   = NM-Dual's DP with the raw caps F_i (no damage terms, no suffix-min)  (ablation A2)
+struct MonoPrefix {
+    vector<int> order;
+    vector<double> g, F, V, m2top, a2rows;
+};
+
+template <class P>
+MonoPrefix monotone_prefix(const P& prob, const vector<char>& S, int kmax) {
+    int n = prob.n();
+    typename P::State st(prob);
+    for (int v = 0; v < n; v++)
+        if (S[v] == 1) st.add(v);
+    vector<double> single(n, 0.0);
+    vector<int> order;
+    for (int i = 0; i < n; i++)
+        if (!S[i]) {
+            order.push_back(i);
+            single[i] = st.gain(i);
+        }
+    std::sort(order.begin(), order.end(), [&single](int a, int b) { return single[a] > single[b]; });
+    MonoPrefix mp;
+    mp.order = order;
+    double acc = 0;
+    for (int a : order) {
+        mp.g.push_back(check_finite(single[a], "monotone f(a|S)", a));
+        acc += check_finite(st.gain(a), "monotone f_S(A_i)", a);
+        st.add(a);
+        mp.F.push_back(acc);
+    }
+    int m = order.size();
+    mp.V.assign(kmax + 1, 0.0);
+    for (int j = 1; j <= kmax; j++) {
+        double best = 0.0;
+        for (int t = 0; t < m; t++) best = std::max(best, std::min(mp.g[t], mp.F[t] - mp.V[j - 1]));
+        mp.V[j] = mp.V[j - 1] + best;
+    }
+    mp.m2top.assign(kmax + 1, 0.0);
+    for (int j = 1; j <= kmax; j++) mp.m2top[j] = mp.m2top[j - 1] + (j <= m ? std::max(0.0, mp.g[j - 1]) : 0.0);
+    CapData raw;
+    raw.order = order, raw.g = mp.g, raw.U = mp.F;
+    mp.a2rows = dp_rows_from_caps(raw, kmax);
+    return mp;
+}
+
 }  // namespace dual

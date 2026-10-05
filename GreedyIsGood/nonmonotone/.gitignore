@@ -12,3 +12,6 @@ common/port_check
 */results/lp_export/
 src/maxcut_baselines
 .DS_Store
+*_monoraw_prefix.csv
+*/results/*/lp_export/
+*/results/*/logs/
